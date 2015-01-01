@@ -1,3 +1,7 @@
-flask
-flask-login
-flask-script
+Flask==0.10.1
+Flask-Login==0.2.11
+Flask-Script==2.0.5
+itsdangerous==0.24
+Jinja2==2.7.3
+MarkupSafe==0.23
+Werkzeug==0.9.6
