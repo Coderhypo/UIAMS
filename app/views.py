@@ -30,10 +30,10 @@ def logout():
     flash('You have been logged out.')
     return redirect(url_for('index'))
 
-@app.route('/main')
+@app.route('/competition')
 @login_required
-def main():
-    return render_template("main.html")  
+def competition():
+    return render_template("competition.html")  
     
 
 @app.route('/perinfo', methods=['GET', 'POST'])
