@@ -1,14 +1,23 @@
 {% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
-{% block title %}Login{% endblock %}
+{% block title %}Competition Information{% endblock %}
 
 {% block page_content %}
 <div class="page-header">
-    <h1>Login</h1>
+    <h1>信息录入</h1>
 </div>
-<div class="col-md-4">
-    {{ wtf.quick_form(form) }}
+<div class="row" >
+    <div class="col-sm-6 col-md-3">
+        <a href="/teaminfo" class="thumbnail">
+            <img src="http://7sbxph.com1.z0.glb.clouddn.com/wp-content/uploads/2014/11/12992339412269-270x180.jpg" alt="">
+        </a>
+    </div> 
+    <div class="col-sm-6 col-md-3">
+        <a href="/perinfo" class="thumbnail">
+            <img src="http://7sbxph.com1.z0.glb.clouddn.com/wp-content/uploads/2014/12/12941408109319-270x180.png" alt="">
+        </a>
+    </div> 
 </div>
 {% endblock %}
 

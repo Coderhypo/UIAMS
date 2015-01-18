@@ -3,7 +3,7 @@
 {% block title %}{% endblock %}
 
 {% block navbar %}
-<div class="navbar navbar-inverse" role="navigation">
+<div class="navbar navbar-default" role="tablist">
     <div class="container">
         <div class="b=navbat-header">
             <button type="button" class="navbar-toggle"
@@ -12,13 +12,15 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/">大学生竞赛管理系统</a>
+            <a class="navbar-brand" href="/">大学生创新活动</a>
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li><a href="/">首页</a></li>
+                <li><a href="/">新闻</a></li>
+                <li><a href="/">工作交流</a></li>
+                <li><a href="/">竞赛通知</a></li>
                 <li><a href="/main">竞赛录入</a></li>
-                <li><a href="/main">竞赛查询</a></li>
+                <li><a href="/query">竞赛查询</a></li>
             </ul>
             <ul class="nav navbar-bav navbar-right">
                 {% if current_user.is_authenticated() %}
