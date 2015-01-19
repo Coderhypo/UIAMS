@@ -36,10 +36,10 @@ def competition():
     return render_template("competition.html")  
     
 
-@app.route('/perinfo', methods=['GET', 'POST'])
+@app.route('/individual_com', methods=['GET', 'POST'])
 @login_required
 @commit_required
-def perinfo():
+def individual_com():
     form = PerForm(request.form)
     if form.validate() and request.method=='POST':
         Cstu = ComStu.query.filter_by(stu_id=form.stuid.data).first()
@@ -70,13 +70,13 @@ def perinfo():
         Cinfo.com_sid = Cstu.id
         db.session.add(Cinfo) 
         db.session.commit()
-    return render_template('perinfo.html', form=form)
+    return render_template('individual_com.html', form=form)
     
-@app.route('/teaminfo')
+@app.route('/team_com')
 @login_required
-def teaminfo():
+def team_com():
     form = TeamForm(request.form)
-    return render_template('teaminfo.html', form=form)  
+    return render_template('team_com.html', form=form)  
 
 @app.route('/query')
 @login_required
