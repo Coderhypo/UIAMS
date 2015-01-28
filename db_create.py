@@ -126,3 +126,6 @@ def createdb():
         Com = ComName(c)
         db.session.add(Com)
         db.session.commit()
+
+if __name__ == '__main__':
+    createdb()
