@@ -3,7 +3,7 @@ from app import db, app, login_manager
 from flask import render_template, redirect, request, url_for, flash
 from flask.ext.login import login_user, login_required, logout_user, current_user
 from models import User, Student, Acachemy, Teacher, ComInfo, ComName
-from forms import LoginForm,TeamForm, PerForm
+from forms import LoginForm,TeamForm, PerForm,PatentForm
 from decorators import commit_required, query_required
 
 @app.route('/')
@@ -56,7 +56,7 @@ def individual_com():
                 stu_class=form.stuclass.data 
             )
             
-            db.session.add(Com_stu)
+            db.session.add(Cstu)
             db.session.commit()
             Com_stu = Student.query.filter_by(stu_id=form.stuid.data).first()
 
@@ -81,6 +81,25 @@ def individual_com():
         return redirect(url_for('index'))
     return render_template('individual_com.html', form=form)
     
+
+@app.route('/patent',methods=['GET','POST'])
+def patent():
+    form = PatentForm()
+    if form.validate() and request.method == 'POST':
+        pate_info = PatentForm.query.filter_by(peaname=form.peaname.data.data).first()
+        if pate_info = None
+
+            pate_info = PatentForm(
+                peaname = form.peaname.data,
+                inventor = form.inventor.data,
+                filingdate = form.filingdate,
+                patentee = form.patentee.data,
+                annoucement = form.announcement.data
+            )
+        db.session.add(pate_info)
+        db.session.commit()
+        return redirect(url_for('index'))
+    return render_template('patent.html',form = form)
 """
 @app.route('/team_com')
 @login_required
