@@ -207,3 +207,20 @@ class Role(db.Model):
                 role.permissions = roles[r]
                 db.session.add(role)
         db.session.commit()
+
+
+        
+class Patent(db.Model):
+    __tablename__ = 'patent'
+    id = db.Column(db.Integer,primary_key=True)
+    peaname = db.Column(db.String(64),unique=True)
+    inventor = db.Column(db.String(64),unique=True)
+    filingdate = db.Column(db.Date)
+    patentee = db.Column(db.String(64),unique=True)
+    announcement = db.Column(db.Date)
+
+    def __init__(self,peaname ):
+        self.peaname = peaname
+
+    def __repr__(self):
+        return '<patent %s>' % self.peaname

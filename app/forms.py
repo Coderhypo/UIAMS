@@ -68,6 +68,15 @@ class TeamForm(BaseForm):
     comtea = FormField(TeaForm, u'指导老师')
     submit = SubmitField(u'提交')
 
+class PatentForm(BaseForm):
+    peaname = StringField(u'实用新型名称:')
+    inventor = StringField(u'发明人:')
+    filingdate = StringField(u'专利申请日')
+    patentee = StringField(u'专利权人')
+    announcement = StringField(u'授权公告日')
+    submit = SubmitField(u'提交')
+
+
 class PerForm(TeaForm, ComForm, StuForm):
     submit = SubmitField(u'提交')
 
