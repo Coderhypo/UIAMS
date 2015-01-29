@@ -5,18 +5,16 @@ from app.models import ComName, User, Acachemy, Role, Teacher
 def createdb():
     db.drop_all()
     db.create_all()
+
     Role.insert_roles()
-    admin_role = Role.query.filter_by(name='Administrator').first()
+    admin_role = Role.query.filter_by(role_name='Administrator').first()
     admin = User('admin', u'管理员')
     admin.password = '123'
     admin.role = admin_role
 
-    teacher_role = Role.query.filter_by(name='Teacher').first()
-    teacher = User('T00001', u'老师')
-    teacher.password = '123'
-    teacher.role = teacher_role
+    teacher_role = Role.query.filter_by(role_name='Teacher').first()
     
-    db.session.add_all([admin, teacher])
+    db.session.add_all([admin])
     db.session.commit()
     
     aca = [
@@ -53,21 +51,12 @@ def createdb():
     (u'安琳', u'农业食品院'),
     (u'巴奉丽', u'电子电气院')]
 
-    tea_id = User.query.filter_by(role=teacher_role).order_by().first().user_id
-    id = int(tea_id[1:])
+    id = 0
         
     for t in tea:
         id += 1
         T = str('T'+'%05d' %id)
-        Tea = User(T,t[0])
-        Tea.password = '123'
-        Tea.role = teacher_role
-        db.session.add(Tea)
-        db.session.commit()
-        
-    for t in tea:
-        tea_id = User.query.filter_by(user_name=t[0]).first().id
-        Tea = Teacher(tea_id,t[0],t[1])
+        Tea = Teacher(T,t[0],t[1])
         db.session.add(Tea)
         db.session.commit()
 
