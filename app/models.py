@@ -142,7 +142,7 @@ class User(UserMixin, db.Model):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.String(128), nullable=False, unique=True)
-    user_name = db.Column(db.String(128), nullable=False)
+    user_name = db.Column(db.String(128), nullable=False, unique=True)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     password_hash = db.Column(db.String(128), nullable=False)
 
@@ -196,9 +196,9 @@ class Role(db.Model):
     @staticmethod
     def insert_roles():
         roles= {
-            'Teacher': (0xff),
-            'Acachemy': (0xff),
-            'Administrator': (0xff)
+            u'教师': (0xff),
+            u'学院': (0xff),
+            u'管理员': (0xff)
         }
         for r in roles:
             role = Role.query.filter_by(role_name=r).first()
