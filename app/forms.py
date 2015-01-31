@@ -7,9 +7,15 @@ from flask.ext.login import current_user
 from models import Acachemy, Teacher, ComName, User, Role
 
 class BaseForm(Form):
+
+    '''支持中文表单的表单基类'''
+
     LANGUAGES = ['zh']
 
 class LoginForm(BaseForm):
+
+    '''登录的表单类'''
+
     userid = StringField(u'帐号', validators=[Required()])
     passwd = PasswordField(u'密码', validators=[Required()])
     remember_me = BooleanField(u'记住我')
@@ -26,10 +32,18 @@ class StuForm(BaseForm):
     stu_class = StringField(u'班级', validators=[Required()])
 
 class TeaForm(BaseForm):
+    
+    '''教师的表单类'''
+
     tea1 = QuerySelectField(u'指导教师1', get_label='tea_name')
     tea2 = QuerySelectField(u'指导教师2', get_label='tea_name')
 
-class ComForm(BaseForm):
+# 竞赛表单类
+
+class ComInfoForm(BaseForm):
+
+    '''竞赛信息的表单类'''
+
     com_name = QuerySelectField(u'竞赛项目', get_label='com_name')
     pro_name = StringField(u'成果名称')
     com_level = SelectField(u'获奖级别', choices=[
@@ -44,7 +58,7 @@ class ComForm(BaseForm):
     com_date = DateField(u'获奖时间', validators=[Required()])
     com_org = StringField(u'颁奖单位', validators=[Required()])
 
-class ComIndivForm(TeaForm, ComForm, StuForm):
+class ComIndivForm(TeaForm, ComInfoForm, StuForm):
     
     '''个人竞赛的表单类'''
 
