@@ -29,7 +29,7 @@ class ComName(db.Model):
         self.com_name=com_name
 
     def __repr__(self):
-        return '<ComName %s>' % self.com_name
+        return '<ComName %r>' % self.com_name
         
 class ComInfo(db.Model):
 
@@ -45,7 +45,7 @@ class ComInfo(db.Model):
     com_tid = db.Column(db.Integer, db.ForeignKey('comteam.id'), nullable=True)
     tea1_id = db.Column(db.Integer, db.ForeignKey('teachers.id'), nullable=False)
     tea2_id = db.Column(db.Integer, db.ForeignKey('teachers.id'), nullable=False)
-    com_time = db.Column(db.Date, nullable=False)
+    com_time = db.Column(db.String(128), nullable=False)
     com_org = db.Column(db.String(128), nullable=False)
     is_team  = db.Column(db.Integer, nullable=False)
 
@@ -87,7 +87,7 @@ class Student(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     stu_id = db.Column(db.String(128), nullable=False, unique=True)
     stu_name = db.Column(db.String(128), nullable=False)
-    stu_academy = db.Column(db.Integer, db.ForeignKey('acachemy.id'), nullable=False)
+    stu_academy = db.Column(db.Integer, db.ForeignKey('acachemys.id'), nullable=False)
     stu_major = db.Column(db.String(128), nullable=False)
     stu_class = db.Column(db.String(128), nullable=False)
     
@@ -98,7 +98,7 @@ class Student(db.Model):
         self.stu_class = stu_class
        
     def __repr__(self):
-        return '<Stu %s>' % self.stu_id
+        return '<Student %r>' % self.stu_id
 
 class Teacher(db.Model):
     
@@ -122,7 +122,7 @@ class Acachemy(db.Model):
     
     '''学院表'''
     
-    __tablename__ = 'acachemy'
+    __tablename__ = 'acachemys'
     id = db.Column(db.Integer, primary_key=True)
     aca_name = db.Column(db.String(128), nullable=False, unique=True)
     stus = db.relationship('Student', backref='acachemy', lazy='dynamic')
