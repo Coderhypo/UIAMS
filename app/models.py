@@ -23,7 +23,7 @@ class ComName(db.Model):
     __tablename__ = 'comname'
     id = db.Column(db.Integer, primary_key=True)
     com_name = db.Column(db.String(128), nullable=False)
-    infos = db.relationship('ComInfo', backref='name', lazy='dynamic') 
+    infos = db.relationship('ComInfo', backref='com_name', lazy='dynamic') 
 
     def __init__(self, com_name):
         self.com_name=com_name
@@ -49,8 +49,7 @@ class ComInfo(db.Model):
     com_org = db.Column(db.String(128), nullable=False)
     is_team  = db.Column(db.Integer, nullable=False)
 
-    def __init__(self, com_nid, pro_name, com_level, com_class, com_sid, tea1_id, tea2_id, com_time, com_org, is_team):
-        self.com_nid=com_nid
+    def __init__(self, pro_name, com_level, com_class, com_sid, tea1_id, tea2_id, com_time, com_org, is_team):
         self.pro_name=pro_name
         self.com_level=com_level
         self.com_class=com_class
@@ -92,12 +91,11 @@ class Student(db.Model):
     stu_major = db.Column(db.String(128), nullable=False)
     stu_class = db.Column(db.String(128), nullable=False)
     
-    def __init__(self, stu_id, stu_name, stu_academy, stu_major, stu_class):
-        self.stu_id=stu_id
-        self.stu_name=stu_name
-        self.stu_academy=stu_academy
-        self.stu_major=stu_major
-        self.stu_class=stu_class
+    def __init__(self, stu_id, stu_name, stu_major, stu_class):
+        self.stu_id = stu_id
+        self.stu_name = stu_name
+        self.stu_major = stu_major
+        self.stu_class = stu_class
        
     def __repr__(self):
         return '<Stu %s>' % self.stu_id
@@ -213,18 +211,20 @@ class Role(db.Model):
 class Patent(db.Model):
     __tablename__ = 'patent'
     id = db.Column(db.Integer,primary_key=True)
+    pea_type = db.Column(db.String(128),nullable=False)
     pea_name = db.Column(db.String(64),nullable=False)
     pea_inventor = db.Column(db.String(64),nullable=False)
     pea_filingdate = db.Column(db.Date,nullable=False)
     pea_patentee = db.Column(db.String(64),nullable=False)
     pea_announcement = db.Column(db.Date,nullable=False)
 
-    def __init__(self,pea_peaname, pea_inventor, pea_filingdate, pea_patentee, pea_announcement ):
-        self.pea_peaname = pea_peaname
+    def __init__(self,pea_type, pea_name, pea_inventor, pea_filingdate, pea_patentee, pea_announcement ):
+        self.pea_type = pea_type
+        self.pea_name = pea_name
         self.pea_inventor = pea_inventor
         self.pea_filingdate = pea_filingdate
         self.pea_patentee = pea_patentee
         self.pea_announcement = pea_announcement
 
     def __repr__(self):
-        return '<patent %s>' % self.pea_peaname
+        return '<patent %s>' % self.pea_name
