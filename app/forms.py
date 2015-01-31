@@ -131,7 +131,7 @@ class AddTeaForm(BaseForm):
     def validate_add_tea_name(form, field):
         teacher = Teacher.query.filter_by(tea_name=field.data).first()
         if teacher != None:
-            raise ValidationError(u'此教师姓名已存在')
+            raise ValidationError(u'该教师姓名已存在')
 
 class DelTeaForm(BaseForm):
 
@@ -143,7 +143,7 @@ class DelTeaForm(BaseForm):
     def validate_del_tea(form, field):
         teacher_num = len(field.query)
         if teacher_num == 1:
-            raise ValidationError(u'教师人数必须大于等于1')
+            raise ValidationError(u'教师不能为空')
 
 class ReSetTeaForm(BaseForm):
     
@@ -153,6 +153,11 @@ class ReSetTeaForm(BaseForm):
     re_tea_name = StringField(u'教师姓名')
     re_tea_unit = StringField(u'新单位')
     reset = SubmitField(u'修改')
+
+    def validate_re_tea_name(form, field):
+        teacher = Teacher.query.filter_by(tea_name=field.data).first()
+        if teacher != None:
+            raise ValidationError(u'该教师姓名已存在')
 
 # 学院表单类
 
@@ -174,6 +179,11 @@ class DelAcaForm(BaseForm):
 
     del_aca = QuerySelectField(u'选择学院', get_label='aca_name')
     delete = SubmitField(u'删除')
+    
+    def validate_del_aca(form, field):
+        acachemy_num = len(field.query)
+        if acachemy_num == 1:
+            raise ValidationError(u'学院不能为空')
 
 class ReSetAcaForm(BaseForm):
     
@@ -182,3 +192,8 @@ class ReSetAcaForm(BaseForm):
     re_aca = QuerySelectField(u'选择学院', get_label='aca_name')
     re_aca_name = StringField(u'学院名称', validators=[Required()])
     reset = SubmitField(u'修改')
+
+    def validate_re_aca_name(form, field):
+        acachemy = Acachemy.query.filter_by(aca_name=field.data).first()
+        if acachemy != None:
+            raise ValidationError(u'该学院已存在')

@@ -29,7 +29,7 @@ class ComName(db.Model):
         self.com_name=com_name
 
     def __repr__(self):
-        return '<ComName %s>' % self.com_name
+        return '<ComName %r>' % self.com_name
         
 class ComInfo(db.Model):
 
@@ -98,7 +98,7 @@ class Student(db.Model):
         self.stu_class = stu_class
        
     def __repr__(self):
-        return '<Stu %s>' % self.stu_id
+        return '<Student %r>' % self.stu_id
 
 class Teacher(db.Model):
     
