@@ -45,7 +45,7 @@ class ComInfo(db.Model):
     com_tid = db.Column(db.Integer, db.ForeignKey('comteam.id'), nullable=True)
     tea1_id = db.Column(db.Integer, db.ForeignKey('teachers.id'), nullable=False)
     tea2_id = db.Column(db.Integer, db.ForeignKey('teachers.id'), nullable=False)
-    com_time = db.Column(db.Date, nullable=False)
+    com_time = db.Column(db.String(128), nullable=False)
     com_org = db.Column(db.String(128), nullable=False)
     is_team  = db.Column(db.Integer, nullable=False)
 
@@ -87,7 +87,7 @@ class Student(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     stu_id = db.Column(db.String(128), nullable=False, unique=True)
     stu_name = db.Column(db.String(128), nullable=False)
-    stu_academy = db.Column(db.Integer, db.ForeignKey('acachemy.id'), nullable=False)
+    stu_academy = db.Column(db.Integer, db.ForeignKey('acachemys.id'), nullable=False)
     stu_major = db.Column(db.String(128), nullable=False)
     stu_class = db.Column(db.String(128), nullable=False)
     
@@ -122,7 +122,7 @@ class Acachemy(db.Model):
     
     '''学院表'''
     
-    __tablename__ = 'acachemy'
+    __tablename__ = 'acachemys'
     id = db.Column(db.Integer, primary_key=True)
     aca_name = db.Column(db.String(128), nullable=False, unique=True)
     stus = db.relationship('Student', backref='acachemy', lazy='dynamic')
