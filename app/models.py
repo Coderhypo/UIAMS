@@ -213,14 +213,18 @@ class Role(db.Model):
 class Patent(db.Model):
     __tablename__ = 'patent'
     id = db.Column(db.Integer,primary_key=True)
-    peaname = db.Column(db.String(64),unique=True)
-    inventor = db.Column(db.String(64),unique=True)
-    filingdate = db.Column(db.Date)
-    patentee = db.Column(db.String(64),unique=True)
-    announcement = db.Column(db.Date)
+    pea_name = db.Column(db.String(64),nullable=False)
+    pea_inventor = db.Column(db.String(64),nullable=False)
+    pea_filingdate = db.Column(db.Date,nullable=False)
+    pea_patentee = db.Column(db.String(64),nullable=False)
+    pea_announcement = db.Column(db.Date,nullable=False)
 
-    def __init__(self,peaname ):
-        self.peaname = peaname
+    def __init__(self,pea_peaname, pea_inventor, pea_filingdate, pea_patentee, pea_announcement ):
+        self.pea_peaname = pea_peaname
+        self.pea_inventor = pea_inventor
+        self.pea_filingdate = pea_filingdate
+        self.pea_patentee = pea_patentee
+        self.pea_announcement = pea_announcement
 
     def __repr__(self):
-        return '<patent %s>' % self.peaname
+        return '<patent %s>' % self.pea_peaname

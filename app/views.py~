@@ -2,8 +2,8 @@
 from app import db, app, login_manager
 from flask import render_template, redirect, request, url_for, flash
 from flask.ext.login import login_user, login_required, logout_user, current_user
-from models import User, Student, Acachemy, Teacher, ComInfo, ComName,Patent
-from forms import LoginForm,TeamForm, PerForm,PatentForm
+from models import User, Student, Acachemy, Teacher, ComInfo, ComName
+from forms import LoginForm,TeamForm, PerForm
 from decorators import commit_required, query_required
 
 @app.route('/')
@@ -80,26 +80,6 @@ def individual_com():
 
         return redirect(url_for('index'))
     return render_template('individual_com.html', form=form)
-
-@app.route('/patent',methods=['GET','POST'])
-@login_required
-def patent():
-    form = PatentForm()
-    if request.method == 'POST':
-        print '1'
-        Pat_info = Patent(
-            pea_name = form.peaname.data,
-            pea_inventor = form.inventor.data,
-            pea_filingdate = form.filingdate.data,
-            pea_patentee = form.patentee.data,
-            pea_announcement = form.announcement.data
-        )
-        print '2'
-
-        db.session.add(Pat_info)
-        db.session.commit()
-        return redirect (url_for('index'))
-    return render_template('patent.html',form = form)
     
 """
 @app.route('/team_com')
