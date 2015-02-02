@@ -1,0 +1,57 @@
+{% extends "bootstrap/base.html" %} 
+
+{% block title %}{% endblock %}
+
+{% block navbar %}
+
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>大学生创新活动管理系统 <small>Bate 1.0</small></h1>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <ul class="nav">
+                <li class="dropdown pull-right">
+                     <a href="#" data-toggle="dropdown" class="dropdown-toggle">管理员<strong class="caret"></strong></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">设置</a></li>
+                        <li class="divider"></li>
+                        <li><a href="/logout">注销</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="well sidebar-nav">
+                <ul class="nav nav-pills nav-stacked">
+                    <li class="nav-header"><i class="glyphicon glyphicon-home"></i>首页</li>
+                    <li class="action"><a href="/admin">欢迎</a></li>
+                    <li class="nav-header"><i class="glyphicon glyphicon-user"></i>用户管理</li>
+                    <li><a href="/admin/user">登录用户</a></li>
+                    <li class="nav-header"><i class="glyphicon glyphicon-info-sign"></i>信息管理</li>
+                    <li><a href="/admin/teacher">教师管理</a></li>
+                    <li><a href="/admin/acachemy">学院管理</a></li>
+                    <li class="nav-header"><i class="glyphicon glyphicon-star"></i>创新活动</li>
+                    <li><a href="/admin/competition">竞赛管理</a></li>
+                    <li><a href="/admin/patent">专利管理</a></li>
+                    <li><a href="/admin/work">作品管理</a></li>
+                    <li><a href="/admin/paper">论文管理</a></li>
+                    <li class="nav-header"><i class="glyphicon glyphicon-open"></i>信息导入</li>
+                    <li class="nav-header"><i class="glyphicon glyphicon-download-alt"></i>信息导出</li>
+                </ul>
+            </div>
+            <div class="well">
+                
+            </div>
+        </div>
+        <div class="col-md-9">
+                {% block admin_page %}{% endblock %}
+        </div>
+    </div>
+</div>
+{% endblock %}
