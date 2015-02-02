@@ -1,10 +1,10 @@
 #-*- coding: UTF-8 -*-
 from app import db, app, login_manager
-from flask import render_template, redirect, request, url_for, flash
-from flask.ext.login import login_user, login_required, logout_user
-from models import Role, User, Student, Acachemy, Teacher, ComInfo, ComName, Patent
-from forms import LoginForm, ComIndivForm,PatentForm,  AddUserForm, DelUserForm, ReSetUserForm, AddTeaForm, DelTeaForm, ReSetTeaForm, AddAcaForm, DelAcaForm, ReSetAcaForm
-from decorators import commit_required
+from flask import render_template, redirect, request, url_for, flash, session
+from flask.ext.login import login_user, login_required, logout_user, current_user
+from models import Role, User, Student, Acachemy, Teacher, ComInfo, ComName,Patent
+from forms import LoginForm, ComTeamForm, CompetitionIndividualForm, CreateUserForm, DeleteUserForm, UpdateUserForm, CreateTeacherForm, DeleteTeacherForm, UpdateTeacherForm, CreateAcachemyForm, DeleteAcachemyForm, UpdateAcachemyForm,PatentForm
+from decorators import commit_required, query_required
 
 def messages(status, message):
     return '<div class="alert alert-' + status + ' alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><spanaria-hidden="true">&times;</span><span class="sr-only">Close</span></button><strong>' + status + '! </strong>' + message + '</div>'
@@ -84,6 +84,7 @@ def individual_com():
         return redirect(url_for('index'))
     return render_template('individual_com.html', form=form)
 
+
 @app.route('/patent',methods=['GET','POST'])
 @login_required
 def patent():
@@ -105,6 +106,7 @@ def patent():
             return redirect (url_for('index'))
     return render_template('patent.html',form = form)
     
+
 @app.route('/admin')
 @login_required
 def admin():
@@ -113,6 +115,7 @@ def admin():
         session['message'] = None
         return render_template('admin.html', message=message)
     return render_template("admin.html")
+
 
 @app.route('/admin/user', methods=['GET', 'POST'])
 @login_required
@@ -307,12 +310,8 @@ def admin_acachemy():
             session['message']=messages(status, message)
             
             return redirect(url_for('admin'))
-<<<<<<< HEAD
-    return render_template('admin-acachemy.html',add_form=add_form, del_form=del_form, re_form=re_form)
-=======
     return render_template("admin-acachemy.html",
             create_form=create_form, 
             delete_form=delete_form, 
             update_form=update_form
         )
->>>>>>> nplus/admin
