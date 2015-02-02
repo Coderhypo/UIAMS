@@ -1,0 +1,26 @@
+{% from "_form.html" import render_field %}
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}大学生竞赛系统{% endblock %}
+
+{% block page_content %}
+<div class="col-md-12">
+    <form class="form" role="form" method="POST">
+    {{ form.hidden_tag() }}
+        <div class="col-md-4">
+            <legend>
+                专利信息
+            </legend>
+            {{ wtf.quick_form(form) }}
+            <!--{{ render_field(form.peaname,class="form-control") }}
+            {{ render_field(form.inventor,class="form-control") }}
+            {{ render_field(form.filingdate,class="form-control") }}
+            {{ render_field(form.patentee,class="form-control") }}
+            {{ render_field(form.announcement,class="form-control") }}
+            {{ render_field(form.submit,class="btn btn-dafault") }}-->
+        </div>
+    </form>
+</div>
+
+{% endblock %}

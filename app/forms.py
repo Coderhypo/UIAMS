@@ -2,150 +2,239 @@
 from flask.ext.wtf import Form
 from wtforms import PasswordField, SubmitField, StringField, BooleanField, SelectField, FormField, DateField
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
-from wtforms.validators import Required, EqualTo, ValidationError
+from wtforms.validators import Required, ValidationError
 from flask.ext.login import current_user
-from models import Acachemy, Teacher, ComName, User, Role
-
-def Aca_all():
-    Aca = []
-    for a in Acachemy.query.all():
-        Aca.append((str(a.id),a.aca_name))
-    return Aca
-
-def Tea_all():
-    Tea_name = []
-    for t in Teacher.query.all():
-        tea = t.tea_id + ' ' + t.tea_name + ' ' + t.tea_unit
-        Tea_name.append((str(t.id),tea))
-    return Tea_name
-
-def Com_all():
-    Com = []
-    for c in ComName.query.all():
-        Com.append((str(c.id), c.com_name))
-    return Com
+from models import Acachemy, Teacher, User,Patent
 
 class BaseForm(Form):
+
+    '''支持中文表单的表单基类'''
+
     LANGUAGES = ['zh']
 
 class LoginForm(BaseForm):
+
+    '''登录的表单类'''
+
     userid = StringField(u'帐号', validators=[Required()])
     passwd = PasswordField(u'密码', validators=[Required()])
     remember_me = BooleanField(u'记住我')
     submit = SubmitField(u'登入')
    
-class StuForm(BaseForm):
-    stuid = StringField(u'学号', validators=[Required()])
-    stuname = StringField(u'姓名', validators=[Required()])
-    stuaca = SelectField(u'学院', choices=Aca_all())
-    stumajor = StringField(u'专业', validators=[Required()])
-    stuclass = StringField(u'班级', validators=[Required()])
+class StudentForm(BaseForm):
+    
+    '''学生信息的表单类'''
 
-class TeaForm(BaseForm):
-    teaid1 = SelectField(u'教师工号1', choices=Tea_all())
-    teaid2 = SelectField(u'教师工号2', choices=Tea_all())
+    student_id = StringField(u'学号', validators=[Required()])
+    student_name = StringField(u'姓名', validators=[Required()])
+    acachemys = QuerySelectField(u'学院', get_label='aca_name')
+    student_major = StringField(u'专业', validators=[Required()])
+    student_class = StringField(u'班级', validators=[Required()])
 
-class ComForm(BaseForm):
-    comname = SelectField(u'竞赛项目', choices=Com_all())
-    proname = StringField(u'成果名称')
-    comlevel = SelectField(u'获奖级别', choices=[
+class TeacherForm(BaseForm):
+    
+    '''教师的表单类'''
+
+    teachers1 = QuerySelectField(u'指导教师1', get_label='tea_name')
+    teachers2 = QuerySelectField(u'指导教师2', get_label='tea_name')
+
+# 竞赛表单类
+
+class CompetitionInfoForm(BaseForm):
+
+    '''竞赛信息的表单类'''
+
+    competitions_name = QuerySelectField(u'竞赛项目', get_label='com_name')
+    project_name = StringField(u'成果名称')
+    competition_level = SelectField(u'获奖级别', choices=[
             (u'省级',u'省级'), 
             (u'国家级',u'国家级'), 
             (u'亚洲区级',u'亚洲区级'), 
             (u'国际',u'国际')], validators=[Required()])
-    comclass = SelectField(u'等级', choices=[
+    competition_class = SelectField(u'等级', choices=[
             (u'一等奖（金奖）',u'一等奖（金奖）'), 
             (u'二等奖（银奖）',u'二等奖（银奖）'), 
             (u'三等奖（铜奖）',u'三等奖（铜奖）')], validators=[Required()])
-    comdate = DateField(u'获奖时间', validators=[Required()])
-    comorg = StringField(u'颁奖单位', validators=[Required()])
+    competition_date = StringField(u'获奖时间', validators=[Required()])
+    competition_org = StringField(u'颁奖单位', validators=[Required()])
 
-class TeamForm(BaseForm):
-    commain = FormField(ComForm,u'竞赛信息')
-    comstu1 = FormField(StuForm, u'参赛学生1') 
-    comstu2 = FormField(StuForm, u'参赛学生2') 
-    comstu3 = FormField(StuForm, u'参赛学生3') 
-    comstu4 = FormField(StuForm, u'参赛学生4') 
-    comstu5 = FormField(StuForm, u'参赛学生5') 
-    comtea = FormField(TeaForm, u'指导老师')
+    def validate_competition_data(form, field):
+        print field.data
+        if field.data == '':
+            raise ValidationError(u'请填写此字段')
+
+class CompetitionIndividualForm(TeacherForm, CompetitionInfoForm, StudentForm):
+    
+    '''个人竞赛的表单类'''
+
     submit = SubmitField(u'提交')
 
-class PerForm(TeaForm, ComForm, StuForm):
+class ComTeamForm():
+    
+    '''团体竞赛的表单类'''
+
+    pass
+
+class PatentForm(BaseForm):
+
+    '''专利信息的表单类'''
+
+    type = SelectField(u'专利类型',choices=[
+        (u'学术专著',u'学术专著'),
+        (u'科普读物',u'科普读物'),
+        (u'电子出版物',u'电子出版物')],validators=[Required()])
+    peaname = StringField(u'专利名称:',validators=[Required()])
+    inventor = StringField(u'发明人:')
+    filingdate = StringField(u'专利申请日')
+    patentee = StringField(u'专利权人')
+    announcement = StringField(u'授权公告日')
     submit = SubmitField(u'提交')
 
-class AddUserForm(BaseForm):
+    def validate_add_patent (form,field):
+        Pat_info = Patent.query.filter_by(pea_name = field.data).first()
+        if Pat_info != None:
+            raise ValidationError(u'专利名称已存在')
+    
+
+# 用户表单类
+
+class CreateUserForm(BaseForm):
 
     '''添加用户的表单类'''
 
-    add_user_id = StringField(u'用户ID', validators=[Required()])
-    add_user_name = StringField(u'用户名称', validators=[Required()])
-    add_user_role = QuerySelectField(u'用户角色', get_label='role_name')
-    add = SubmitField(u'添加')
+    create_id = StringField(u'用户ID', validators=[Required()])
+    create_name = StringField(u'用户名称', validators=[Required()])
+    roles = QuerySelectField(u'用户角色', get_label='role_name')
+    create = SubmitField(u'添加')
     
-    def validate_add_user_id(form, field):
+    def validate_create_id(form, field):
         user = User.query.filter_by(user_id=field.data).first()
+        
         if user != None:
             raise ValidationError(u'此用户ID已存在')
 
-    def validate_add_user_name(form, field):
+    def validate_create_name(form, field):
         user = User.query.filter_by(user_name=field.data).first()
+        
         if user != None:
             raise ValidationError(u'此用户名称已存在')
 
-class DelUserForm(BaseForm):
+class DeleteUserForm(BaseForm):
 
     '''删除用户的表单类'''
 
-    del_user_name = QuerySelectField(u'选择用户', get_label='user_name')
+    users = QuerySelectField(u'选择用户', get_label='user_name')
     delete = SubmitField(u'删除')
 
-    def validate_del_user_name(form, field):
+    def validate_users(form, field):
         user = field.data
+        
         if user == current_user:
             raise ValidationError(u'不能删除自己')
 
-class ReSetUserForm(BaseForm):
+class UpdateUserForm(BaseForm):
 
     '''修改用户信息的表单类'''
 
-    re_user_name = QuerySelectField(u'选择用户', get_label='user_name')
-    re_user_role = QuerySelectField(u'修改角色', get_label='role_name')
-    re_user_passwd = StringField(u'新密码') 
-    reset = SubmitField(u'修改')
+    users = QuerySelectField(u'选择用户', get_label='user_name')
+    roles = QuerySelectField(u'修改角色', get_label='role_name')
+    update_name = StringField(u'用户名称')
+    update_passwd = StringField(u'密码') 
+    update = SubmitField(u'修改')
 
-class AddTeaForm(BaseForm):
-    add_tea_id = StringField(u'教师编号', validators=[Required()])
-    add_tea_name = StringField(u'教师姓名', validators=[Required()])
-    add_tea_unit = StringField(u'单位', validators=[Required()])
-    add = SubmitField(u'添加')
+    def validate_update_name(form, field):
+        user = User.query.filter_by(user_name=field.data).first()
+        
+        if user != None:
+            raise ValidationError(u'该用户名称已存在')
 
-class DelTeaForm(BaseForm):
-    del_tea_id = QuerySelectField(u'选择教师', get_label='tea_name')
+
+# 教师表单类
+
+class CreateTeacherForm(BaseForm):
+
+    '''添加教师的表单类'''
+
+    create_id = StringField(u'教师编号', validators=[Required()])
+    create_name = StringField(u'教师姓名', validators=[Required()])
+    create_unit = StringField(u'单位', validators=[Required()])
+    create = SubmitField(u'添加')
+
+    def validate_create_id(form, field):
+        teacher = Teacher.query.filter_by(tea_id=field.data).first()
+
+        if teacher != None:
+            raise ValidationError(u'此教师编号已存在')
+
+    def validate_create_name(form, field):
+        teacher = Teacher.query.filter_by(tea_name=field.data).first()
+
+        if teacher != None:
+            raise ValidationError(u'该教师姓名已存在')
+
+class DeleteTeacherForm(BaseForm):
+
+    '''删除教师的表单类'''
+
+    teachers = QuerySelectField(u'选择教师', get_label='tea_name')
     delete = SubmitField(u'删除')
 
-    def validate_del_tea_id(form, field):
-        teacher_num = len(field.query)
-        if teacher_num == 1:
-            raise ValidationError(u'教师人数必须大于等于1')
+    def validate_teachers(form, field):
+        teacher_number = len(field.query)
 
-class ReSetTeaForm(BaseForm):
-    re_tea_id = QuerySelectField(u'选择教师', get_label='tea_name')
-    re_tea_name = StringField(u'教师姓名', validators=[Required()])
-    re_tea_unit = StringField(u'新单位')
-    reset = SubmitField(u'修改')
+        if teacher_number == 1:
+            raise ValidationError(u'教师不能为空')
 
-class AddAcaForm(BaseForm):
-    add_aca_id = StringField(u'学院编号', validators=[Required()])
-    add_aca_name = StringField(u'学院编号', validators=[Required()])
-    add = SubmitField(u'添加')
+class UpdateTeacherForm(BaseForm):
+    
+    '''更新教师信息的表单类'''
 
-class DelAcaForm(BaseForm):
-    del_aca_id = StringField(u'学院编号', validators=[Required()])
-    del_aca_name = StringField(u'学院名称', validators=[Required()])
+    teachers = QuerySelectField(u'选择教师', get_label='tea_name')
+    update_name = StringField(u'教师姓名')
+    update_unit = StringField(u'新单位')
+    update = SubmitField(u'修改')
+
+    def validate_update_name(form, field):
+        teacher = Teacher.query.filter_by(tea_name=field.data).first()
+        if teacher != None:
+            raise ValidationError(u'该教师姓名已存在')
+
+# 学院表单类
+
+class CreateAcachemyForm(BaseForm):
+
+    '''添加学院的表单类'''
+
+    create_name = StringField(u'学院名称', validators=[Required()])
+    create = SubmitField(u'添加')
+
+    def validate_create_name(form, field):
+        acachemy = Acachemy.query.filter_by(aca_name=field.data).first()
+        if acachemy != None:
+            raise ValidationError(u'该学院已存在')
+
+class DeleteAcachemyForm(BaseForm):
+    
+    '''删除学院的表单类'''
+
+    acachemys = QuerySelectField(u'选择学院', get_label='aca_name')
     delete = SubmitField(u'删除')
+    
+    def validate_acachemys(form, field):
+        acachemy_number = len(field.query)
 
-class ReSetAcaForm(BaseForm):
-    re_teaid = StringField(u'学院编号', validators=[Required()])
-    re_teaname = StringField(u'学院名称', validators=[Required()])
-    re_passwd = StringField(u'新密码') 
-    re = SubmitField(u'修改')
+        if acachemy_number == 1:
+            raise ValidationError(u'学院不能为空')
+
+class UpdateAcachemyForm(BaseForm):
+    
+    '''修改学院信息的表单类'''  
+
+    acachemys = QuerySelectField(u'选择学院', get_label='aca_name')
+    update_name = StringField(u'学院名称', validators=[Required()])
+    update = SubmitField(u'修改')
+
+    def validate_update_name(form, field):
+        acachemy = Acachemy.query.filter_by(aca_name=field.data).first()
+        if acachemy != None:
+            raise ValidationError(u'该学院已存在')

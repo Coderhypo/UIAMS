@@ -11,36 +11,51 @@
 <div class="col-md-12">
     <form method="post" class="form" role="form">
     {{ form.hidden_tag() }}
-            <div class="col-md-4">
+    <div class="container">
+        <div class="col-md-4">
             <legend>
                 竞赛信息
             </legend>
-            {{ render_field(form.comname,class="form-control") }}
-            {{ render_field(form.proname,class="form-control") }}
-            {{ render_field(form.comlevel,class="form-control") }}
-            {{ render_field(form.comclass,class="form-control") }}
-            {{ render_field(form.comdate,class="form-control") }}
-            {{ render_field(form.comorg,class="form-control") }}
-            </div>
+            {{ render_field(form.competitions_name,class="form-control") }}
+            {{ render_field(form.project_name,class="form-control") }}
+            {{ render_field(form.competition_level,class="form-control") }}
+            {{ render_field(form.competition_class,class="form-control") }}
+            {{ render_field(form.competition_date,class="form-control") }}
+            {{ render_field(form.competition_org,class="form-control") }}
+        </div>
 
-            <div class="col-md-4">
+        <div class="col-md-4">
             <legend>
                 参赛学生
             </legend>
-            {{ render_field(form.stuid,class="form-control") }}
-            {{ render_field(form.stuname,class="form-control") }}
-            {{ render_field(form.stuaca,class="form-control") }}
-            {{ render_field(form.stumajor,class="form-control") }}
-            {{ render_field(form.stuclass,class="form-control") }}
-            </div>
-            <div class="col-md-4">
+            {{ render_field(form.student_id,class="form-control") }}
+            {{ render_field(form.student_name,class="form-control") }}
+            {{ render_field(form.acachemys,class="form-control") }}
+            {{ render_field(form.student_major,class="form-control") }}
+            {{ render_field(form.student_class,class="form-control") }}
+        </div>
+
+        <div class="col-md-4">
             <legend>
                 指导老师
             </legend>
-            {{ render_field(form.teaid1, class="form-control") }}
-            {{ render_field(form.teaid2, class="form-control") }}
-            {{ render_field(form.submit, class="btn btn-default") }}
+            {{ render_field(form.teachers1, class="form-control") }}
+            {{ render_field(form.teachers2, class="form-control") }}
+        </div>
+    </div>
+    <div class="container">
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form.submit(class="btn btn-primary") }}
             </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <a class="btn btn-primary">重置</a>
+            </div>
+        </div>
+    </div>
+
     </form>
 </div>
 {% endblock %}

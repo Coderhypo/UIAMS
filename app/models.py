@@ -23,13 +23,13 @@ class ComName(db.Model):
     __tablename__ = 'comname'
     id = db.Column(db.Integer, primary_key=True)
     com_name = db.Column(db.String(128), nullable=False)
-    infos = db.relationship('ComInfo', backref='name', lazy='dynamic') 
+    infos = db.relationship('ComInfo', backref='com_name', lazy='dynamic') 
 
     def __init__(self, com_name):
         self.com_name=com_name
 
     def __repr__(self):
-        return '<ComName %s>' % self.com_name
+        return '<ComName %r>' % self.com_name
         
 class ComInfo(db.Model):
 
@@ -45,12 +45,11 @@ class ComInfo(db.Model):
     com_tid = db.Column(db.Integer, db.ForeignKey('comteam.id'), nullable=True)
     tea1_id = db.Column(db.Integer, db.ForeignKey('teachers.id'), nullable=False)
     tea2_id = db.Column(db.Integer, db.ForeignKey('teachers.id'), nullable=False)
-    com_time = db.Column(db.Date, nullable=False)
+    com_time = db.Column(db.String(128), nullable=False)
     com_org = db.Column(db.String(128), nullable=False)
     is_team  = db.Column(db.Integer, nullable=False)
 
-    def __init__(self, com_nid, pro_name, com_level, com_class, com_sid, tea1_id, tea2_id, com_time, com_org, is_team):
-        self.com_nid=com_nid
+    def __init__(self, pro_name, com_level, com_class, com_sid, tea1_id, tea2_id, com_time, com_org, is_team):
         self.pro_name=pro_name
         self.com_level=com_level
         self.com_class=com_class
@@ -88,19 +87,18 @@ class Student(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     stu_id = db.Column(db.String(128), nullable=False, unique=True)
     stu_name = db.Column(db.String(128), nullable=False)
-    stu_academy = db.Column(db.Integer, db.ForeignKey('acachemy.id'), nullable=False)
+    stu_academy = db.Column(db.Integer, db.ForeignKey('acachemys.id'), nullable=False)
     stu_major = db.Column(db.String(128), nullable=False)
     stu_class = db.Column(db.String(128), nullable=False)
     
-    def __init__(self, stu_id, stu_name, stu_academy, stu_major, stu_class):
-        self.stu_id=stu_id
-        self.stu_name=stu_name
-        self.stu_academy=stu_academy
-        self.stu_major=stu_major
-        self.stu_class=stu_class
+    def __init__(self, stu_id, stu_name, stu_major, stu_class):
+        self.stu_id = stu_id
+        self.stu_name = stu_name
+        self.stu_major = stu_major
+        self.stu_class = stu_class
        
     def __repr__(self):
-        return '<Stu %s>' % self.stu_id
+        return '<Student %r>' % self.stu_id
 
 class Teacher(db.Model):
     
@@ -124,7 +122,7 @@ class Acachemy(db.Model):
     
     '''学院表'''
     
-    __tablename__ = 'acachemy'
+    __tablename__ = 'acachemys'
     id = db.Column(db.Integer, primary_key=True)
     aca_name = db.Column(db.String(128), nullable=False, unique=True)
     stus = db.relationship('Student', backref='acachemy', lazy='dynamic')
@@ -207,3 +205,26 @@ class Role(db.Model):
                 role.permissions = roles[r]
                 db.session.add(role)
         db.session.commit()
+
+
+        
+class Patent(db.Model):
+    __tablename__ = 'patent'
+    id = db.Column(db.Integer,primary_key=True)
+    pea_type = db.Column(db.String(128),nullable=False)
+    pea_name = db.Column(db.String(64),nullable=False)
+    pea_inventor = db.Column(db.String(64),nullable=False)
+    pea_filingdate = db.Column(db.Date,nullable=False)
+    pea_patentee = db.Column(db.String(64),nullable=False)
+    pea_announcement = db.Column(db.Date,nullable=False)
+
+    def __init__(self,pea_type, pea_name, pea_inventor, pea_filingdate, pea_patentee, pea_announcement ):
+        self.pea_type = pea_type
+        self.pea_name = pea_name
+        self.pea_inventor = pea_inventor
+        self.pea_filingdate = pea_filingdate
+        self.pea_patentee = pea_patentee
+        self.pea_announcement = pea_announcement
+
+    def __repr__(self):
+        return '<patent %s>' % self.pea_name
