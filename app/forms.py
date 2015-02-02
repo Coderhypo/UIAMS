@@ -4,7 +4,7 @@ from wtforms import PasswordField, SubmitField, StringField, BooleanField, Selec
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
 from wtforms.validators import Required, EqualTo, ValidationError
 from flask.ext.login import current_user
-from models import Acachemy, Teacher, ComName, User, Role
+from models import Acachemy, Teacher, Student, ComName, ComInfo, User, Role
 
 class BaseForm(Form):
 
@@ -58,11 +58,6 @@ class CompetitionInfoForm(BaseForm):
     competition_date = StringField(u'获奖时间', validators=[Required()])
     competition_org = StringField(u'颁奖单位', validators=[Required()])
 
-    def validate_competition_data(form, field):
-        print field.data
-        if field.data == '':
-            raise ValidationError(u'请填写此字段')
-
 class CompetitionIndividualForm(TeacherForm, CompetitionInfoForm, StudentForm):
     
     '''个人竞赛的表单类'''
@@ -90,26 +85,13 @@ class CreateUserForm(BaseForm):
         user = User.query.filter_by(user_id=field.data).first()
         
         if user != None:
-            raise ValidationError(u'此用户ID已存在')
+            raise ValidationError(u'该用户ID已存在')
 
     def validate_create_name(form, field):
         user = User.query.filter_by(user_name=field.data).first()
         
         if user != None:
-            raise ValidationError(u'此用户名称已存在')
-
-class DeleteUserForm(BaseForm):
-
-    '''删除用户的表单类'''
-
-    users = QuerySelectField(u'选择用户', get_label='user_name')
-    delete = SubmitField(u'删除')
-
-    def validate_users(form, field):
-        user = field.data
-        
-        if user == current_user:
-            raise ValidationError(u'不能删除自己')
+            raise ValidationError(u'该用户名称已存在')
 
 class UpdateUserForm(BaseForm):
 
@@ -127,6 +109,18 @@ class UpdateUserForm(BaseForm):
         if user != None:
             raise ValidationError(u'该用户名称已存在')
 
+class DeleteUserForm(BaseForm):
+
+    '''删除用户的表单类'''
+
+    users = QuerySelectField(u'选择用户', get_label='user_name')
+    delete = SubmitField(u'删除')
+
+    def validate_users(form, field):
+        user = field.data
+        
+        if user == current_user:
+            raise ValidationError(u'不能删除自己')
 
 # 教师表单类
 
@@ -143,7 +137,7 @@ class CreateTeacherForm(BaseForm):
         teacher = Teacher.query.filter_by(tea_id=field.data).first()
 
         if teacher != None:
-            raise ValidationError(u'此教师编号已存在')
+            raise ValidationError(u'该教师编号已存在')
 
     def validate_create_name(form, field):
         teacher = Teacher.query.filter_by(tea_name=field.data).first()
@@ -151,18 +145,12 @@ class CreateTeacherForm(BaseForm):
         if teacher != None:
             raise ValidationError(u'该教师姓名已存在')
 
-class DeleteTeacherForm(BaseForm):
-
-    '''删除教师的表单类'''
+class RetrieveTeacherForm(BaseForm):
+    
+    '''查询教师的表单类'''
 
     teachers = QuerySelectField(u'选择教师', get_label='tea_name')
-    delete = SubmitField(u'删除')
-
-    def validate_teachers(form, field):
-        teacher_number = len(field.query)
-
-        if teacher_number == 1:
-            raise ValidationError(u'教师不能为空')
+    retrieve = SubmitField(u'查询') 
 
 class UpdateTeacherForm(BaseForm):
     
@@ -178,6 +166,23 @@ class UpdateTeacherForm(BaseForm):
         if teacher != None:
             raise ValidationError(u'该教师姓名已存在')
 
+class DeleteTeacherForm(BaseForm):
+
+    '''删除教师的表单类'''
+
+    teachers = QuerySelectField(u'选择教师', get_label='tea_name')
+    delete = SubmitField(u'删除')
+
+    def validate_teachers(form, field):
+        teacher_number = len(field.query)
+        teacher = field.data
+        competition_info = ComInfo.query.filter_by(tea1_id=teacher.id).first()
+
+        if teacher_number == 1:
+            raise ValidationError(u'该教师不能删除')
+        elif competition_info != None:
+            raise ValidationError(u'该教师不能删除')
+
 # 学院表单类
 
 class CreateAcachemyForm(BaseForm):
@@ -190,20 +195,7 @@ class CreateAcachemyForm(BaseForm):
     def validate_create_name(form, field):
         acachemy = Acachemy.query.filter_by(aca_name=field.data).first()
         if acachemy != None:
-            raise ValidationError(u'该学院已存在')
-
-class DeleteAcachemyForm(BaseForm):
-    
-    '''删除学院的表单类'''
-
-    acachemys = QuerySelectField(u'选择学院', get_label='aca_name')
-    delete = SubmitField(u'删除')
-    
-    def validate_acachemys(form, field):
-        acachemy_number = len(field.query)
-
-        if acachemy_number == 1:
-            raise ValidationError(u'学院不能为空')
+            raise ValidationError(u'该学院信息已存在')
 
 class UpdateAcachemyForm(BaseForm):
     
@@ -216,4 +208,21 @@ class UpdateAcachemyForm(BaseForm):
     def validate_update_name(form, field):
         acachemy = Acachemy.query.filter_by(aca_name=field.data).first()
         if acachemy != None:
-            raise ValidationError(u'该学院已存在')
+            raise ValidationError(u'该学院信息已存在')
+
+class DeleteAcachemyForm(BaseForm):
+    
+    '''删除学院的表单类'''
+
+    acachemys = QuerySelectField(u'选择学院', get_label='aca_name')
+    delete = SubmitField(u'删除')
+    
+    def validate_acachemys(form, field):
+        acachemy_number = len(field.query)
+        student = Student.query.filter_by(acachemy=field.data).first()
+
+        if acachemy_number == 1:
+            raise ValidationError(u'该学院不能删除')
+        elif student != None:
+            raise ValidationError(u'该学院不能删除')
+

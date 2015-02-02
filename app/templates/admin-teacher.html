@@ -1,0 +1,51 @@
+{% from "_form.html" import render_field %}
+{% extends "admin-base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}大学生创新活动管理后台{% endblock %}
+
+{% block admin_page %}
+<div class="well well-sm">
+    <ul class="nav nav-pills">
+        <li class="active"><a href="#create" data-toggle="tab">添加教师</a><li>
+        <li><a href="#retrieve" data-toggle="tab">查询教师</a><li>
+        <li><a href="#update" data-toggle="tab">更新信息</a><li>
+        <li><a href="#delete" data-toggle="tab">删除教师</a><li>
+    </ul>
+</div>
+
+{% for message in get_flashed_messages() %}                              
+<div class="alert alert-{{ session.get('status') }} alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert">
+        <span aria-hidden="true">&times;</span>
+        <span class="sr-only">Close</span>
+    </button>
+    <strong>{{ session.get('status')}}! </strong>{{ message }}
+</div>
+{% endfor %}
+
+<div class="tab-content">
+    <div class="well col-md-12 tab-pane fade active in" id="create">
+        <div class="well col-md-4">
+        {{ wtf.quick_form(create_form) }}
+        </div>
+    </div>
+    <div class="well col-md-12 tab-pane fade" id="retrieve">
+        <div class="well col-md-4">
+        {{ wtf.quick_form(retrieve_form) }}
+        </div> 
+    </div>
+    <div class="well col-md-12 tab-pane fade" id="update">
+        <div class="well col-md-4">
+        {{ wtf.quick_form(update_form) }}
+        </div>
+    </div>
+    <div class="well col-md-12 tab-pane fade" id="delete">
+        <div class="well col-md-4">
+        {{ wtf.quick_form(delete_form) }}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+

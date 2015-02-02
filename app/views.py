@@ -3,15 +3,12 @@ from app import db, app, login_manager
 from flask import render_template, redirect, request, url_for, flash, session
 from flask.ext.login import login_user, login_required, logout_user, current_user
 from models import Role, User, Student, Acachemy, Teacher, ComInfo, ComName
-from forms import LoginForm, ComTeamForm, CompetitionIndividualForm, CreateUserForm, DeleteUserForm, UpdateUserForm, CreateTeacherForm, DeleteTeacherForm, UpdateTeacherForm, CreateAcachemyForm, DeleteAcachemyForm, UpdateAcachemyForm
+from forms import LoginForm, ComTeamForm, CompetitionIndividualForm, CreateUserForm, DeleteUserForm, UpdateUserForm, CreateTeacherForm, RetrieveTeacherForm, DeleteTeacherForm, UpdateTeacherForm, CreateAcachemyForm, DeleteAcachemyForm, UpdateAcachemyForm
 from decorators import commit_required, query_required
 
-def messages(status, message):
-    return '<div class="alert alert-' + status + ' alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><spanaria-hidden="true">&times;</span><span class="sr-only">Close</span></button><strong>' + status + '! </strong>' + message + '</div>'
-    
 @app.route('/')
 def index():
-    return render_template("index.html")
+    return render_template('index.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -35,7 +32,7 @@ def logout():
 @app.route('/competition')
 @login_required
 def competition():
-    return render_template("competition.html")  
+    return render_template('competition.html')  
 
 @app.route('/individual_com', methods=['GET', 'POST'])
 @login_required
@@ -46,7 +43,6 @@ def individual_com():
     form.teachers2.query = Teacher.query.all()
     form.competitions_name.query = ComName.query.all()
 
-    print form.data
     if request.method=='POST' and form.validate():
         competitions_name = form.competitions_name.data
         student = Student.query.filter_by(stu_id=form.student_id.data).first()
@@ -87,10 +83,6 @@ def individual_com():
 @app.route('/admin')
 @login_required
 def admin():
-    message = session.get('message')
-    if message != None:
-        session['message'] = None
-        return render_template('admin.html', message=message)
     return render_template("admin.html")
 
 
@@ -124,10 +116,9 @@ def admin_user():
             db.session.add(user)
             db.session.commit()
             
-            status = u'success'
-            message = u'成功添加登录用户'
-            session['message']=messages(status, message)
-            return redirect(url_for('admin'))
+            session['status'] = u'success'
+            flash(u'成功添加登录用户信息!')
+            return redirect(url_for('admin_user'))
         elif delete_form.data['delete'] and delete_form.validate():
             form = delete_form
             user = form.users.data
@@ -135,10 +126,9 @@ def admin_user():
             db.session.delete(user)
             db.session.commit()
             
-            status = u'warning'
-            message = u'成功删除登录用户'
-            session['message']=messages(status, message)
-            return redirect(url_for('admin'))
+            session['status'] = u'warning'
+            flash(u'成功删除登录用户信息!')
+            return redirect(url_for('admin_user'))
         elif update_form.data['update'] and update_form.validate():
             form = update_form
             user = form.users.data
@@ -155,10 +145,9 @@ def admin_user():
             db.session.add(user)
             db.session.commit()
             
-            status = u'info'
-            message = u'成功修改登录用户信息'
-            session['message']=messages(status, message)
-            return redirect(url_for('admin'))
+            session['status'] = u'info'
+            flash(u'成功修改登录用户信息!')
+            return redirect(url_for('admin_user'))
 
     return render_template('admin-user.html', create_form=create_form, delete_form=delete_form, update_form=update_form)
 
@@ -168,11 +157,14 @@ def admin_teacher():
 
     create_form = CreateTeacherForm()
 
-    delete_form = DeleteTeacherForm()
-    delete_form.teachers.query = Teacher.query.all()
+    retrieve_form = RetrieveTeacherForm()
+    retrieve_form.teachers.query = Teacher.query.all()
 
     update_form = UpdateTeacherForm()
     update_form.teachers.query = Teacher.query.all()
+
+    delete_form = DeleteTeacherForm()
+    delete_form.teachers.query = Teacher.query.all()
 
     if request.method=='POST':
         if create_form.data['create'] and create_form.validate():
@@ -189,23 +181,15 @@ def admin_teacher():
             db.session.add(teacher)
             db.session.commit()
             
-            status = u'success'
-            message = u'成功添加教师'
-            session['message']=messages(status, message)
-
-            return redirect(url_for('admin'))
-        elif delete_form.data['delete'] and delete_form.validate():
-            form = delete_form
+            session['status'] = 'success'
+            flash(u'成功添加教师信息!')
+            return redirect(url_for('admin_teacher'))
+        elif retrieve_form.data['retrieve'] and retrieve_form.validate():
+            form = retrieve_form
             teacher = form.teachers.data
+            print teacher
             
-            db.session.delete(teacher)
-            db.session.commit()
-            
-            status = u'warning'
-            message = u'成功删除教师'
-            session['message']=messages(status, message)
-
-            return redirect(url_for('admin'))
+            return render_template('admin-teacher.html', create_form=create_form, retrieve_form=retrieve_form, delete_form=delete_form, update_form=update_form, teacher=teacher)
         elif update_form.data['update'] and update_form.validate():
             form = update_form
             teacher = form.teachers.data
@@ -221,12 +205,22 @@ def admin_teacher():
             db.session.add(teacher)
             db.session.commit()
 
-            status = u'info'
-            message = u'成功修改教师信息'
-            session['message']=messages(status, message)
-            return redirect(url_for('admin'))
-    return render_template("admin-teacher.html",
+            session['status'] = u'info'
+            flash(u'成功修改教师信息!')
+            return redirect(url_for('admin_teacher'))
+        elif delete_form.data['delete'] and delete_form.validate():
+            form = delete_form
+            teacher = form.teachers.data
+            
+            db.session.delete(teacher)
+            db.session.commit()
+            
+            session['status'] = 'warning'
+            flash(u'成功删除教师信息!')
+            return redirect(url_for('admin_teacher'))
+    return render_template('admin-teacher.html',
             create_form=create_form, 
+            retrieve_form=retrieve_form,
             delete_form=delete_form, 
             update_form=update_form
         )
@@ -254,11 +248,9 @@ def admin_acachemy():
             db.session.add(acachemy)
             db.session.commit()
             
-            status = u'success'
-            message = u'成功添加学院'
-            session['message']=messages(status, message)
-            
-            return redirect(url_for('admin'))
+            session['status'] = u'success' 
+            flash(u'成功添加学院信息!')
+            return redirect(url_for('admin_acachemy'))
         elif delete_form.data['delete'] and delete_form.validate():
             form = delete_form
             acachemy = form.acachemys.data
@@ -266,11 +258,9 @@ def admin_acachemy():
             db.session.delete(acachemy)
             db.session.commit()
             
-            status = u'warning'
-            message = u'成功删除学院信息'
-            session['message']=messages(status, message)
-            
-            return redirect(url_for('admin'))
+            session['status'] = 'warning'
+            flash(u'成功删除学院信息!')
+            return redirect(url_for('admin_acachemy'))
         elif update_form.data['update'] and update_form.validate():
             form = update_form
             acachemy = form.acachemys.data
@@ -283,12 +273,16 @@ def admin_acachemy():
             db.session.commit()
             
             status = u'info'
-            message = u'成功修改学院信息'
-            session['message']=messages(status, message)
-            
-            return redirect(url_for('admin'))
-    return render_template("admin-acachemy.html",
+            session['status'] = u'info'
+            flash(u'成功修改学院信息!')
+            return redirect(url_for('admin_acachemy'))
+    return render_template('admin-acachemy.html',
             create_form=create_form, 
             delete_form=delete_form, 
             update_form=update_form
         )
+
+@app.route('/admin/competition', methods=['GET', 'POST'])
+@login_required
+def admin_competition():
+    return render_template('admin-competition.html')

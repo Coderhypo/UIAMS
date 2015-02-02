@@ -6,7 +6,7 @@ from app import views
 
 manager = Manager(app)
 def make_shell_context():
-    return dict(app=app, db=db, Acachemy=Acachemy,  User=User, Role=Role, createdb=createdb)
+    return dict(app=app, db=db, Acachemy=Acachemy,  User=User, Role=Role)
 
 manager.add_command("start", Server(host="0.0.0.0", port=5000, use_debugger=True))
 manager.add_command("shell", Shell(make_context=make_shell_context))
