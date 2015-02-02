@@ -90,11 +90,6 @@ class PatentForm(BaseForm):
     announcement = StringField(u'授权公告日')
     submit = SubmitField(u'提交')
 
-    def validate_add_patent (form,field):
-        Pat_info = Patent.query.filter_by(pea_name = field.data).first()
-        if Pat_info != None:
-            raise ValidationError(u'专利名称已存在')
-    
 
 # 用户表单类
 
