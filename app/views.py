@@ -1,18 +1,10 @@
 #-*- coding: UTF-8 -*-
 from app import db, app, login_manager
-<<<<<<< HEAD
 from flask import render_template, redirect, request, url_for, flash
 from flask.ext.login import login_user, login_required, logout_user
 from models import Role, User, Student, Acachemy, Teacher, ComInfo, ComName, Patent
 from forms import LoginForm, ComIndivForm,PatentForm,  AddUserForm, DelUserForm, ReSetUserForm, AddTeaForm, DelTeaForm, ReSetTeaForm, AddAcaForm, DelAcaForm, ReSetAcaForm
 from decorators import commit_required
-=======
-from flask import render_template, redirect, request, url_for, flash, session
-from flask.ext.login import login_user, login_required, logout_user, current_user
-from models import Role, User, Student, Acachemy, Teacher, ComInfo, ComName
-from forms import LoginForm, ComTeamForm, CompetitionIndividualForm, CreateUserForm, DeleteUserForm, UpdateUserForm, CreateTeacherForm, DeleteTeacherForm, UpdateTeacherForm, CreateAcachemyForm, DeleteAcachemyForm, UpdateAcachemyForm
-from decorators import commit_required, query_required
->>>>>>> nplus/admin
 
 def messages(status, message):
     return '<div class="alert alert-' + status + ' alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><spanaria-hidden="true">&times;</span><span class="sr-only">Close</span></button><strong>' + status + '! </strong>' + message + '</div>'
