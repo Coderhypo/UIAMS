@@ -1,11 +1,9 @@
 from flask import Flask
 from flask.ext.login import LoginManager
 from flask.ext.sqlalchemy import SQLAlchemy
-from flask.ext.bootstrap import Bootstrap
 from config import config
 
 db = SQLAlchemy()
-bootstrap = Bootstrap()
 login_manager = LoginManager()
 
 def create_app(config_name):
@@ -14,7 +12,6 @@ def create_app(config_name):
     config[config_name].init_app(app)
     
     db.init_app(app)
-    bootstrap.init_app(app)
 
     from admin import admin as admin_blueprint
     app.register_blueprint(admin_blueprint, url_prefix='/admin')
