@@ -16,133 +16,142 @@ class Permission:
     COMMIT = 0x02
     QUERY = 0x04
 
-class ComName(db.Model):
+class CompetitionName(db.Model):
     
     '''竞赛项目名称表'''
     
-    __tablename__ = 'comname'
+    __tablename__ = 'competitionname'
     id = db.Column(db.Integer, primary_key=True)
-    com_name = db.Column(db.String(128), nullable=False)
-    infos = db.relationship('ComInfo', backref='com_name', lazy='dynamic') 
+    competition_name = db.Column(db.String(128), nullable=False)
 
-    def __init__(self, com_name):
-        self.com_name=com_name
+    def __init__(self, competition_name):
+        self.competition_name=competition_name
 
     def __repr__(self):
-        return '<ComName %r>' % self.com_name
+        return '<ComName %r>' % self.competition_name
         
-class ComInfo(db.Model):
-
-    '''竞赛信息表'''
-
-    __tablename__ = 'cominfo'
-    id = db.Column(db.Integer, primary_key=True)
-    com_nid = db.Column(db.Integer, db.ForeignKey('comname.id'), nullable=False)
-    pro_name = db.Column(db.String(128), nullable=True)
-    com_level = db.Column(db.String(128), nullable=False)
-    com_class = db.Column(db.String(128), nullable=False)
-    com_sid = db.Column(db.Integer, db.ForeignKey('students.id'), nullable=True)
-    com_tid = db.Column(db.Integer, db.ForeignKey('comteam.id'), nullable=True)
-    tea1_id = db.Column(db.Integer, db.ForeignKey('teachers.id'), nullable=False)
-    tea2_id = db.Column(db.Integer, db.ForeignKey('teachers.id'), nullable=False)
-    com_time = db.Column(db.String(128), nullable=False)
-    com_org = db.Column(db.String(128), nullable=False)
-    is_team  = db.Column(db.Integer, nullable=False)
-
-    def __init__(self, pro_name, com_level, com_class, com_sid, tea1_id, tea2_id, com_time, com_org, is_team):
-        self.pro_name=pro_name
-        self.com_level=com_level
-        self.com_class=com_class
-        self.com_org=com_org
-        self.com_time = com_time
-        self.com_sid = com_sid
-        self.tea1_id=tea1_id
-        self.tea2_id=tea2_id
-        self.is_team = is_team
-        
-class ComTeam(db.Model):
+class CompetitionInfo(db.Model):
     
-    '''竞赛团队表'''
-    
-    __tablename__ = 'comteam'
+    __tablename__ = 'competitioninfo'
     id = db.Column(db.Integer, primary_key=True)
-    stu1_id = db.Column(db.Integer, db.ForeignKey('students.id'), nullable=False)
-    stu2_id = db.Column(db.Integer, db.ForeignKey('students.id'))
-    stu3_id = db.Column(db.Integer, db.ForeignKey('students.id'))
-    stu4_id = db.Column(db.Integer, db.ForeignKey('students.id'))
-    stu5_id = db.Column(db.Integer, db.ForeignKey('students.id'))
-    stu6_id = db.Column(db.Integer, db.ForeignKey('students.id'))
-    stu7_id = db.Column(db.Integer, db.ForeignKey('students.id'))
-    stu8_id = db.Column(db.Integer, db.ForeignKey('students.id'))
-    stu9_id = db.Column(db.Integer, db.ForeignKey('students.id'))
-
-    def __init__(self):
-        pass
 
 class Student(db.Model):
     
-    '''学生表'''
+    '''学生信息表，字段包括：
+    学生ID，学生姓名，学生所在学院，学生专业，学生所在年级'''
     
     __tablename__ = 'students'
-    id = db.Column(db.Integer, primary_key=True, nullable=False)
-    stu_id = db.Column(db.String(128), nullable=False, unique=True)
-    stu_name = db.Column(db.String(128), nullable=False)
-    stu_academy = db.Column(db.Integer, db.ForeignKey('acachemys.id'), nullable=False)
-    stu_major = db.Column(db.String(128), nullable=False)
-    stu_class = db.Column(db.String(128), nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
+    student_id = db.Column(db.String(128), nullable=False, unique=True)
+    student_name = db.Column(db.String(128), nullable=False)
+    student_academy = db.Column(db.Integer, db.ForeignKey('acachemys.id'))
+    student_major = db.Column(db.Integer, db.ForeignKey('majors.id'))
+    student_class = db.Column(db.Integer, nullable=False)
     
-    def __init__(self, stu_id, stu_name, stu_major, stu_class):
-        self.stu_id = stu_id
-        self.stu_name = stu_name
-        self.stu_major = stu_major
-        self.stu_class = stu_class
+    def __init__(self, student_id, student_name, student_class):
+        self.student_id = student_id
+        self.student_name = student_name
+        self.student_class = student_class
        
     def __repr__(self):
-        return '<Student %r>' % self.stu_id
+        return '<Student %r>' % self.student_id
 
 class Teacher(db.Model):
     
-    '''教师表'''
+    '''教师信息表，字段包括：
+    教师ID，教师姓名，教师所在单位'''
     
     __tablename__ = 'teachers'
     id = db.Column(db.Integer, primary_key=True)
-    tea_id = db.Column(db.String(128), nullable=False, unique=True)
-    tea_name = db.Column(db.String(128), nullable=False)
-    tea_unit = db.Column(db.String(128), nullable=False)
+    teacher_id = db.Column(db.String(128), nullable=False, unique=True)
+    teacher_name = db.Column(db.String(128), nullable=False)
+    teacher_unit = db.Column(db.Integer, db.ForeignKey('units.id'))
 
-    def __init__(self, tea_id, tea_name, tea_unit):
-        self.tea_id=tea_id
-        self.tea_name=tea_name
-        self.tea_unit=tea_unit
+    def __init__(self, teacher_id, teacher_unit):
+        self.teacher_id=teacher_id
+        self.teacher_name=teacher_name
 
     def __repr__(self):
-        return '<Teacher %r>' % self.tea_name
+        return '<Teacher %r>' % self.teacher_name
 
 class Acachemy(db.Model):
     
-    '''学院表'''
+    '''学生学院表，字段包括：
+    学院名称'''
     
     __tablename__ = 'acachemys'
     id = db.Column(db.Integer, primary_key=True)
-    aca_name = db.Column(db.String(128), nullable=False, unique=True)
-    stus = db.relationship('Student', backref='acachemy', lazy='dynamic')
+    acachemy_name = db.Column(db.String(128), nullable=False, unique=True)
     
-    def __init__(self, aca_name):
-        self.aca_name=aca_name
+    # 反向关系
+    students = db.relationship('Student', backref='acachemy', lazy='dynamic')
+    majors = db.relationship('Major', backref='acachemy', lazy='dynamic')
+    
+    def __init__(self, acachemy_name):
+        self.acachemy_name=acachemy_name
     
     def __repr__(self):
-        return '<Acachemy %r>' % self.aca_name
+        return '<Acachemy %r>' % self.acachemy_name
+
+class Major(db.Model):
+    
+    '''学院专业表，字段包括：
+    专业名称，专业所在学院'''
+
+    __tablename__ = 'majors'
+    id = db.Column(db.Integer, primary_key=True)
+    major_name = db.Column(db.String(128), nullable=False, unique=True)
+    major_acachemy = db.Column(db.Integer, db.ForeignKey('acachemys.id'))
+ 
+    def __init__(self,id, major_name):
+        self.id = id
+        self.major_name = major_name
+
+    def __repr__(self):
+        return '<Major %r>' % self.major_name
+
+class Grade(db.Model):
+
+    '''年级信息表，字段包括：
+    年级编号，年级名称'''
+
+    __tablename__ = 'grades'
+    id = db.Column(db.Integer, primary_key=True)
+    grade_name = db.Column(db.String(128), nullable=False, unique=True)
+    
+    def __init__(self, id, grade_name):
+        self.id = id
+        self.grade_name = grade_name
+
+    def __repr__(self):
+        return '<Grade %r>' % self.grade_name
+
+class Unit(db.Model):
+    
+    '''教师单位表，字段包括：
+    单位名称'''
+
+    __tablename__ = 'units'
+    id = db.Column(db.Integer, primary_key=True)
+    unit_name = db.Column(db.String(128), nullable=False, unique=True)
+
+    def __init__(self, unit_name):
+        self.unit_name = unit_name
+
+    def __repr__(self):
+        return '<Unit %r>' % self.unit_name
 
 class User(UserMixin, db.Model):
     
-    '''用户表'''
+    '''用户表，字段包括：
+    用户ID，用户名，用户角色，用户密码哈希值'''
     
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.String(128), nullable=False, unique=True)
     user_name = db.Column(db.String(128), nullable=False, unique=True)
-    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
-    password_hash = db.Column(db.String(128), nullable=False)
+    user_role = db.Column(db.Integer, db.ForeignKey('roles.id'))
+    user_password_hash = db.Column(db.String(128), nullable=False)
 
     @property
     def password(self):
@@ -150,10 +159,10 @@ class User(UserMixin, db.Model):
 
     @password.setter
     def password(self, password):
-        self.password_hash = generate_password_hash(password)
+        self.user_password_hash = generate_password_hash(password)
 
     def verify_password(self, password):
-        return check_password_hash(self.password_hash, password)
+        return check_password_hash(self.user_password_hash, password)
     
     def __init__(self, user_id, user_name):
         self.user_id = user_id
@@ -207,24 +216,3 @@ class Role(db.Model):
         db.session.commit()
 
 
-        
-class Patent(db.Model):
-    __tablename__ = 'patent'
-    id = db.Column(db.Integer,primary_key=True)
-    pea_type = db.Column(db.String(128),nullable=False)
-    pea_name = db.Column(db.String(64),nullable=False)
-    pea_inventor = db.Column(db.String(64),nullable=False)
-    pea_filingdate = db.Column(db.Date,nullable=False)
-    pea_patentee = db.Column(db.String(64),nullable=False)
-    pea_announcement = db.Column(db.Date,nullable=False)
-
-    def __init__(self,pea_type, pea_name, pea_inventor, pea_filingdate, pea_patentee, pea_announcement ):
-        self.pea_type = pea_type
-        self.pea_name = pea_name
-        self.pea_inventor = pea_inventor
-        self.pea_filingdate = pea_filingdate
-        self.pea_patentee = pea_patentee
-        self.pea_announcement = pea_announcement
-
-    def __repr__(self):
-        return '<patent %s>' % self.pea_name
