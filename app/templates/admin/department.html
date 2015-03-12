@@ -3,64 +3,69 @@
 {% block title %}院系信息{% endblock %}
 
 {% block page_content %}
-
-<div class="panel panel-default">
-  <div class="panel-heading">
-      <i class="glyphicon glyphicon-search"></i> 模糊搜索
-  </div>
-  <div class="panel-body">
-    <form class="form " role="search">
-      <div class="input-group">
-        <span class="input-group-btn">
-          <button type="button" class="btn btn-default">搜索</button>
-        </span>
-        <input id="searchInput" type="text" class="form-control" placeholder="学院/专业模糊搜索">
-      </div>
-    </form>
+<div class="col-md-6">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+        <i class="glyphicon glyphicon-search"></i> 模糊搜索
+    </div>
+    <div class="panel-body">
+      <form class="form " role="search">
+        <div class="input-group">
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-default">搜索</button>
+          </span>
+          <input id="searchInput" type="text" class="form-control" placeholder="学院/专业模糊搜索">
+        </div>
+      </form>
+    </div>
   </div>
 </div>
 
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <i class="glyphicon glyphicon-th-list"></i> 显示
+<div class="col-md-6">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <i class="glyphicon glyphicon-info-sign"></i> 操作 
+    </div>
+    <div class="panel-body">
+    </div>
   </div>
-  <div class="panel-body">
-  </div>
-  <table class="table table-hover">
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>院系</th>
-        <th>修改</th>
-        <th>删除</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for acachemy in department_data %}
-        <tr class="success" id="acachemy{{acachemy.id}}">
-          <td>{{ acachemy.id }}</td>
-          <td>{{ acachemy.acachemy_name }}</td>
-          <td><i class="glyphicon glyphicon-pencil" data-toggle="modal" data-target="#acachemyEditModal{{acachemy.id}}"></i></td>
-          <td></td>
+</div>
+
+<div class="col-md-12">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <i class="glyphicon glyphicon-th-list"></i> 显示
+    </div>
+    <div class="panel-body">
+    </div>
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>院系</th>
+          <th>修改</th>
+          <th>删除</th>
         </tr>
-        {% for major in acachemy.majors %}
-          <tr id="major{{major.id}}">
-            <td>{{ major.id }}</td>
-            <td>----{{ major.major_name }}</td>
-            <td><i class="glyphicon glyphicon-pencil" data-toggle="modal" data-target="#majorEditModal{{major.id}}"></i></td>
-            <td><i class="glyphicon glyphicon-remove" data-toggle="modal" data-target="#majorRemoveModal{{major.id}}"></i></td>
+      </thead>
+      <tbody>
+        {% for acachemy in departments_data %}
+          <tr class="success" id="acachemy{{acachemy.id}}">
+            <td>{{ acachemy.id }}</td>
+            <td>{{ acachemy.acachemy_name }}</td>
+            <td><i class="glyphicon glyphicon-pencil" data-toggle="modal" data-target="#acachemyUpdateModal{{acachemy.id}}"></i></td>
+            <td style="color: red;"><i class="glyphicon glyphicon-remove" data-toggle="modal" data-target="#acachemyDeleteModal{{acachemy.id}}"></i></td>
           </tr>
+          {% for major in acachemy.majors %}
+            <tr id="major{{major.id}}">
+              <td>{{ major.id }}</td>
+              <td>----{{ major.major_name }}</td>
+              <td><i class="glyphicon glyphicon-pencil" data-toggle="modal" data-target="#majorUpdateModal{{major.id}}"></i></td>
+              <td><i class="glyphicon glyphicon-remove" data-toggle="modal" data-target="#majorDeleteModal{{major.id}}"></i></td>
+            </tr>
+          {% endfor %}
         {% endfor %}
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
-
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <i class="glyphicon glyphicon-info-sign"></i> 显示
-  </div>
-  <div class="panel-body">
+      </tbody>
+    </table>
   </div>
 </div>
 
@@ -68,11 +73,11 @@
 
 <!-- loopAcachemy -->
 
-{% for acachemy in department_data %}
+{% for acachemy in departments_data %}
   
-  <!-- acachemyEditModal -->
+  <!-- acachemyUpdateModal -->
 
-  <div class="modal fade" id="acachemyEditModal{{acachemy.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal fade" id="acachemyUpdateModal{{acachemy.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -83,85 +88,88 @@
           <p class="hidden">acachemy</p>
           <p class="hidden">{{acachemy.id}}</p>
           <div class="form-group">
-            <input id="EditInput" placeholder="{{acachemy.acachemy_name}}" type="text" class="form-control">
+            <input id="updateInput" placeholder="{{acachemy.acachemy_name}}" type="text" class="form-control">
           </div>
-          <button id="EditButton" type="button" class="btn btn-success btn-block" disabled="disabled" data-dismiss="modal">修改</button>
+          <button id="updateButton" type="button" class="btn btn-success btn-block" disabled="disabled" data-dismiss="modal">修改</button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- endAcachemyEditModal -->
+  <!-- endAcachemyUpdateModal -->
 
-  <!-- acachemyRemoveModal >
+  <!-- acachemyDeleteModal -->
 
-  <div class="modal fade" id="acachemyRemoveModal{{acachemy.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal fade" id="acachemyDeleteModal{{acachemy.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+          <h4 class="modal-title" id="myModalLabel">删除学院</h4>
         </div>
         <div class="modal-body">
+          <p class="hidden">acachemy</p>
+          <p class="hidden">{{acachemy.id}}</p>
           <div class="form-group">
-            <input type="text" class="form-control">
+            <input id="deleteInput" placeholder="{{acachemy.acachemy_name}}" type="text" class="form-control">
           </div>
-          <button type="button" class="btn btn-danger btn-block">删除</button>
+          <button id="deleteButton" type="button" class="btn btn-danger btn-block" disabled="disabled" data-dismiss="modal">删除</button>
         </div>
       </div>
     </div>
   </div>
 
-  < endAcachemyRemoveModal -->
+  <!-- endAcachemyDeleteModal -->
 
   <!-- loopMajors -->
   
   {% for major in acachemy.majors %}
 
-    <!-- majorEditModal -->
+    <!-- majorUpdateModal -->
     
-    <div class="modal fade" id="majorEditModal{{major.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal fade" id="majorUpdateModal{{major.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="majorEditModalLabel">修改专业名称</h4>
+            <h4 class="modal-title" id="majorUpdateModalLabel">修改专业名称</h4>
           </div>
           <div class="modal-body">
             <p class="hidden">major</p>
             <p class="hidden">{{major.id}}</p>
             <div class="form-group">
-              <input id="EditInput" placeholder="{{major.major_name}}" type="text" class="form-control">
+              <input id="updateInput" placeholder="{{major.major_name}}" type="text" class="form-control">
             </div>
-            <button id="EditButton" type="button" class="btn btn-success btn-block" disabled="disabled" data-dismiss="modal">修改</button>
+            <button id="updateButton" type="button" class="btn btn-success btn-block" disabled="disabled" data-dismiss="modal">修改</button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- endMajorEditModal -->
+    <!-- endMajorUpdateModal -->
 
-    <!-- majorRemoveModal-->
+    <!-- majorDeleteModal -->
 
-    <div class="modal fade" id="majorRemoveModal{{major.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal fade" id="majorDeleteModal{{major.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="majorRemoveModalLabel">删除专业</h4>
+            <h4 class="modal-title" id="majorDeleteModalLabel">删除专业</h4>
           </div>
           <div class="modal-body">
+            <p class="hidden">major</p>
             <p class="hidden">{{major.id}}</p>
             <div class="form-group">
-              <input id="majorRemoveInput" placeholder="{{major.major_name}}" type="text" class="form-control">
+              <input id="deleteInput" placeholder="{{major.major_name}}" type="text" class="form-control">
             </div>
-            <button id="majorRemoveButton" type="button" class="btn btn-danger btn-block" disabled="disabled" data-dismiss="modal">删除</button>
+            <button id="deleteButton" type="button" class="btn btn-danger btn-block" disabled="disabled" data-dismiss="modal">删除</button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- endMajorRemoveModal -->
+    <!-- endMajorDeleteModal -->
 
   {% endfor %}
 
@@ -173,9 +181,7 @@
 
 <!-- endModal -->
 
-
 {% endblock %}
-
 
 {% block script %}
 
@@ -183,35 +189,8 @@
 
 <script>
   $(document).ready(function(){
-    
-    $("input#majorRemoveInput").keyup(function(){
-      var majorName = $(this).attr("placeholder");
-      var name = $(this).val();
-      if ( majorName == name ){
-        $(this).parent().next().removeAttr("disabled");
-      }
-      else {
-        $(this).parent().next().attr("disabled", "disabled");
-      }
-    });
 
-    $("button#majorRemoveButton").click(function(){
-      var majorId = $(this).prev().prev().html();
-      $this = $(this);
-        $.getJSON("/admin/major/_remove",{
-          Id: majorId
-        },function(data){
-          if (data.status==1){
-            var obj = document.getElementById("major" + majorId);
-            $(obj).remove();
-          }
-          else {
-            alert("操作失败")
-          }
-        });
-    });
-
-    $("input#EditInput").keyup(function(){
+    $("input#updateInput").keyup(function(){
       var name = $(this).val();
       if ( name != "" ){
         $(this).parent().next().removeAttr("disabled");
@@ -220,39 +199,84 @@
       }
     });
 
-    $("button#EditButton").click(function(){
+    $("button#updateButton").click(function(){
       var isAcachemy = true;
-      if ( $(this).parent().children().eq(0).html() != "acachemy" ) {
+      if ( $(this).parent().children("p:eq(0)").text() != "acachemy" ) {
         isAcachemy = false;
       }
-      var id = $(this).parent().children().eq(1).html();
+      var id = $(this).parent().children("p:eq(1)").text();
       var newName = $(this).prev().children().val();
       if ( isAcachemy == true ){
-        $.getJSON("/admin/acachemy/_edit",{
+        $.getJSON("/admin/acachemy/_update",{
           Id: id,
           Name: newName
         },function(data){
           if ( data.status==2){
             var obj = document.getElementById("acachemy" + id);
-            $(obj).children().eq(1).text(newName);
+            $(obj).children(":eq(1)").text(newName);
           } else {
             alert("None");
           }
         });
       } else {
-        $.getJSON("/admin/major/_edit",{
+        $.getJSON("/admin/major/_update",{
             Id: id,
             Name: newName
         },function(data){
           if ( data.status==2){
             var obj = document.getElementById("major" + id);
-            $(obj).children().eq(1).text("----" + newName);
+            $(obj).children(":eq(1)").text("----" + newName);
           } else {
             alert("None");
           }
         });
       }
     });
+    
+    $("input#deleteInput").keyup(function(){
+      var deleteName = $(this).attr("placeholder");
+      var name = $(this).val();
+      if ( deleteName == name ){
+        $(this).parent().next().removeAttr("disabled");
+      }
+      else {
+        $(this).parent().next().attr("disabled", "disabled");
+      }
+    });
+
+    $("button#deleteButton").click(function(){
+      var isAcachemy = true;
+      if ( $(this).parent().children("p:eq(0)").text() != "acachemy") {
+        isAcachemy = false;
+      }
+      var id = $(this).parent().children("p:eq(1)").text();
+      if ( isAcachemy == true ) {
+        $.getJSON("/admin/acachemy/_delete",{
+          Id: id
+        },function(data){
+          if (data.status==2){
+            var obj = document.getElementById("acachemy" + id);
+            $(obj).remove();
+          }
+          else {
+            alert("操作失败")
+          }
+        });
+      } else {
+        $.getJSON("/admin/major/_delete",{
+          Id: id
+        },function(data){
+          if (data.status==2){
+            var obj = document.getElementById("major" + id);
+            $(obj).remove();
+          }
+          else {
+            alert("操作失败")
+          }
+        });
+      }
+    });
+
   });
 </script>
 
