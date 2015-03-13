@@ -70,7 +70,7 @@
         <div class="modal-body">
           <p class="hidden">{{grade.id}}</p>
           <div class="form-group">
-            <input id="deleteInput" placeholder="{{grade.grade_name}}" type="text" class="form-control">
+            <input id="deleteInput" placeholder="{{grade.grade_name}}" type="text" class="form-control grade">
           </div>
           <button id="deleteButton" type="button" class="btn btn-danger btn-block" disabled="disabled" data-dismiss="modal">删除</button>
         </div>
@@ -103,6 +103,7 @@
     $("button#updateButton").click(function(){
       var gradeId = $(this).parent().children("p").text();
       var newName = $(this).prev().children().val();
+      $this = $(this);
       $.getJSON("/admin/grade/_update",{
         Id: gradeId,
         Name: newName
@@ -110,6 +111,8 @@
         if ( data.status==2){
           var obj = document.getElementById("grade" + gradeId);
           $(obj).children().eq(1).text(newName);
+          $this.prev().children().attr("placeholder", newName);
+          $("input#deleteInput.grade").attr("placeholder", newName);
         } else {
           alert("None");
         }
