@@ -1,120 +1,88 @@
 #-*- coding: UTF-8 -*-
-from app import db
-from app.models import ComName, User, Acachemy, Role, Teacher
+import os
+from app import create_app, db
+from app.models import CompetitionName, User, Role, Major, Grade, Unit
 
 def createdb():
+    app = create_app(os.getenv('FLASK_CONFIG') or 'default')
+    print 'MANAGE: ', db
     db.drop_all()
     db.create_all()
 
     Role.insert_roles()
-    admin_role = Role.query.filter_by(role_name='Administrator').first()
+    admin_role = Role.query.filter_by(role_name='管理员').first()
+    unitAdmin_role = Role.query.filter_by(role_name=u'单位管理员').first()
+    teacher_role = Role.query.filter_by(role_name=u'教师').first()
     admin = User('admin', u'管理员')
     admin.password = '123'
     admin.role = admin_role
 
-    teacher_role = Role.query.filter_by(role_name='Teacher').first()
-    
-    db.session.add_all([admin])
+    grades = {
+        '2011': u'2011级',
+        '2012': u'2012级',
+        '2013': u'2013级',
+        '2014': u'2014级',
+        '2015': u'2015级',
+        '2016': u'2016级',
+        '2017': u'2017级',
+        '2018': u'2018级',
+        '2019': u'2019级'
+    }
+    for g in grades:
+        print grades[g]
+        grade = Grade(g, grades[g])
+        db.session.add(grade)
     db.session.commit()
-    
-    aca = [
-    u'机械工程学院',
-    u'交通与车辆工程学院',
-    u'农业工程与食品科学学院',
-    u'电气与电子工程学院',
-    u'计算机科学与技术学院',
-    u'化学工程学院',
-    u'建筑工程学院',
-    u'资源与环境工程学院',
-    u'材料科学与工程学院',
-    u'生命科学学院',
-    u'理学院',
-    u'商学院',
-    u'文学与新闻传播学院',
-    u'外国语学院',
-    u'法学院',
-    u'马克思主义学院',
-    u'美术学院',
-    u'音乐学院',
-    u'体育学院',
-    u'国防教育学院',
-    u'鲁泰纺织服装学院']
-    
-    for a in aca:
-        Aca = Acachemy(a)
-        db.session.add(Aca)
+
+    acas = {
+    u'机械工程学院': [
+        [u'材料成型及控制工程','080203'],
+        [u'测控技术与仪器','080301']
+    ],
+    u'交通与车辆工程学院': [
+        [u'车辆工程','080207']
+    ],
+    u'计算机科学与技术学院': [
+        [u'计算机科学与技术','080901'],
+        [u'软件工程','080902'],
+        [u'数字媒体技术','080906']
+    ],
+    u'教务处':None
+    } 
+    for a in acas:
+        print a
+        aca = Unit(a)
+        db.session.add(aca)
+        aca = Unit.query.filter_by(unit_name=a).first()
+        if acas[a] == None:
+            aca.is_acachemy = 0
+            db.session.commit()
+            continue
+
+        for i in acas[a]:
+            major = Major(id=i[1],major_name=i[0])
+            major.major_acachemy = aca.id
+            db.session.add(major)
         db.session.commit()
 
-    tea = [
-    (u'艾兵', u'化学工程院'),
-    (u'安春艳', u'生命科学院'),
-    (u'安琳', u'农业食品院'),
-    (u'巴奉丽', u'电子电气院')]
+    teachers = [
+    ('050114', u'张先伟', u'计算机科学与技术学院'),
+    ('110413', u'许敬', u'机械工程学院'),
+    ('170518', u'巴奉丽', u'交通与车辆工程学院')]
 
-    id = 0
-        
-    for t in tea:
-        id += 1
-        T = str('T'+'%05d' %id)
-        Tea = Teacher(T,t[0],t[1])
-        db.session.add(Tea)
-        db.session.commit()
-
-    com = [
-    u'“挑战杯”全国大学生课外学术科技作品竞赛',
-    u'“挑战杯”山东省大学生创业计划竞赛',
-    u'国际大学生数学建模竞赛',
-    u'全国大学生数学建模竞赛',
-    u'全国大学生电工数学建模竞赛',
-    u'全国大学生电子设计竞赛',
-    u'全国大学生工程训练综合能力竞赛',
-    u'全国大学生机械设计创新大赛',
-    u'山东省大学生机电产品创新设计竞赛',
-    u'全国大学生广告艺术大赛',
-    u'全国信息技术应用水平大赛',
-    u'“高教杯”全国大学生先进成图技术与产品信息建模创新大赛',
-    u'“博创杯”全国大学生嵌入式物联网设计大赛',
-    u'全国大学生农业建筑环境与能源工程相关专业创新设计竞赛',
-    u'全国高等院校“广联达杯”工程算量大赛',
-    u'全国大学生测绘科技论文竞赛',
-    u'中国大学生铸造工艺设计大赛',
-    u'中国机器人大赛暨robocup公开赛',
-    u'全国三维数字化创新设计大赛',
-    u'全国大学生“飞思卡尔”杯智能汽车竞赛',
-    u'全国大学生化工设计竞赛',
-    u'山东省大学生化学实验技能竞赛',
-    u'全国大学生节能减排社会实践与科技竞赛',
-    u'齐鲁软件大赛',
-    u'山东省ACM大学生程序设计竞赛',
-    u'山东省大学生建筑设计大赛',
-    u'山东省大学生结构设计大赛',
-    u'中国大学生高分子材料创新创业大赛',
-    u'全国高等学校大学生测绘技能竞赛',
-    u'全国大学生工业设计大赛',
-    u'山东省大学生电子与信息技术应用水平大赛',
-    u'山东省大学生物理科技创新大赛',
-    u'山东省大学生物理教学技能大赛',
-    u'全国大学生数学竞赛',
-    u'全国大学生英语竞赛',
-    u'“外研社杯”全国英语演讲大赛',
-    u'山东省大学生科技外语大赛',
-    u'全国大学生英语风采大赛',
-    u'全国大学生英语演讲比赛',
-    u'全国大学生网络商务创新应用大赛',
-    u'齐鲁大学生创业计划竞赛',
-    u'高校环保科技创意设计大赛',
-    u'山东省师范类高校学生从业技能大赛',
-    u'山东省高校音乐专业师生基本功比赛',
-    u'山东省体育教育专业大学生基本功大赛',
-    u'山东省大学生足球锦标赛',
-    u'山东省大学生篮球锦标赛',
-    u'山东省高校美术与设计专业基本功比赛',
-    u'山东省服装面料图案设计大赛']
-
-    for c in com:
-        Com = ComName(c)
-        db.session.add(Com)
-        db.session.commit()
+    for t in teachers:
+        tea = User(t[0],t[1])
+        tea.role = teacher_role
+        tea.password = '123'
+        unit = Unit.query.filter_by(unit_name = t[2]).first()
+        if unit == None:
+            unit = Unit(t[2])
+            db.session.add(unit)
+            tea.unit = unit
+        else :
+            tea.unit = unit
+        db.session.add(tea)
+    db.session.commit()
 
 if __name__ == '__main__':
     createdb()

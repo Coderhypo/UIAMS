@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    {% block title %}{% endblock %}
+    <title>{% block title %}{% endblock %}</title>
     <!-- Bootstrap -->
     <link href="{{ url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet">
 
@@ -21,42 +21,67 @@
         <h1>大学生创新活动管理系统 <small>Bate 1.0</small></h1>
       </div>
     </header>
-      <div class="container">
-        <div class="row">
-          <div class="col-md-3">
-            <div class="well sidebar-nav">
-              <ul class="nav nav-pills nav-stacked">
-                <li class="nav-header"><i class="glyphicon glyphicon-home"></i>首页</li>
-                <li class="action"><a href="/admin">欢迎</a></li>
-                <li class="nav-header"><i class="glyphicon glyphicon-user"></i>用户管理</li>
-                <li><a href="/admin/teacher">教师管理</a></li>
-                <li><a href="/admin/unit">单位管理</a></li>
-                <li><a href="/admin/system">管理员管理</a></li>
-                <li class="nav-header"><i class="glyphicon glyphicon-info-sign"></i>信息管理</li>
-                <li><a href="/admin/acachemy">学院信息</a></li>
-                <li><a href="/admin/major">专业信息</a></li>
-                <li><a href="/admin/grade">年级信息</a></li>
-                <li class="nav-header"><i class="glyphicon glyphicon-star"></i>创新活动</li>
-                <li><a href="/admin/competition">竞赛管理</a></li>
-                <li><a href="/admin/patent">专利管理</a></li>
-                <li><a href="/admin/work">作品管理</a></li>
-                <li><a href="/admin/paper">论文管理</a></li>
-                <li class="nav-header"><i class="glyphicon glyphicon-open"></i>信息导入</li>
-                <li class="nav-header"><i class="glyphicon glyphicon-download-alt"></i>信息导出</li>
-                </ul>
-              </div>
-            <div class="well">
-                
+    <div class="container">
+      <div class="row">
+        <div class="col-md-3">
+          <div class="panel panel-default">
+              <div class="list-group" aria-multiselectable="true">
+                <a class="list-group-item" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne"><i class="glyphicon glyphicon-home"></i> 首页</a>
+                <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                  <div class="panel-body">
+                    <a class="list-group-item" href="/admin">欢迎</a>
+                  </div>
+                </div>
+                <a class="list-group-item" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"><i class="glyphicon glyphicon-user"></i> 用户管理</a>
+                <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                  <div class="panel-body">
+                    <a id="teacher" class="list-group-item" href="/admin/teacher">教师管理</a>
+                    <a id="unit_admin" class="list-group-item" href="/admin/unit_admin">单位管理员管理</a>
+                    <a id="system_admin" class="list-group-item" href="/admin/system_admin">管理员管理</a>
+                  </div>
+                </div>
+                <a class="list-group-item" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree"><i class="glyphicon glyphicon-info-sign"></i> 信息管理</a>
+                <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+                  <div class="panel-body">
+                    <a id="unit" class="list-group-item" href="/admin/unit">单位/院系信息</a>
+                    <a id="grade" class="list-group-item" href="/admin/grade">年级信息</a>
+                  </div>
+                </div>
+                <a class="list-group-item collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="false" aria-controls="collapseFive"><i class="glyphicon glyphicon-star"></i> 创新活动</a>
+                <div id="collapseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive">
+                  <div class="panel-body">
+                    <a id="competition" class="list-group-item" href="/admin/competition">竞赛管理</a>
+                    <a id="patent" class="list-group-item" href="/admin/patent">专利管理</a>
+                    <a id="work" class="list-group-item" href="/admin/work">作品管理</a>
+                    <a id="paper" class="list-group-item" href="/admin/paper">论文管理</a>
+                  </div>
+                </div>
+                <a class="list-group-item"><i class="glyphicon glyphicon-open"></i> 信息导入</a>
+                <a class="list-group-item"><i class="glyphicon glyphicon-download-alt"></i> 信息导出</a>
+                </div>
+          </div>
+          <div class="">
+            <a href="/">返回首页</a>
           </div>
         </div>
         <div class="col-md-9">
-                {% block admin_page %}{% endblock %}
+            {% block page_content %}{% endblock %}
         </div>
       </div>
     </div>
+    {% block script %}
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="http://cdn.bootcss.com/jquery/1.11.2/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <script>
+        $(document).ready(function(){
+            var reg = /[a-zA-Z]\w+$/;
+            var match = reg.exec(location.href);
+            var matchObj = document.getElementById(match);
+            $(matchObj).parent().parent().addClass("in");
+        });
+    </script>
+    {% endblock %}
   </body>
 </html>

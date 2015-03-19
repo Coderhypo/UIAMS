@@ -44,7 +44,7 @@ class Student(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     student_id = db.Column(db.String(128), nullable=False, unique=True)
     student_name = db.Column(db.String(128), nullable=False)
-    student_academy = db.Column(db.Integer, db.ForeignKey('acachemys.id'))
+    student_academy = db.Column(db.Integer, db.ForeignKey('units.id'))
     student_major = db.Column(db.Integer, db.ForeignKey('majors.id'))
     student_class = db.Column(db.Integer, nullable=False)
     
@@ -56,42 +56,26 @@ class Student(db.Model):
     def __repr__(self):
         return '<Student %r>' % self.student_id
 
-class Teacher(db.Model):
-    
-    '''教师信息表，字段包括：
-    教师ID，教师姓名，教师所在单位'''
-    
-    __tablename__ = 'teachers'
-    id = db.Column(db.Integer, primary_key=True)
-    teacher_id = db.Column(db.String(128), nullable=False, unique=True)
-    teacher_name = db.Column(db.String(128), nullable=False)
-    teacher_unit = db.Column(db.Integer, db.ForeignKey('units.id'))
-
-    def __init__(self, teacher_id, teacher_unit):
-        self.teacher_id=teacher_id
-        self.teacher_name=teacher_name
-
-    def __repr__(self):
-        return '<Teacher %r>' % self.teacher_name
-
-class Acachemy(db.Model):
+class Unit(db.Model):
     
     '''学生学院表，字段包括：
-    学院名称'''
+    学院:名称'''
     
-    __tablename__ = 'acachemys'
+    __tablename__ = 'units'
     id = db.Column(db.Integer, primary_key=True)
-    acachemy_name = db.Column(db.String(128), nullable=False, unique=True)
+    unit_name = db.Column(db.String(128), nullable=False, unique=True)
+    is_acachemy = db.Column(db.Integer, nullable=False, default=1)
     
     # 反向关系
     students = db.relationship('Student', backref='acachemy', lazy='dynamic')
     majors = db.relationship('Major', backref='acachemy', lazy='dynamic')
+    unit = db.relationship('User', backref='unit',lazy='dynamic')
     
-    def __init__(self, acachemy_name):
-        self.acachemy_name=acachemy_name
+    def __init__(self, unit_name):
+        self.unit_name=unit_name
     
     def __repr__(self):
-        return '<Acachemy %r>' % self.acachemy_name
+        return '<Acachemy %r>' % self.unit_name
 
 class Major(db.Model):
     
@@ -101,7 +85,7 @@ class Major(db.Model):
     __tablename__ = 'majors'
     id = db.Column(db.Integer, primary_key=True)
     major_name = db.Column(db.String(128), nullable=False, unique=True)
-    major_acachemy = db.Column(db.Integer, db.ForeignKey('acachemys.id'))
+    major_acachemy = db.Column(db.Integer, db.ForeignKey('units.id'))
  
     def __init__(self,id, major_name):
         self.id = id
@@ -126,21 +110,6 @@ class Grade(db.Model):
     def __repr__(self):
         return '<Grade %r>' % self.grade_name
 
-class Unit(db.Model):
-    
-    '''教师单位表，字段包括：
-    单位名称'''
-
-    __tablename__ = 'units'
-    id = db.Column(db.Integer, primary_key=True)
-    unit_name = db.Column(db.String(128), nullable=False, unique=True)
-
-    def __init__(self, unit_name):
-        self.unit_name = unit_name
-
-    def __repr__(self):
-        return '<Unit %r>' % self.unit_name
-
 class User(UserMixin, db.Model):
     
     '''用户表，字段包括：
@@ -150,6 +119,7 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.String(128), nullable=False, unique=True)
     user_name = db.Column(db.String(128), nullable=False, unique=True)
+    user_unit = db.Column(db.Integer, db.ForeignKey('units.id'))
     user_role = db.Column(db.Integer, db.ForeignKey('roles.id'))
     user_password_hash = db.Column(db.String(128), nullable=False)
 
@@ -204,7 +174,7 @@ class Role(db.Model):
     def insert_roles():
         roles= {
             u'教师': (0xff),
-            u'学院': (0xff),
+            u'单位管理员': (0xff),
             u'管理员': (0xff)
         }
         for r in roles:
