@@ -2,7 +2,7 @@
 from app import db, app, login_manager
 from flask import render_template, redirect, request, url_for, flash, session
 from flask.ext.login import login_user, login_required, logout_user, current_user
-from models import Role, User, Student, Acachemy, Teacher, ComInfo, ComName, Patent
+from models import Role, User, Student, Acachemy, Teacher, CompetitionInfo, CompetitionName
 from forms import LoginForm, ComTeamForm, CompetitionIndividualForm, CreateUserForm, DeleteUserForm, UpdateUserForm, CreateTeacherForm, RetrieveTeacherForm, DeleteTeacherForm, UpdateTeacherForm, CreateAcachemyForm, DeleteAcachemyForm, UpdateAcachemyForm, PatentForm
 from decorators import commit_required, query_required
 
@@ -41,7 +41,7 @@ def individual_com():
     form.acachemys.query = Acachemy.query.all()
     form.teachers1.query = Teacher.query.all()
     form.teachers2.query = Teacher.query.all()
-    form.competitions_name.query = ComName.query.all()
+    form.competitions_name.query = CompetitionName.query.all()
 
     if request.method=='POST' and form.validate():
         competitions_name = form.competitions_name.data
@@ -62,7 +62,7 @@ def individual_com():
             db.session.add(student)
             db.session.commit()
 
-        competition_info = ComInfo(
+        competition_info = CompetitionInfo(
             pro_name = form.project_name.data,
             com_level = form.competition_level.data,
             com_class = form.competition_class.data,
@@ -88,6 +88,7 @@ def patent():
     if request.method == 'POST':
             Pat_info = Patent.query.filter_by(pea_name = form.peaname.data).first()
             if Pat_info == None: 
+                '''
                 Pat_info = Patent(
                     pea_type = form.type.data,
                     pea_name = form.peaname.data,
@@ -96,9 +97,10 @@ def patent():
                     pea_patentee = form.patentee.data,
                     pea_announcement = form.announcement.data
                 )
-
+            
                 db.session.add(Pat_info)
                 db.session.commit()
+                '''
             return redirect (url_for('index'))
     return render_template('patent.html',form = form)
     

@@ -1,0 +1,45 @@
+{% extends "/main/base.html" %}
+
+{% block title %}大学生创新活动{% endblock %}
+
+{% block page_content %}
+<div class="col-md-9">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+        <i class="glyphicon glyphicon-duplicate"></i> 新闻
+    </div>
+    <div class="panel-body">
+    </div>
+  </div>
+</div>
+<div class="col-md-3">
+  <div class="panel panel-default">
+    <div class="panel-body">
+      {% if current_user.is_authenticated() %}
+      <div>
+        {% if current_user.role.role_name == "管理员" %}
+          <a href="/admin">后台管理</a>
+        {% endif %}
+      </div>
+      {% else %}
+      <form method="post" action="/login" name="loginform">
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="用户名" name="username"></input>
+        </div>
+        <div class="form-group input-group">
+          <input type="password" class="form-control" placeholder="密码" name="password"></input>
+          <span class="input-group-btn">
+            <input class="btn btn-default" type="submit" value="登录"></input>
+          </span>
+        </div>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" name="remember_me"> 记住我</input>
+          </label>
+        </div>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
