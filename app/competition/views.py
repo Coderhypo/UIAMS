@@ -5,7 +5,10 @@ from flask import render_template, session, redirect, url_for
 from . import competition
 from .. import db
 
-@competition.route('/')
-def index():
-    return 'hello world'
+@competition.route('/individual')
+def individual():
+    return render_template('/competition/individual.html') 
 
+@competition.route('/team')
+def team():
+    return render_template('/competition/team.html') 
