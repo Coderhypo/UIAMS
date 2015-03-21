@@ -104,3 +104,8 @@ def systemAdmin():
 @login_required
 def teacherInsert():
     return render_template('/admin/teacher_insert.html')
+    
+@admin.route('/competition')
+@login_required
+def competition():
+    return render_template('/admin/competition.html')
