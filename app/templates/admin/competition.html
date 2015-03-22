@@ -1,0 +1,83 @@
+{% extends "/admin/base.html" %}
+
+{% block title %}竞赛管理{% endblock %}
+
+{% block page_content %}
+<div role="tabpanel">
+  <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#verify" aria-controls="verify" role="tab" data-toggle="tab">竞赛审核</a></li>
+    <li role="presentation"><a href="#project" aria-controls="project" role="tab" data-toggle="tab">竞赛项目</a></li>
+  </ul>
+
+  <div class="tab-content row" style="padding-top: 40px; ">
+    <div id="verify" class="tab-pane active">
+    </div>
+    <div id="project" class="tab-pane">
+      <div class="col-md-6">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+              <i class="glyphicon glyphicon-search"></i> 模糊搜索
+          </div>
+          <div class="panel-body">
+            <form class="form " role="search">
+              <div class="input-group">
+                <span class="input-group-btn">
+                  <button type="button" class="btn btn-default">搜索</button>
+                </span>
+                <input id="searchInput" type="text" class="form-control" placeholder="竞赛项目模糊搜索">
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+              <i class="glyphicon glyphicon-search"></i> 添加
+          </div>
+          <div class="panel-body">
+            <div class="btn-group btn-group-justified" role="group">
+              <a href="/admin/competition/project/_insert" class="btn btn-default">添加竞赛项目</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+              <i class="glyphicon glyphicon-th-list"></i> 列表
+          </div>
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>项目名称</th>
+                <th>修改</th>
+                <th>删除</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for projectName in competitionProject %}
+              <tr class="">
+                <td>{{projectName.id}}</td>
+                <td>{{projectName.competition_project_name}}</td>
+                <td><i class="glyphicon glyphicon-pencil" data-toggle="modal" data-target="#"></i></td>
+                <td style="color: red;"><i class="glyphicon glyphicon-remove" data-toggle="modal" data-target="#"></i></td>
+              </tr>
+              {% endfor%}
+            </tbody>
+          </table>
+      </thead>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block script %}
+
+{{ super() }}
+
+{% endblock %}
