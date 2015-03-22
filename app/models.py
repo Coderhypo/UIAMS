@@ -16,19 +16,19 @@ class Permission:
     COMMIT = 0x02
     QUERY = 0x04
 
-class CompetitionName(db.Model):
+class CompetitionProject(db.Model):
     
     '''竞赛项目名称表'''
     
-    __tablename__ = 'competitionname'
+    __tablename__ = 'competitionproject'
     id = db.Column(db.Integer, primary_key=True)
-    competition_name = db.Column(db.String(128), nullable=False)
+    competition_project_name = db.Column(db.String(128))
 
-    def __init__(self, competition_name):
-        self.competition_name=competition_name
+    def __init__(self, competition_project_name):
+        self.competition_project_name=competition_project_name
 
     def __repr__(self):
-        return '<ComName %r>' % self.competition_name
+        return '<ComName %r>' % self.competition_project_name
         
 class CompetitionInfo(db.Model):
     
@@ -46,12 +46,12 @@ class Student(db.Model):
     student_name = db.Column(db.String(128), nullable=False)
     student_academy = db.Column(db.Integer, db.ForeignKey('units.id'))
     student_major = db.Column(db.Integer, db.ForeignKey('majors.id'))
-    student_class = db.Column(db.Integer, nullable=False)
+    student_grade = db.Column(db.String(128), nullable=False)
     
-    def __init__(self, student_id, student_name, student_class):
+    def __init__(self, student_id, student_name, student_grade):
         self.student_id = student_id
         self.student_name = student_name
-        self.student_class = student_class
+        self.student_grade = student_grade
        
     def __repr__(self):
         return '<Student %r>' % self.student_id
