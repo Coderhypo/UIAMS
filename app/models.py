@@ -1,6 +1,5 @@
 #-*- coding: UTF-8 -*-
 from app import db, login_manager
-from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask.ext.login import UserMixin, AnonymousUserMixin
 
@@ -22,31 +21,56 @@ class CompetitionProject(db.Model):
     
     __tablename__ = 'competitionproject'
     id = db.Column(db.Integer, primary_key=True)
-    competition_project_name = db.Column(db.String(128))
+    project_name = db.Column(db.String(128), nullable=False)
 
-    def __init__(self, competition_project_name):
-        self.competition_project_name=competition_project_name
+    def __init__(self, project_name):
+        self.project_name=project_name
 
     def __repr__(self):
-        return '<ComName %r>' % self.competition_project_name
-        
-class CompetitionInfo(db.Model):
+        return '<ComName %r>' % self.project_name
+
+class Participants(db.Model):
     
-    __tablename__ = 'competitioninfo'
+    __tablename__ = 'participants'
     id = db.Column(db.Integer, primary_key=True)
+    id_student_1 = db.Column(db.Integer, db.ForeignKey('student.id'), nullable=False)
+    id_student_2 = db.Column(db.Integer, db.ForeignKey('student.id'))
+    id_student_3 = db.Column(db.Integer, db.ForeignKey('student.id'))
+    id_student_4 = db.Column(db.Integer, db.ForeignKey('student.id'))
+    id_student_5 = db.Column(db.Integer, db.ForeignKey('student.id'))
+    id_student_6 = db.Column(db.Integer, db.ForeignKey('student.id'))
+    id_student_7 = db.Column(db.Integer, db.ForeignKey('student.id'))
+    id_student_8 = db.Column(db.Integer, db.ForeignKey('student.id'))
+    id_student_9 = db.Column(db.Integer, db.ForeignKey('student.id'))
+    id_student_10 = db.Column(db.Integer, db.ForeignKey('student.id'))
+
+class Competition(db.Model):
+    
+    __tablename__ = 'competition'
+    id = db.Column(db.Integer, primary_key=True)
+    id_competitionproject = db.Column(db.Integer, db.ForeignKey('competitionproject.id'))
+    achievement_name = db.Column(db.String(128))
+    winning_level = db.Column(db.String(128))
+    rate = db.Column(db.String(128))
+    awards_unit = db.Column(db.String(128))
+    winning_time = db.Column(db.Date)
+    id_participants = db.Column(db.Integer, db.ForeignKey('participants.id'))
+    id_teacher_1 = db.Column(db.Integer, db.ForeignKey('user.id'))
+    id_teacher_2 = db.Column(db.Integer, db.ForeignKey('user.id'))
 
 class Student(db.Model):
     
     '''学生信息表，字段包括：
     学生ID，学生姓名，学生所在学院，学生专业，学生所在年级'''
     
-    __tablename__ = 'students'
+    __tablename__ = 'student'
     id = db.Column(db.Integer, primary_key=True)
     student_id = db.Column(db.String(128), nullable=False, unique=True)
     student_name = db.Column(db.String(128), nullable=False)
-    student_academy = db.Column(db.Integer, db.ForeignKey('units.id'))
-    student_major = db.Column(db.Integer, db.ForeignKey('majors.id'))
     student_grade = db.Column(db.String(128), nullable=False)
+    
+    id_academy = db.Column(db.Integer, db.ForeignKey('unit.id'))
+    id_major = db.Column(db.Integer, db.ForeignKey('major.id'))
     
     def __init__(self, student_id, student_name, student_grade):
         self.student_id = student_id
@@ -61,7 +85,7 @@ class Unit(db.Model):
     '''学生学院表，字段包括：
     学院:名称'''
     
-    __tablename__ = 'units'
+    __tablename__ = 'unit'
     id = db.Column(db.Integer, primary_key=True)
     unit_name = db.Column(db.String(128), nullable=False, unique=True)
     is_acachemy = db.Column(db.Integer, nullable=False, default=1)
@@ -82,10 +106,10 @@ class Major(db.Model):
     '''学院专业表，字段包括：
     专业名称，专业所在学院'''
 
-    __tablename__ = 'majors'
+    __tablename__ = 'major'
     id = db.Column(db.Integer, primary_key=True)
     major_name = db.Column(db.String(128), nullable=False, unique=True)
-    major_acachemy = db.Column(db.Integer, db.ForeignKey('units.id'))
+    id_acachemy = db.Column(db.Integer, db.ForeignKey('unit.id'))
  
     def __init__(self,id, major_name):
         self.id = id
@@ -99,7 +123,7 @@ class Grade(db.Model):
     '''年级信息表，字段包括：
     年级编号，年级名称'''
 
-    __tablename__ = 'grades'
+    __tablename__ = 'grade'
     id = db.Column(db.Integer, primary_key=True)
     grade_name = db.Column(db.String(128), nullable=False, unique=True)
     
@@ -119,9 +143,10 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.String(128), nullable=False, unique=True)
     user_name = db.Column(db.String(128), nullable=False, unique=True)
-    user_unit = db.Column(db.Integer, db.ForeignKey('units.id'))
-    user_role = db.Column(db.Integer, db.ForeignKey('roles.id'))
     user_password_hash = db.Column(db.String(128), nullable=False)
+
+    id_unit = db.Column(db.Integer, db.ForeignKey('unit.id'))
+    id_role = db.Column(db.Integer, db.ForeignKey('role.id'))
 
     @property
     def password(self):
@@ -158,10 +183,11 @@ class Role(db.Model):
     
     '''角色表'''
     
-    __tablename__ = 'roles'
+    __tablename__ = 'role'
     id = db.Column(db.Integer, primary_key=True)
     role_name = db.Column(db.String(64), unique=True)
     permissions = db.Column(db.Integer)
+
     users = db.relationship('User', backref='role', lazy='dynamic')
 
     def __repr__(self):
