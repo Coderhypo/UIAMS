@@ -11,10 +11,10 @@
       <i class="glyphicon glyphicon-open"></i> 批量导入
     </div>
     <div class="panel-body">
-      <form class="form">
+      <form class="form" method="post" enctype="multipart/form-data">
         <div class="form-group">
           <label class="control-label">上传文件</label>
-          <input class="form-control" type="file"></input>
+          <input class="form-control" type="file" name="file"></input>
         </div>
         <button type="submit" class="btn btn-default">提交</button>
       </form>
@@ -27,10 +27,10 @@
       <i class="glyphicon glyphicon-plus"></i> 添加竞赛项目
     </div>
     <div class="panel-body">
-      <form class="form">
+      <form class="form" method="post" name="competitionProject">
         <div class="form-group" >
           <label class="control-label">竞赛项目</label>
-          <input type="text" class="form-control" placeholder="项目名称">
+          <input type="text" class="form-control" placeholder="项目名称" name="projectName">
         </div>
         <button type="submit" class="btn btn-default">提交</button>
       </form>

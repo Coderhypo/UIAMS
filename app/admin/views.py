@@ -1,10 +1,19 @@
 # coding=utf-8
 from flask import render_template, session, redirect, url_for, request, jsonify
-from ..models import Grade, Role, User, Unit
+from ..models import Grade, Role, User, Unit, CompetitionProject
 from flask.ext.login import login_required
 
+import os
+import xlrd
+from werkzeug import secure_filename
 from . import admin
 from .. import db
+
+ALLOWED_EXTENSIONS = set(['xls','xlsx'])
+UPLOAD_FOLDER = 'app/static/uploads'
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 @admin.route('/')
 @login_required
@@ -21,6 +30,7 @@ def grade():
 @login_required
 def unit():
     units = Unit.query.filter_by().order_by('id').all()
+    print units[0].majors
     return render_template('/admin/unit.html', units = units)
 
 @admin.route('/unit/department')
@@ -108,4 +118,34 @@ def teacherInsert():
 @admin.route('/competition')
 @login_required
 def competition():
-    return render_template('/admin/competition.html')
+    competitionProject = CompetitionProject.query.order_by('id').all()
+    return render_template('/admin/competition.html',competitionProject=competitionProject)
+
+@admin.route('/competition/project/_insert', methods=['GET','POST'])
+@login_required
+def projectInsert():
+    if request.method == "POST":
+        if request.form.get('projectName') == None: 
+            file = request.files['file']
+            if file and allowed_file(file.filename):
+                file_url = os.path.join(UPLOAD_FOLDER, file.filename)
+                file.save(file_url)
+                xls = xlrd.open_workbook(file_url)
+                table = xls.sheets()[0]
+                for i in range(table.nrows):
+                    projectName = table.row(i)[0].value.encode('utf-8')
+                    print projectName
+                    if CompetitionProject.query.filter_by(project_name=projectName).first() == None:
+                        competitionProject = CompetitionProject(projectName)
+                        db.session.add(competitionProject)
+                db.session.commit()
+            return render_template('/admin/competition.html')
+        else:
+            projectName = request.form['projectName']
+            if CompetitionProject.query.filter_by(project_name=projectName).first() == None:
+                competitionProject = CompetitionProject(projectName)
+                db.session.add(competitionProject)
+                db.session.commit()
+            return render_template('/admin/competition.html')
+
+    return render_template('/admin/competition_project_insert.html')
