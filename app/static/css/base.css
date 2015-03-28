@@ -21,6 +21,10 @@
 }
 
 hr {
-    margin-top:0px;
+    margin-top:10px;
     margin-bottom:10px;
+}
+legend {
+    margin-top:20px;
+    margin-bottom:40px;
 }
