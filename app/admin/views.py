@@ -1,9 +1,10 @@
 # coding=utf-8
 from flask import render_template, session, redirect, url_for, request, jsonify
-from ..models import Grade, Role, User, Unit, CompetitionProject
+from ..models import Grade, Role, User, Unit, CompetitionProject, Major
 from flask.ext.login import login_required
 
 import os
+import json
 import xlrd
 from werkzeug import secure_filename
 from . import admin
@@ -37,6 +38,14 @@ def unit():
 @login_required
 def department():
     return render_template('/admin/unit_department.html')
+
+@admin.route('/unit/department/_get')
+@login_required
+def getDepartment():
+    id = request.args.get('Id')
+    majors = Major.query.filter_by(id_acachemy=id).order_by('id').all()
+    print type(majors)
+    return jsonify(str(majors))
 
 @admin.route('/grade/_update')
 @login_required
@@ -134,18 +143,17 @@ def projectInsert():
                 table = xls.sheets()[0]
                 for i in range(table.nrows):
                     projectName = table.row(i)[0].value.encode('utf-8')
-                    print projectName
                     if CompetitionProject.query.filter_by(project_name=projectName).first() == None:
                         competitionProject = CompetitionProject(projectName)
                         db.session.add(competitionProject)
                 db.session.commit()
-            return render_template('/admin/competition.html')
+            return redirect(url_for('.competition'))
         else:
             projectName = request.form['projectName']
             if CompetitionProject.query.filter_by(project_name=projectName).first() == None:
                 competitionProject = CompetitionProject(projectName)
                 db.session.add(competitionProject)
                 db.session.commit()
-            return render_template('/admin/competition.html')
+            return redirect(url_for('.competition'))
 
     return render_template('/admin/competition_project_insert.html')
