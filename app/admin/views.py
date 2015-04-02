@@ -44,8 +44,7 @@ def department():
 def getDepartment():
     id = request.args.get('Id')
     majors = Major.query.filter_by(id_acachemy=id).order_by('id').all()
-    print type(majors)
-    return jsonify(str(majors))
+    return jsonify({'majors': [ major.to_json() for major in majors] })
 
 @admin.route('/grade/_update')
 @login_required

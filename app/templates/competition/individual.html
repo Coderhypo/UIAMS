@@ -171,13 +171,16 @@ $(".form_datetime").datetimepicker({
 $(document).ready(function(){
   $("#acachemy").change(function(){ 
     acachemyId = $(this).val();
-    opt = '';
-    $.getJSON('/admin/unit/department/_get',{
-      Id: acachemyId  
-      },function(majors){
-        alert(majors);
+    $.getJSON("/admin/unit/department/_get",{
+      Id: acachemyId
+      },function(data){
+        var opt = "";
+        for (var i=0; i<data.majors.length; i++) {
+          opt += "<option value=\"" + data.majors[i].id + "\">" + data.majors[i].major_name + "</option>"
+        }
+        $("#major").html(opt)
       });
-    });
   });
+});
 </script>
 {% endblock %}

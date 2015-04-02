@@ -110,6 +110,12 @@ class Major(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     major_name = db.Column(db.String(128), nullable=False, unique=True)
     id_acachemy = db.Column(db.Integer, db.ForeignKey('unit.id'))
+
+    def to_json(self):
+        return {
+            'id': self.id,
+            'major_name': self.major_name
+        }
  
     def __init__(self,id, major_name):
         self.id = id
