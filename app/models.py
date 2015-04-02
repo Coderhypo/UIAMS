@@ -154,6 +154,12 @@ class User(UserMixin, db.Model):
     id_unit = db.Column(db.Integer, db.ForeignKey('unit.id'))
     id_role = db.Column(db.Integer, db.ForeignKey('role.id'))
 
+    def to_json(self):
+        return {
+            'id': self.id,
+            'user_name': self.user_name
+        }
+
     @property
     def password(self):
         raise AttributeError('password is not a readable attribute')
