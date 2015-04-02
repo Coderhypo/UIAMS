@@ -112,10 +112,17 @@
           <label class="col-sm-2 control-label">教师1</label>
           <div class="col-sm-10 input-group">
             <div class="col-sm-6">
-              <select class="form-control"></select>
+              <select class="form-control unit" name="unit1" id="unit1">
+                <option value="" disabled selected>==选择单位==</option>
+                {% for unit in units %}
+                  <option value="{{ unit.id }}">{{ unit.unit_name }}</option>
+                {% endfor %}
+              </select>
             </div>
             <div class="col-sm-6">
-              <select class="form-control"></select>
+              <select class="form-control teacher" name="teacher1" id="teacher1">
+                <option value="" disabled selected>==选择教师==</option>
+              </select>
             </div>
           </div>
         </div>
@@ -123,10 +130,17 @@
           <label class="col-sm-2 control-label">教师2</label>
           <div class="col-sm-10 input-group">
             <div class="col-sm-6">
-              <select class="form-control"></select>
+              <select class="form-control unit" name="unit2" id="unit2">
+                <option value="" disabled selected>==选择单位==</option>
+                {% for unit in units %}
+                  <option value="{{ unit.id }}">{{ unit.unit_name }}</option>
+                {% endfor %}
+              </select>
             </div>
             <div class="col-sm-6">
-              <select class="form-control"></select>
+              <select class="form-control teacher" name="teacher2" id="teacher2">
+                <option value="" disabled selected>==选择教师==</option>
+              </select>
             </div>
           </div>
         </div>
@@ -183,6 +197,24 @@ $(document).ready(function(){
         }
         $("#major").html(opt)
       });
+  });
+
+  $(".unit").change(function(){
+    unitId = $(this).val();
+    $this = $(this);
+    $.getJSON("/admin/teacher/_get",{
+        Id: unitId
+      },function(data){
+        var opt = "";
+        opt += "<option value=\"\" disabled selected>==选择专业==</option>";
+        for (var i=0; i<data.teachers.length; i++) {
+          opt += "<option value=\"" + data.teachers[i].id + "\">" + data.teachers[i].user_name + "</option>"
+        }
+        if ($this.attr("id")=="unit1")
+            $("#teacher1").html(opt);
+        else if ($this.attr("id")=="unit2") 
+            $("#teacher2").html(opt);
+    });
   });
 });
 </script>
