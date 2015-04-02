@@ -13,8 +13,8 @@ def individual():
     competitionProjects = CompetitionProject.query.order_by('id').all()
     grades = Grade.query.order_by('id').all()
     acachemys = Unit.query.filter_by(is_acachemy=1).order_by('id').all()
-    majors = Major.query.order_by('id').all()
-    return render_template('/competition/individual.html',competitionProjects=competitionProjects, grades = grades, acachemys = acachemys, majors = majors) 
+    units = Unit.query.filter_by().order_by('id').all()
+    return render_template('/competition/individual.html',competitionProjects=competitionProjects, grades = grades, acachemys = acachemys, units = units ) 
 
 @competition.route('/team')
 def team():
