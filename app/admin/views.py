@@ -104,6 +104,14 @@ def teacher():
     teachers = User.query.filter_by(role=teacherRole).all()
     return render_template('/admin/teacher.html',teachers = teachers)
 
+@admin.route('/teacher/_get')
+@login_required
+def teacherrGet():
+    id = request.args.get('Id', type=int)
+    teacherRole = Role.query.filter_by(role_name=u'教师').first()
+    teachers = User.query.filter_by(role=teacherRole, id_unit=id).all()
+    return jsonify({'teachers': [teacher.to_json() for teacher in teachers ]})
+
 @admin.route('/unit_admin')
 @login_required
 def unitAdmin():
