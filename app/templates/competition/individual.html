@@ -177,6 +177,7 @@ $(document).ready(function(){
       Id: acachemyId
       },function(data){
         var opt = "";
+        opt += "<option value=\"\" disabled selected>==选择专业==</option>";
         for (var i=0; i<data.majors.length; i++) {
           opt += "<option value=\"" + data.majors[i].id + "\">" + data.majors[i].major_name + "</option>"
         }
