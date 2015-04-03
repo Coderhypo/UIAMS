@@ -16,7 +16,7 @@
           <div class="col-sm-10">
             <select class="form-control">
               {% for projectName in competitionProjects %}
-              <option>{{projectName.project_name}}</option>
+              <option value="{{projectName.id}}">{{projectName.project_name}}</option>
               {% endfor%}
             </select>
           </div>
@@ -24,13 +24,13 @@
         <div class="form-group">
           <label class="col-sm-2 control-label">成果名称</label>
           <div class="col-sm-10">
-            <input class="form-control" placeholder="可不填写"></input>
+            <input class="form-control" placeholder="可不填写" name="achievement_name"></input>
           </div>
         </div>
         <div class="form-group">
           <label class="col-sm-2 control-label">获奖级别</label>
           <div class="col-sm-10">
-            <select class="form-control">
+            <select class="form-control" name="winning_level">
               <option>国际级</option>
               <option>赛区级</option>
               <option>国家级</option>
@@ -41,7 +41,7 @@
         <div class="form-group">
           <label class="col-sm-2 control-label">等级</label>
           <div class="col-sm-10">
-            <select class="form-control">
+            <select class="form-control" name="rate">
               <option>一等奖</option>
               <option>二等奖</option>
               <option>三等奖</option>
@@ -51,13 +51,13 @@
         <div class="form-group">
           <label class="col-sm-2 control-label">获奖时间</label>
           <div class="col-sm-10">
-            <input type="text" class="form-control form_datetime"></input>
+            <input type="text" class="form-control form_datetime" name="awards_unit"></input>
           </div>
         </div>
         <div class="form-group">
           <label class="col-sm-2 control-label">颁奖单位</label>
           <div class="col-sm-10">
-            <input class="form-control" required></input>
+            <input class="form-control" required name="winning_unit"></input>
           </div>
         </div>
         <legend>
@@ -66,13 +66,13 @@
         <div class="form-group">
           <label class="col-sm-2 control-label">学号</label>
           <div class="col-sm-10">
-            <input class="form-control" required></input>
+            <input class="form-control" required name="student_id"></input>
           </div>
         </div>
         <div class="form-group">
           <label class="col-sm-2 control-label">姓名</label>
           <div class="col-sm-10">
-            <input class="form-control" required></input>
+            <input class="form-control" required name="student_name"></input>
           </div>
         </div>
         <div class="form-group">
@@ -81,7 +81,7 @@
             <select class="form-control" name="grade">
               <option value="" disabled selected>==选择年级==</option>
               {% for grade in grades %}
-              <option>{{grade.grade_name}}</option>
+              <option value="{{grade.id}}">{{grade.grade_name}}</option>
               {% endfor%}
             </select>
           </div>
