@@ -23,6 +23,8 @@ class CompetitionProject(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     project_name = db.Column(db.String(128), nullable=False)
 
+    competitions = db.relationship('Competition', backref='competitionproject',lazy='dynamic')
+    
     def __init__(self, project_name):
         self.project_name=project_name
 
@@ -58,6 +60,13 @@ class Competition(db.Model):
     id_teacher_1 = db.Column(db.Integer, db.ForeignKey('user.id'))
     id_teacher_2 = db.Column(db.Integer, db.ForeignKey('user.id'))
 
+    def __init__(self, achievement_name, winning_level, rate, awards_unit, winning_time):
+        self.achievement_name = achievement_name
+        self.winning_level = winning_level
+        self.rate = rate
+        self.awards_unit = awards_unit
+        self.winning_time = winning_time
+
 class Student(db.Model):
     
     '''学生信息表，字段包括：
@@ -67,15 +76,17 @@ class Student(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     student_id = db.Column(db.String(128), nullable=False, unique=True)
     student_name = db.Column(db.String(128), nullable=False)
-    student_grade = db.Column(db.String(128), nullable=False)
     
+    id_grade = db.Column(db.Integer, db.ForeignKey('grade.id'))
     id_academy = db.Column(db.Integer, db.ForeignKey('unit.id'))
     id_major = db.Column(db.Integer, db.ForeignKey('major.id'))
     
-    def __init__(self, student_id, student_name, student_grade):
+    def __init__(self, student_id, student_name, id_grade, id_acachemy, id_major):
         self.student_id = student_id
         self.student_name = student_name
-        self.student_grade = student_grade
+        self.id_grade = id_grade
+        self.id_acachemy = id_acachemy
+        self.id_major = id_major
        
     def __repr__(self):
         return '<Student %r>' % self.student_id
