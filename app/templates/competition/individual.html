@@ -14,7 +14,7 @@
         <div class="form-group">
           <label class="col-sm-2 control-label">竞赛项目</label>
           <div class="col-sm-10">
-            <select class="form-control">
+            <select class="form-control" name="competitionproject">
               {% for projectName in competitionProjects %}
               <option value="{{projectName.id}}">{{projectName.project_name}}</option>
               {% endfor%}
@@ -51,13 +51,13 @@
         <div class="form-group">
           <label class="col-sm-2 control-label">获奖时间</label>
           <div class="col-sm-10">
-            <input type="text" class="form-control form_datetime" name="awards_unit"></input>
+            <input type="text" class="form-control form_datetime" name="winning_time" required></input>
           </div>
         </div>
         <div class="form-group">
           <label class="col-sm-2 control-label">颁奖单位</label>
           <div class="col-sm-10">
-            <input class="form-control" required name="winning_unit"></input>
+            <input class="form-control" required name="awards_unit"></input>
           </div>
         </div>
         <legend>
@@ -78,7 +78,7 @@
         <div class="form-group">
           <label class="col-sm-2 control-label">年级</label>
           <div class="col-sm-10">
-            <select class="form-control" name="grade">
+            <select class="form-control" name="grade" required>
               <option value="" disabled selected>==选择年级==</option>
               {% for grade in grades %}
               <option value="{{grade.id}}">{{grade.grade_name}}</option>
@@ -89,7 +89,7 @@
         <div class="form-group">
           <label class="col-sm-2 control-label">学院</label>
           <div class="col-sm-10">
-            <select class="form-control" name="acachemy" id="acachemy">
+            <select class="form-control" name="acachemy" id="acachemy" required>
               <option value="" disabled selected>==选择学院==</option>
               {% for acachemy in acachemys %}
               <option value="{{acachemy.id}}">{{acachemy.unit_name}}</option>
@@ -100,7 +100,7 @@
         <div class="form-group">
           <label class="col-sm-2 control-label">专业</label>
           <div class="col-sm-10">
-            <select class="form-control" name="major" id="major">
+            <select class="form-control" name="major" id="major" required>
               <option value="" disabled selected>==选择专业==</option>
             </select>
           </div>
@@ -113,7 +113,7 @@
           <label class="col-sm-2 control-label">教师1</label>
           <div class="col-sm-10 input-group">
             <div class="col-sm-6">
-              <select class="form-control unit" name="unit1" id="unit1">
+              <select class="form-control unit" name="unit1" id="unit1" required>
                 <option value="" disabled selected>==选择单位==</option>
                 {% for unit in units %}
                   <option value="{{ unit.id }}">{{ unit.unit_name }}</option>
@@ -121,7 +121,7 @@
               </select>
             </div>
             <div class="col-sm-6">
-              <select class="form-control teacher" name="teacher1" id="teacher1">
+              <select class="form-control teacher" name="teacher1" id="teacher1" required>
                 <option value="" disabled selected>==选择教师==</option>
               </select>
             </div>
@@ -131,7 +131,7 @@
           <label class="col-sm-2 control-label">教师2</label>
           <div class="col-sm-10 input-group">
             <div class="col-sm-6">
-              <select class="form-control unit" name="unit2" id="unit2">
+              <select class="form-control unit" name="unit2" id="unit2" required>
                 <option value="" disabled selected>==选择单位==</option>
                 {% for unit in units %}
                   <option value="{{ unit.id }}">{{ unit.unit_name }}</option>
@@ -139,7 +139,7 @@
               </select>
             </div>
             <div class="col-sm-6">
-              <select class="form-control teacher" name="teacher2" id="teacher2">
+              <select class="form-control teacher" name="teacher2" id="teacher2" required>
                 <option value="" disabled selected>==选择教师==</option>
               </select>
             </div>
@@ -152,7 +152,7 @@
         <div class="form-group">
           <label class="col-sm-2 control-label">获奖证书</label>
           <div class="col-sm-10">
-            <input class="form-control" type="file" > 
+            <input class="form-control" type="file" required> 
           </div>
         </div>
         <hr />
@@ -192,7 +192,7 @@ $(document).ready(function(){
       Id: acachemyId
       },function(data){
         var opt = "";
-        opt += "<option value=\"\" disabled selected>==选择教师==</option>";
+        opt += "<option value=\"\" disabled selected>==选择专业==</option>";
         for (var i=0; i<data.majors.length; i++) {
           opt += "<option value=\"" + data.majors[i].id + "\">" + data.majors[i].major_name + "</option>"
         }
