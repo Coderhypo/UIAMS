@@ -2,6 +2,7 @@
 # coding=utf-8
 from flask import render_template, session, redirect, url_for, request
 from ..models import CompetitionProject, Grade, Unit, Major, Student, User, Participants, Competition
+from flask.ext.login import login_required
 
 from . import competition
 from .. import db
@@ -9,6 +10,7 @@ import os
 from werkzeug import secure_filename
 
 @competition.route('/individual', methods=['GET', 'POST'])
+@login_required
 def individual():
     competitionProjects = CompetitionProject.query.order_by('id').all()
     grades = Grade.query.order_by('id').all()
@@ -37,5 +39,6 @@ def individual():
     return render_template('/competition/individual.html',competitionProjects=competitionProjects, grades = grades, acachemys = acachemys, units = units ) 
 
 @competition.route('/team')
+@login_required
 def team():
     return render_template('/competition/team.html') 
