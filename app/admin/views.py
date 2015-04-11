@@ -30,7 +30,7 @@ def grade():
 @admin.route('/unit')
 @login_required
 def unit():
-    units = Unit.query.filter_by().order_by('id').all()
+    units = Unit.query.order_by('id').all()
     print units[0].majors
     return render_template('/admin/unit.html', units = units)
 
@@ -129,7 +129,8 @@ def systemAdmin():
 @admin.route('/teacher/_insert')
 @login_required
 def teacherInsert():
-    return render_template('/admin/teacher_insert.html')
+    units = Unit.query.order_by('id').all()
+    return render_template('/admin/teacher_insert.html', units=units)
     
 @admin.route('/competition')
 @login_required
@@ -157,10 +158,17 @@ def projectInsert():
             return redirect(url_for('.competition'))
         else:
             projectName = request.form['projectName']
-            if CompetitionProject.query.filter_by(project_name=projectName).first() == None:
+            if projectName != "" and CompetitionProject.query.filter_by(project_name=projectName).first() == None:
                 competitionProject = CompetitionProject(projectName)
                 db.session.add(competitionProject)
                 db.session.commit()
             return redirect(url_for('.competition'))
 
     return render_template('/admin/competition_project_insert.html')
+
+@admin.route('/competition/project/_update')
+@login_required
+def projectUpdate():
+    id = request.args.get('Id', type=int)
+    newName = request.args.get('Name')
+    return jsonify(status=2)
