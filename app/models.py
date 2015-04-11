@@ -56,6 +56,7 @@ class Competition(db.Model):
     rate = db.Column(db.String(128))
     awards_unit = db.Column(db.String(128))
     winning_time = db.Column(db.Date)
+    id_student = db.Column(db.Integer, db.ForeignKey('student.id'))
     id_participants = db.Column(db.Integer, db.ForeignKey('participants.id'))
     id_teacher_1 = db.Column(db.Integer, db.ForeignKey('user.id'))
     id_teacher_2 = db.Column(db.Integer, db.ForeignKey('user.id'))
@@ -78,8 +79,10 @@ class Student(db.Model):
     student_name = db.Column(db.String(128), nullable=False)
     
     id_grade = db.Column(db.Integer, db.ForeignKey('grade.id'))
-    id_academy = db.Column(db.Integer, db.ForeignKey('unit.id'))
+    id_acachemy = db.Column(db.Integer, db.ForeignKey('unit.id'))
     id_major = db.Column(db.Integer, db.ForeignKey('major.id'))
+
+    competitions = db.relationship('Competition', backref='student', lazy='dynamic')
     
     def __init__(self, student_id, student_name, id_grade, id_acachemy, id_major):
         self.student_id = student_id
