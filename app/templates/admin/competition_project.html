@@ -6,12 +6,12 @@
 {% block page_content %}
 <div role="tabpanel">
   <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" class="active"><a href="#verify" aria-control="verify" role="tab" data-taggle="tab">竞赛审核</a></li>
-    <li role="presentation"><a href="/admin/competition/project">竞赛项目</a></li>
+    <li role="presentation"><a href="/admin/competition">竞赛审核</a></li>
+    <li role="presentation" class="active"><a href="#project" aria-controls="project" role="tab" data-toggle="tab">竞赛项目</a></li>
   </ul>
 
   <div class="tab-content row" style="padding-top: 40px; ">
-    <div id="verify" class="tab-pane active">
+    <div id="project" class="tab-pane active">
       <div class="col-md-6">
         <div class="panel panel-default">
           <div class="panel-heading">
@@ -55,7 +55,7 @@
                 <th>删除</th>
               </tr>
             </thead>
-            <!--tbody>
+            <tbody>
               {% for projectName in competitionProjects %}
               <tr id="project{{projectName.id}}">
                 <td>{{projectName.id}}</td>
@@ -64,9 +64,10 @@
                 <td style="color: red;"><i class="glyphicon glyphicon-remove" data-toggle="modal" data-target="#deleteModel{{projectName.id}}"></i></td>
               </tr>
               {% endfor%}
-            </tbody-->
+            </tbody>
           </table>
           <div style="text-align:center">
+              {{ macros.pagination_widget(project_pagination, '.competition_project')}}
           </div>
         </div>
       </div>
