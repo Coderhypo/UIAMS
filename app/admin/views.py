@@ -1,5 +1,6 @@
 # coding=utf-8
-from flask import render_template, session, redirect, url_for, request, jsonify
+from flask import render_template, session, redirect, url_for, request,\
+jsonify,current_app
 from ..models import Grade, Role, User, Unit, CompetitionProject, Major
 from flask.ext.login import login_required
 
@@ -131,18 +132,27 @@ def systemAdmin():
 def teacherInsert():
     units = Unit.query.order_by('id').all()
     return render_template('/admin/teacher_insert.html', units=units)
-    
+
 @admin.route('/competition')
 @login_required
 def competition():
-    competitionProject = CompetitionProject.query.order_by('id').all()
-    return render_template('/admin/competition.html',competitionProject=competitionProject)
+    return render_template('/admin/competition.html')
+
+@admin.route('/competition/project')
+@login_required
+def competition_project():
+    project_page = request.args.get('page', 1, type=int)
+    project_pagination = CompetitionProject.query.order_by('id').paginate(
+        project_page,per_page=current_app.config['FLASK_POSTS_PER_PAGE'],error_out=False)
+    projects = project_pagination.items
+    return render_template('/admin/competition_project.html',competitionProjects=projects,
+        project_pagination=project_pagination)
 
 @admin.route('/competition/project/_insert', methods=['GET','POST'])
 @login_required
 def projectInsert():
     if request.method == "POST":
-        if request.form.get('projectName') == None: 
+        if request.form.get('projectName') == None:
             file = request.files['file']
             if file and allowed_file(file.filename):
                 file_url = os.path.join(UPLOAD_FOLDER, file.filename)
@@ -171,4 +181,10 @@ def projectInsert():
 def projectUpdate():
     id = request.args.get('Id', type=int)
     newName = request.args.get('Name')
+    return jsonify(status=2)
+
+@admin.route("/competition/project/_delete")
+@login_required
+def projectDelete():
+    id = request.args.get('Id', type=int)
     return jsonify(status=2)
