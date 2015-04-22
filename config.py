@@ -5,8 +5,10 @@ import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config:
+    UPLOAD_FOLDER = '/app/uploads'
     SECRET_KEY = 'you-will-never-guess'
-    
+    FLASK_POSTS_PER_PAGE = 10
+
     @staticmethod
     def init_app(app):
         pass
