@@ -54,12 +54,12 @@
       </thead>
       <tbody>
         {% for teacher in teachers %}
-          <tr id="">
+        <tr id="teacher{{teacher.user_id}}">
             <td>{{ teacher.user_id }}</td>
             <td>{{ teacher.user_name }}</td>
             <td>{{ teacher.unit.unit_name }}</td>
-            <td><i class="glyphicon glyphicon-pencil" data-toggle="modal" data-target="#acachemyUpdateModal"></i></td>
-            <td style="color: red;"><i class="glyphicon glyphicon-remove" data-toggle="modal" data-target="#acachemyDeleteModal"></i></td>
+            <td><i class="glyphicon glyphicon-pencil" data-toggle="modal" data-target="#updateModal{{teacher.user_id}}"></i></td>
+            <td style="color: red;"><i class="glyphicon glyphicon-remove" data-toggle="modal" data-target="#deleteModal{{teacher.user_id}}"></i></td>
           </tr>
         {% endfor %}
       </tbody>
@@ -68,7 +68,124 @@
         {{ macros.pagination_widget(teacher_pagination, '.teacher')}}
     </div>
   </div>
+<!-- modal -->
+
+<!-- loop -->
+
+{% for teacher in teachers %}
+
+  <!-- updateModal -->
+
+  <div class="modal fade" id="updateModal{{teacher.user_id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">修改教师名称</h4>
+        </div>
+        <div class="modal-body">
+          <p class="hidden">{{teacher.user_id}}</p>
+          <div class="form-group">
+            <input id="updateInput" placeholder="{{teacher.user_name}}" type="text" class="form-control">
+          </div>
+          <button id="updateButton" type="button" class="btn btn-success btn-block" disabled="disabled" data-dismiss="modal">修改</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- endUpdateModal -->
+
+  <!-- deleteModal -->
+
+  <div class="modal fade" id="deleteModal{{teacher.user_id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">删除教师</h4>
+        </div>
+        <div class="modal-body">
+          <p class="hidden">{{teacher.user_id}}</p>
+          <div class="form-group">
+            <input id="deleteInput" placeholder="{{teacher.user_name}}" type="text" class="form-control deleteInput{{teacher.user_id}}">
+          </div>
+          <button id="deleteButton" type="button" class="btn btn-danger btn-block" disabled="disabled" data-dismiss="modal">删除</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- endDeleteModal -->
+
+{% endfor %}
+
+<!-- endLoop -->
+
+<!-- endModal -->
+
 </div>
 
 {% endblock %}
 
+{% block script %}
+{{ super() }}
+<script>
+$(document).ready(function(){
+
+  $("input#updateInput").keyup(function(){
+    var name = $(this).val();
+    if ( name != ""){
+      $(this).parent().next().removeAttr("disabled");
+    } else {
+      $(this).parent().next().attr("disabled", "disabled");
+    }
+  });
+
+  $("button#updateButton").click(function(){
+    var id = $(this).parent().children("p:eq(0)").text();
+    var newName = $(this).prev().children().val();
+    $this = $(this)
+    $.getJSON("/admin/competition/project/_update",{
+      Id: id,
+      Name: newName
+    },function(data){
+      if (data.status==2){
+        var obj = document.getElementById("teacher" + id);
+        $(obj).children().eq(1).text(newName);
+        $this.prev().children().attr("placeholder", newName);
+        $this.parents("div.modal").next().find("input").attr("placeholder", newName);
+      }
+    });
+  });
+
+  $("input#deleteInput").keyup(function(){
+    var teacherName = $(this).attr("placeholder");
+    var name = $(this).val();
+    if (teacherName == name ){
+      $(this).parent().next().removeAttr("disabled");
+    }
+    else {
+      $(this).parent().next().attr("disabled", "disabled");
+    }
+  });
+
+  $("button#deleteButton").click(function(){
+    var id = $(this).prev().prev().html();
+    $this = $(this);
+    $.getJSON("/admin/competition/project/_delete",{
+      Id: id
+      }, function(data){
+        if (data.status==2){
+          var obj = document.getElementById("teacher" +id);
+          $(obj).remove();
+        }
+        else {
+          alert("");
+        }
+    })
+  });
+
+});
+</script>
+{% endblock %}
