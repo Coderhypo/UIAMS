@@ -102,8 +102,12 @@ def unitDelete():
 @login_required
 def teacher():
     teacherRole = Role.query.filter_by(role_name=u'教师').first()
-    teachers = User.query.filter_by(role=teacherRole).all()
-    return render_template('/admin/teacher.html',teachers = teachers)
+    teacher_page = request.args.get('page', 1, type=int)
+    teacher_pagination = \
+    User.query.filter_by(role=teacherRole).order_by('id').paginate(teacher_page,per_page=current_app.config['FLASK_POSTS_PER_PAGE'],error_out=False)
+    teachers = teacher_pagination.items
+    return render_template('/admin/teacher.html',teachers = teachers,
+            teacher_pagination=teacher_pagination)
 
 @admin.route('/teacher/_get')
 @login_required

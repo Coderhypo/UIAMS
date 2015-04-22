@@ -1,5 +1,6 @@
 {% extends "/admin/base.html" %}
 
+{% import "_macros.html" as macros %}
 {% block title %}教师管理 | 用户管理{% endblock %}
 
 {% block page_content %}
@@ -63,6 +64,9 @@
         {% endfor %}
       </tbody>
     </table>
+    <div style="text-align:center">
+        {{ macros.pagination_widget(teacher_pagination, '.teacher')}}
+    </div>
   </div>
 </div>
 
