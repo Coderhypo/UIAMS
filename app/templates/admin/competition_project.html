@@ -159,6 +159,7 @@ $(document).ready(function(){
         var obj = document.getElementById("project" + projectId);
         $(obj).children().eq(1).text(newName);
         $this.prev().children().attr("placeholder", newName);
+        $this.parents("div.modal").next().find("input").attr("placeholder", newName);
       }
     });
   });
