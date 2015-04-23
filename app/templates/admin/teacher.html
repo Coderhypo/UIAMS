@@ -4,7 +4,15 @@
 {% block title %}教师管理 | 用户管理{% endblock %}
 
 {% block page_content %}
-<div class="col-md-6">
+<div class="col-md-12">
+<!--ol class="breadcrumb">
+  <li><a href="/">Home</a></li>
+  <li><a href="/admin">后台首页</a></li>
+  <li><a href="#">用户管理</a></li>
+  <li class="active">教师管理</li>
+</ol-->
+</div>
+<div class="col-md-12">
   <div class="panel panel-default">
     <div class="panel-heading">
         <i class="glyphicon glyphicon-search"></i> 模糊搜索
@@ -15,22 +23,9 @@
           <span class="input-group-btn">
             <button type="button" class="btn btn-default">搜索</button>
           </span>
-          <input id="searchInput" type="text" class="form-control" placeholder="教师模糊搜索">
+          <input id="search" type="text" class="form-control" placeholder="教师模糊搜索">
         </div>
       </form>
-    </div>
-  </div>
-</div>
-
-<div class="col-md-6">
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <i class="glyphicon glyphicon-user"></i> 操作 
-    </div>
-    <div class="panel-body">
-      <div class="btn-group btn-group-justified" role="group">
-        <a href="/admin/teacher/_insert" class="btn btn-default">添加教师</a>
-      </div>
     </div>
   </div>
 </div>
@@ -39,8 +34,7 @@
   <div class="panel panel-default">
     <div class="panel-heading">
       <i class="glyphicon glyphicon-th-list"></i> 显示
-    </div>
-    <div class="panel-body">
+      <a data-toggle="modal" data-target="#updateTeachers">更新教师</a>
     </div>
     <table class="table table-hover">
       <thead>
@@ -68,11 +62,36 @@
         {{ macros.pagination_widget(teacher_pagination, '.teacher')}}
     </div>
   </div>
+</div>
+
 <!-- modal -->
 
-<!-- loop -->
+<div class="modal fade" id="updateTeachers" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">更新教师</h4>
+      </div>
+      <form class="form" method="post" action="/admin/teacher/_insert" enctype="multipart/form-data">
+        <div class="modal-body">
+            <div class="form-group">
+              <label class="control-label">上传文件</label>
+              <input class="form-control" type="file" name="file"></input>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+          <button type="submit" class="btn btn-primary">提交</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 
 {% for teacher in teachers %}
+
+<!-- loop -->
 
   <!-- updateModal -->
 
@@ -123,8 +142,6 @@
 <!-- endLoop -->
 
 <!-- endModal -->
-
-</div>
 
 {% endblock %}
 
