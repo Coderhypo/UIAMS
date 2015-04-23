@@ -1,18 +1,20 @@
 # coding=utf-8
 from flask import render_template, session, redirect, url_for, request,\
-jsonify,current_app
+jsonify, current_app
 from ..models import Grade, Role, User, Unit, CompetitionProject, Major
 from flask.ext.login import login_required
 
 import os
 import json
 import xlrd
+from datetime import datetime
 from werkzeug import secure_filename
 from . import admin
 from .. import db
 
 ALLOWED_EXTENSIONS = set(['xls','xlsx'])
-UPLOAD_FOLDER = 'app/static/uploads'
+#UPLOAD_FOLDER = current_app.config['UPLOAD_FOLDER']
+UPLOAD_FOLDER = '/tmp'
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
@@ -111,11 +113,34 @@ def teacher():
 
 @admin.route('/teacher/_get')
 @login_required
-def teacherrGet():
+def teacherGet():
     id = request.args.get('Id', type=int)
     teacherRole = Role.query.filter_by(role_name=u'教师').first()
     teachers = User.query.filter_by(role=teacherRole, id_unit=id).all()
     return jsonify({'teachers': [teacher.to_json() for teacher in teachers ]})
+
+@admin.route('/teacher/_insert', methods=['GET', 'POST'])
+@login_required
+def teacherInsert():
+    if request.method == 'POST':
+        utcnow = datetime.utcnow()
+        file = request.files['file']
+        if file and allowed_file(file.filename):
+            file.filename = utcnow.strftime('teachers_%Y-%m-%d(%H:%M:%S).xls')
+            file_url = os.path.join(UPLOAD_FOLDER, file.filename)
+            file.save(file_url)
+            xls = xlrd.open_workbook(file_url)
+            table = xls.sheets()[0]
+            for i in range(1, table.nrows):
+                print table.row(i)[2].value,table.row(i)[3].value
+                '''
+                teacher_id = table.row(i)[0].value.encode('utf-8')
+                teacher_name = table.row(i)[1].value.encode('utf-8')
+                teacher_unit =
+                '''
+            return redirect(url_for('.teacher'))
+    units = Unit.query.order_by('id').all()
+    return render_template('/admin/teacher.html', units=units)
 
 @admin.route('/unit_admin')
 @login_required
@@ -130,12 +155,6 @@ def systemAdmin():
     adminRole = Role.query.filter_by(role_name=u'管理员').first()
     admins = User.query.filter_by(role=adminRole).all()
     return render_template('/admin/system_admin.html',admins = admins)
-
-@admin.route('/teacher/_insert')
-@login_required
-def teacherInsert():
-    units = Unit.query.order_by('id').all()
-    return render_template('/admin/teacher_insert.html', units=units)
 
 @admin.route('/competition')
 @login_required
@@ -156,28 +175,19 @@ def competition_project():
 @login_required
 def projectInsert():
     if request.method == "POST":
-        if request.form.get('projectName') == None:
-            file = request.files['file']
-            if file and allowed_file(file.filename):
-                file_url = os.path.join(UPLOAD_FOLDER, file.filename)
-                file.save(file_url)
-                xls = xlrd.open_workbook(file_url)
-                table = xls.sheets()[0]
-                for i in range(table.nrows):
-                    projectName = table.row(i)[0].value.encode('utf-8')
-                    if CompetitionProject.query.filter_by(project_name=projectName).first() == None:
-                        competitionProject = CompetitionProject(projectName)
-                        db.session.add(competitionProject)
-                db.session.commit()
-            return redirect(url_for('.competition'))
-        else:
-            projectName = request.form['projectName']
-            if projectName != "" and CompetitionProject.query.filter_by(project_name=projectName).first() == None:
-                competitionProject = CompetitionProject(projectName)
-                db.session.add(competitionProject)
-                db.session.commit()
-            return redirect(url_for('.competition'))
-
+        file = request.files['file']
+        if file and allowed_file(file.filename):
+            file_url = os.path.join(UPLOAD_FOLDER, file.filename)
+            file.save(file_url)
+            xls = xlrd.open_workbook(file_url)
+            table = xls.sheets()[0]
+            for i in range(table.nrows):
+                projectName = table.row(i)[0].value.encode('utf-8')
+                if CompetitionProject.query.filter_by(project_name=projectName).first() == None:
+                    competitionProject = CompetitionProject(projectName)
+                    db.session.add(competitionProject)
+            db.session.commit()
+        return redirect(url_for('.competition'))
     return render_template('/admin/competition_project_insert.html')
 
 @admin.route('/competition/project/_update')
