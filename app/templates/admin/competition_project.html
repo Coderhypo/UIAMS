@@ -4,193 +4,214 @@
 {% block title %}竞赛管理{% endblock %}
 
 {% block page_content %}
-<div role="tabpanel">
-  <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation"><a href="/admin/competition">竞赛审核</a></li>
-    <li role="presentation" class="active"><a href="#project" aria-controls="project" role="tab" data-toggle="tab">竞赛项目</a></li>
-  </ul>
 
-  <div class="tab-content row" style="padding-top: 40px; ">
-    <div id="project" class="tab-pane active">
-      <div class="col-md-6">
-        <div class="panel panel-default">
-          <div class="panel-heading">
-              <i class="glyphicon glyphicon-search"></i> 模糊搜索
+  <div class="col-md-12">
+    <ol class="breadcrumb">
+      <li><a href="/">Home</a></li>
+      <li><a href="/admin">后台首页</a></li>
+      <li><a href="#">竞赛管理</a></li>
+      <li class="active">竞赛项目</li>
+    </ol>
+  </div>
+  
+  <div class="col-md-12">
+    <ul class="nav nav-tabs" role="tablist">
+      <li><a href="/admin/competition">竞赛审核</a></li>
+      <li class="active"><a>竞赛项目</a></li>
+      <li class="pull-right" data-toggle="modal" data-target="#updateProject"><a><span class="glyphicon glyphicon-open"></span> 更新竞赛项目</a></li>
+    </ul>
+  </div>
+
+  <div class="col-md-12">
+    <button id="remove" class="btn btn-danger" disabled="">
+      <i class="glyphicon glyphicon-remove"></i> 删除
+    </button>
+    <table id="table" class="table table-hover table-striped" data-toggle="table" data-sort-order="desc" data-search="true" data-click-to-select="true" data-toolbar="#remove" data-pagination="true" data-query-params="queryParams" data-page-size="10" data-show-pagination-switch="true">
+      <thead>
+        <tr>
+          <th data-field="state" data-checkbox="true"></th>
+          <th class="col-xs-1">#</th>
+          <th>项目名称</th>
+          <th class="col-xs-1" data-field="action">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for projectName in competitionProjects %}
+        <tr id="project{{projectName.id}}">
+          <td></td>
+          <td>{{projectName.id}}</td>
+          <td>{{projectName.project_name}}</td>
+          <td>
+            <a class="btn-xs ml10"><i class="glyphicon glyphicon-edit" data-toggle="modal" data-target="#updateModel{{projectName.id}}"></i></a>
+            <a class="btn-xs ml10"><i class="glyphicon glyphicon-remove" data-toggle="modal" data-target="#deleteModel{{projectName.id}}"></i></a>
+          </td>
+        </tr>
+      {% endfor%}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- modal -->
+
+    <div class="modal fade" id="updateProject" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">更新竞赛项目</h4>
           </div>
-          <div class="panel-body">
-            <form class="form " role="search">
-              <div class="input-group">
-                <span class="input-group-btn">
-                  <button type="button" class="btn btn-default">搜索</button>
-                </span>
-                <input id="searchInput" type="text" class="form-control" placeholder="竞赛项目模糊搜索">
-              </div>
-            </form>
-          </div>
+          <form class="form" method="post" action="/admin/competition/project/_insert" enctype="multipart/form-data">
+            <div class="modal-body">
+                <div class="form-group">
+                  <label class="control-label">上传文件</label>
+                  <input class="form-control" type="file" name="file"></input>
+                </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+              <button type="submit" class="btn btn-primary">提交</button>
+            </div>
+          </form>
         </div>
       </div>
-      <div class="col-md-6">
-        <div class="panel panel-default">
-          <div class="panel-heading">
-              <i class="glyphicon glyphicon-info-sign"></i> 操作
-          </div>
-          <div class="panel-body">
-            <div class="btn-group btn-group-justified" role="group">
-              <a href="/admin/competition/project/_insert" class="btn btn-default">更新竞赛项目</a>
+    </div>
+
+    <!-- loop -->
+    {% for projectName in competitionProjects %}
+
+      <!-- updateModal -->
+
+      <div class="modal fade" id="updateModel{{projectName.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="myModalLabel">修改项目名称</h4>
+            </div>
+            <div class="modal-body">
+              <p class="hidden">{{projectName.id}}</p>
+              <div class="form-group">
+                <input id="updateInput" placeholder="{{projectName.project_name}}" type="text" class="form-control">
+              </div>
+              <button id="updateButton" type="button" class="btn btn-success btn-block" disabled="disabled" data-dismiss="modal">修改</button>
             </div>
           </div>
         </div>
       </div>
-      <div class="col-md-12">
-        <div class="panel panel-default">
-          <div class="panel-heading">
-              <i class="glyphicon glyphicon-th-list"></i> 列表
-          </div>
-          <table class="table table-hover">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>项目名称</th>
-                <th>修改</th>
-                <th>删除</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for projectName in competitionProjects %}
-              <tr id="project{{projectName.id}}">
-                <td>{{projectName.id}}</td>
-                <td>{{projectName.project_name}}</td>
-                <td><i class="glyphicon glyphicon-pencil" data-toggle="modal" data-target="#updateModel{{projectName.id}}"></i></td>
-                <td style="color: red;"><i class="glyphicon glyphicon-remove" data-toggle="modal" data-target="#deleteModel{{projectName.id}}"></i></td>
-              </tr>
-              {% endfor%}
-            </tbody>
-          </table>
-          <div style="text-align:center">
-              {{ macros.pagination_widget(project_pagination, '.competition_project')}}
+
+      <!-- endUpdateModal -->
+
+      <!-- deleteModal -->
+
+      <div class="modal fade" id="deleteModel{{projectName.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="myModalLabel">删除学院</h4>
+            </div>
+            <div class="modal-body">
+              <p class="hidden">{{projectName.id}}</p>
+              <div class="form-group">
+                <input id="deleteInput" placeholder="{{projectName.project_name}}" type="text" class="form-control">
+              </div>
+              <button id="deleteButton" type="button" class="btn btn-danger btn-block" disabled="disabled" data-dismiss="modal">删除</button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
-<!-- modal -->
 
-<!-- loop -->
-{% for projectName in competitionProjects %}
+      <!-- endDeleteModal -->
 
-  <!-- updateModal -->
+    {% endfor %}
 
-  <div class="modal fade" id="updateModel{{projectName.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title" id="myModalLabel">修改项目名称</h4>
-        </div>
-        <div class="modal-body">
-          <p class="hidden">{{projectName.id}}</p>
-          <div class="form-group">
-            <input id="updateInput" placeholder="{{projectName.project_name}}" type="text" class="form-control">
-          </div>
-          <button id="updateButton" type="button" class="btn btn-success btn-block" disabled="disabled" data-dismiss="modal">修改</button>
-        </div>
-      </div>
-    </div>
+    <!-- endLoop -->
+
+  <!-- endModal -->
+
   </div>
 
-  <!-- endUpdateModal -->
-
-  <!-- deleteModal -->
-
-  <div class="modal fade" id="deleteModel{{projectName.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title" id="myModalLabel">删除学院</h4>
-        </div>
-        <div class="modal-body">
-          <p class="hidden">{{projectName.id}}</p>
-          <div class="form-group">
-            <input id="deleteInput" placeholder="{{projectName.project_name}}" type="text" class="form-control">
-          </div>
-          <button id="deleteButton" type="button" class="btn btn-danger btn-block" disabled="disabled" data-dismiss="modal">删除</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- endDeleteModal -->
-
-{% endfor %}
-
-<!-- endLoop -->
-
-<!-- endModal -->
-
-</div>
 {% endblock %}
 
 {% block script %}
 
-{{ super() }}
-<script>
-$(document).ready(function(){
+  {{ super() }}
+  <script>
+  $(document).ready(function(){
 
-  $("input#updateInput").keyup(function(){
-    var name = $(this).val();
-    if ( name != ""){
-      $(this).parent().next().removeAttr("disabled");
-    } else {
-      $(this).parent().next().attr("disabled", "disabled");
-    }
-  });
-
-  $("button#updateButton").click(function(){
-    var projectId = $(this).parent().children("p:eq(0)").text();
-    var newName = $(this).prev().children().val();
-    $this = $(this)
-    $.getJSON("/admin/competition/project/_update",{
-      Id: projectId,
-      Name: newName
-    },function(data){
-      if (data.status==2){
-        var obj = document.getElementById("project" + projectId);
-        $(obj).children().eq(1).text(newName);
-        $this.prev().children().attr("placeholder", newName);
-        $this.parents("div.modal").next().find("input").attr("placeholder", newName);
+    $("input#updateInput").keyup(function(){
+      var name = $(this).val();
+      if ( name != ""){
+        $(this).parent().next().removeAttr("disabled");
+      } else {
+        $(this).parent().next().attr("disabled", "disabled");
       }
     });
-  });
 
-  $("input#deleteInput").keyup(function(){
-    var projectName = $(this).attr("placeholder");
-    var name = $(this).val();
-    if (projectName == name ){
-      $(this).parent().next().removeAttr("disabled");
-    }
-    else {
-      $(this).parent().next().attr("disabled", "disabled");
-    }
-  });
-
-  $("button#deleteButton").click(function(){
-    var projectId = $(this).prev().prev().html();
-    $this = $(this);
-    $.getJSON("/admin/competition/project/_delete",{
-      Id: projectId
-      }, function(data){
+    $("button#updateButton").click(function(){
+      var projectId = $(this).parent().children("p:eq(0)").text();
+      var newName = $(this).prev().children().val();
+      $this = $(this)
+      $.getJSON("/admin/competition/project/_update",{
+        Id: projectId,
+        Name: newName
+      },function(data){
         if (data.status==2){
-          var obj = document.getElementById("project" +projectId);
-          $(obj).remove();
+          var obj = document.getElementById("project" + projectId);
+          $(obj).children().eq(1).text(newName);
+          $this.prev().children().attr("placeholder", newName);
+          $this.parents("div.modal").next().find("input").attr("placeholder", newName);
         }
-        else {
-          alert("");
-        }
-    })
-  });
+      });
+    });
 
-});
-</script>
+    $("input#deleteInput").keyup(function(){
+      var projectName = $(this).attr("placeholder");
+      var name = $(this).val();
+      if (projectName == name ){
+        $(this).parent().next().removeAttr("disabled");
+      }
+      else {
+        $(this).parent().next().attr("disabled", "disabled");
+      }
+    });
+
+    $("button#deleteButton").click(function(){
+      var projectId = $(this).prev().prev().html();
+      $this = $(this);
+      $.getJSON("/admin/competition/project/_delete",{
+        Id: projectId
+        }, function(data){
+          if (data.status==2){
+            var obj = document.getElementById("project" +projectId);
+            $(obj).remove();
+          }
+          else {
+            alert("");
+          }
+      })
+    });
+
+  });
+  </script>
+  <script>
+    var $table = $('#table'), $remove = $('#remove');
+    $(function () {
+      $table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
+        $remove.prop('disabled', !$table.bootstrapTable('getSelections').length);
+      });
+      $remove.click(function () {
+        var ids = $.map($table.bootstrapTable('getSelections'), function (row) {
+            return row.id
+        });
+
+        $table.bootstrapTable('remove', {
+          field: 'id',
+          values: ids
+        });
+        $remove.prop('disabled', true);
+      });
+    });
+  </script>
 
 {% endblock %}
