@@ -7,6 +7,8 @@
     <title>{% block title %}{% endblock %}</title>
     <!-- Bootstrap -->
     <link href="{{ url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/admin-base.css')}}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/bootstrap-table.min.css')}}" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -24,41 +26,53 @@
     <div class="container">
       <div class="row">
         <div class="col-md-3">
-          <div class="panel panel-default">
-              <div class="list-group" aria-multiselectable="true">
-                <a class="list-group-item" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne"><i class="glyphicon glyphicon-home"></i> 首页</a>
-                <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-                  <div class="panel-body">
-                    <a class="list-group-item" href="/admin">欢迎</a>
-                  </div>
+          <div class="panel-group" aria-multiselectable="true" role="tablist" id="accordion">
+            <div class="panel panel-default">
+              <div class="panel-heading" role="tab" id="headingOne" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                <i class="glyphicon glyphicon-home"></i> 首页
+              </div>
+              <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                <div class="list-group">
+                  <a class="list-group-item" href="/admin">欢迎</a>
                 </div>
-                <a class="list-group-item" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"><i class="glyphicon glyphicon-user"></i> 用户管理</a>
-                <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-                  <div class="panel-body">
-                    <a id="teacher" class="list-group-item" href="/admin/teacher">教师管理</a>
-                    <a id="unit_admin" class="list-group-item" href="/admin/unit_admin">单位管理员管理</a>
-                    <a id="system_admin" class="list-group-item" href="/admin/system_admin">管理员管理</a>
-                  </div>
+              </div>
+            </div>
+            <div class="panel panel-default">
+              <div class="panel-heading" role="tab" id="headingTwo" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                <i class="glyphicon glyphicon-user"></i> 用户管理
+              </div>
+              <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                <div class="list-group">
+                  <a class="list-group-item" id="teacher"  href="/admin/teacher">教师管理</a>
+                  <a class="list-group-item" id="unit_admin"  href="/admin/unit_admin">单位管理员管理</a>
+                  <a class="list-group-item" id="system_admin"  href="/admin/system_admin">管理员管理</a>
                 </div>
-                <a class="list-group-item" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree"><i class="glyphicon glyphicon-info-sign"></i> 信息管理</a>
-                <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
-                  <div class="panel-body">
-                    <a id="unit" class="list-group-item" href="/admin/unit">单位/院系信息</a>
-                    <a id="grade" class="list-group-item" href="/admin/grade">年级信息</a>
-                  </div>
+              </div>
+            </div>
+            <div class="panel panel-default">
+              <div class="panel-heading" role="tab" id="headingThree" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                <i class="glyphicon glyphicon-info-sign"></i> 信息管理
+              </div>
+              <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+                <div class="list-group">
+                  <a class="list-group-item" id="unit" href="/admin/unit">单位/院系信息</a>
+                  <a class="list-group-item" id="grade" href="/admin/grade">年级信息</a>
                 </div>
-                <a class="list-group-item collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="false" aria-controls="collapseFive"><i class="glyphicon glyphicon-star"></i> 创新活动</a>
-                <div id="collapseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive">
-                  <div class="panel-body">
-                    <a id="competition" class="list-group-item" href="/admin/competition">竞赛管理</a>
-                    <a id="patent" class="list-group-item" href="/admin/patent">专利管理</a>
-                    <a id="work" class="list-group-item" href="/admin/work">作品管理</a>
-                    <a id="paper" class="list-group-item" href="/admin/paper">论文管理</a>
-                  </div>
+              </div>
+            </div>
+            <div class="panel panel-default">
+              <div class="panel-heading" role="tab" id="headingFive" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                <i class="glyphicon glyphicon-star"></i> 创新活动
+              </div>
+              <div id="collapseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive">
+                <div class="list-group">
+                  <a class="list-group-item" id="competition" href="/admin/competition">竞赛管理</a>
+                  <a class="list-group-item" id="patent" href="/admin/patent">专利管理</a>
+                  <a class="list-group-item" id="work" href="/admin/work">作品管理</a>
+                  <a class="list-group-item" id="paper" href="/admin/paper">论文管理</a>
                 </div>
-                <a class="list-group-item"><i class="glyphicon glyphicon-open"></i> 信息导入</a>
-                <a class="list-group-item"><i class="glyphicon glyphicon-download-alt"></i> 信息导出</a>
-                </div>
+              </div>
+            </div>
           </div>
           <div class="">
             <a href="/">返回首页</a>
@@ -75,14 +89,28 @@
     <script src="{{ url_for('static', filename='js/jquery-1.11.2.min.js') }}"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap-table.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js//locales/bootstrap-table-zh-CN.min.js') }}"></script>
     <script>
-        $(document).ready(function(){
-            var reg = /[a-zA-Z]\w+$/;
-            var match = reg.exec(location.href);
-            var matchObj = document.getElementById(match);
-            $(matchObj).parent().parent().addClass("in");
+      var $table = $('#table'), $remove = $('#remove');
+      $(function () {
+        $table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
+          $remove.prop('disabled', !$table.bootstrapTable('getSelections').length);
         });
+        $remove.click(function () {
+          var ids = $.map($table.bootstrapTable('getSelections'), function (row) {
+              return row.id
+          });
+
+          $table.bootstrapTable('remove', {
+            field: 'id',
+            values: ids
+          });
+          $remove.prop('disabled', true);
+        });
+      });
     </script>
+
     {% endblock %}
   </body>
 </html>
