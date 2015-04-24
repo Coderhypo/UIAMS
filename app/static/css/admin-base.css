@@ -1,3 +1,6 @@
 .panel-group .panel {
     border-radius: 0px;
 }
+.panel-group .panel+.panel{
+    margin-top: 0px;
+}
