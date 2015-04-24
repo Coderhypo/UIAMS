@@ -103,6 +103,7 @@ def unitDelete():
 @admin.route('/teacher')
 @login_required
 def teacher():
+    '''
     teacherRole = Role.query.filter_by(role_name=u'教师').first()
     teacher_page = request.args.get('page', 1, type=int)
     teacher_pagination = \
@@ -110,6 +111,10 @@ def teacher():
     teachers = teacher_pagination.items
     return render_template('/admin/teacher.html',teachers = teachers,
             teacher_pagination=teacher_pagination)
+    '''
+    teacherRole = Role.query.filter_by(role_name=u'教师').first()
+    teachers = User.query.filter_by(role=teacherRole).order_by('id').all()
+    return render_template('/admin/teacher.html',teachers = teachers)
 
 @admin.route('/teacher/_get')
 @login_required
