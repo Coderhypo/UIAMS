@@ -1,27 +1,26 @@
 {% extends "/admin/base.html" %}
 
-{% block title %}单位/院系信息{% endblock %}
+{% block title %}院系信息{% endblock %}
 
 {% block page_content %}
 
   <div class="col-md-12">
     <ol class="breadcrumb">
       <li><a href="/">Home</a></li>
-      <li><a href="/admin">后台首页</a></li>
       <li><a href="#">信息管理</a></li>
-      <li class="active">单位/院系信息</li>
+      <li class="active">院系信息</li>
     </ol>
   </div>
   
   <div class="col-md-12">
     <ul class="nav nav-tabs">
-      <li class="active"><a>单位/院系信息</a></li>
-      <li class="pull-right" data-toggle="modal" data-target="#updateUnit"><a><span class="glyphicon glyphicon-open"></span> 更新单位/院系</a></li>
+      <li class="active"><a>院系信息</a></li>
+      <li class="pull-right" data-toggle="modal" data-target="#updateDepartment"><a><span class="glyphicon glyphicon-open"></span> 更新院系</a></li>
     </ul>
     <button id="remove" class="btn btn-danger" disabled="">
-      <i class="glyphicon glyphicon-remove"></i> 删除
+      <i class="glyphicon glyphicon-trash"></i>
     </button>
-    <table id="table" class="table table-hover table-striped" data-toggle="table" data-search="true" data-toolbar="#remove">
+    <table id="table" class="table table-hover table-striped" data-toggle="table" data-toolbar="#remove">
       <thead>
         <tr>
           <th data-field="state" data-checkbox="true"></th>
@@ -33,7 +32,7 @@
       </thead>
       <tbody>
         {% for unit in units %}
-          <tr class="unit" id="unit{{unit.id}}">
+          <tr class="unit success" id="unit{{unit.id}}">
             <td disabled></td>
             <td>{{ unit.id }}</td>
             <td>{{ unit.unit_name }}</td>
@@ -60,112 +59,131 @@
     </table>
   </div>
 
-<!-- modal -->
+  <!-- modal -->
 
-  <!-- loopUnit -->
-
-  {% for unit in units %}
-    
-    <!-- unitUpdateModal -->
-
-    <div class="modal fade" id="unitUpdateModal{{unit.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal fade" id="updateDepartment" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="myModalLabel">修改学院名称</h4>
+            <h4 class="modal-title" id="myModalLabel">更新教师</h4>
           </div>
-          <div class="modal-body">
-            <p class="hidden">{{unit.id}}</p>
-            <div class="form-group">
-              <input id="updateInput" placeholder="{{unit.unit_name}}" type="text" class="form-control unit">
+          <form class="form" method="post" action="/admin/unit/department/_insert" enctype="multipart/form-data">
+            <div class="modal-body">
+                <div class="form-group">
+                  <label class="control-label">上传文件</label>
+                  <input class="form-control" type="file" name="file"></input>
+                </div>
             </div>
-            <button id="updateButton" type="button" class="btn btn-success btn-block unit" disabled="disabled" data-dismiss="modal">修改</button>
-          </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+              <button type="submit" class="btn btn-primary">提交</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
 
-    <!-- endUnitUpdateModal -->  <!-- acDeleteModal -->
-
-    <!-- unitDeleteModal -->
-    <div class="modal fade" id="unitDeleteModal{{unit.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="myModalLabel">删除学院</h4>
-          </div>
-          <div class="modal-body">
-            <p class="hidden">{{unit.id}}</p>
-            <div class="form-group">
-              <input id="deleteInput" placeholder="{{unit.unit_name}}" type="text" class="form-control unit">
-            </div>
-            <button id="deleteButton" type="button" class="btn btn-danger btn-block unit" disabled="disabled" data-dismiss="modal">删除</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- endUnitDeleteModal -->
-
-    <!-- loopMajors -->
-    
-    {% for major in unit.majors %}
-
-      <!-- majorUpdateModal -->
+    {% for unit in units %}
       
-      <div class="modal fade" id="majorUpdateModal{{major.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <!-- unitUpdateModal -->
+
+      <div class="modal fade" id="unitUpdateModal{{unit.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title" id="majorUpdateModalLabel">修改专业名称</h4>
+              <h4 class="modal-title" id="myModalLabel">修改学院名称</h4>
             </div>
             <div class="modal-body">
-              <p class="hidden">{{major.id}}</p>
+              <p class="hidden">{{unit.id}}</p>
               <div class="form-group">
-                <input id="updateInput" placeholder="{{major.major_name}}" type="text" class="form-control major">
+                <input id="updateInput" placeholder="{{unit.unit_name}}" type="text" class="form-control unit">
               </div>
-              <button id="updateButton" type="button" class="btn btn-success btn-block major" disabled="disabled" data-dismiss="modal">修改</button>
+              <button id="updateButton" type="button" class="btn btn-success btn-block unit" disabled="disabled" data-dismiss="modal">修改</button>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- endMajorUpdateModal -->
+      <!-- endUnitUpdateModal -->  <!-- acDeleteModal -->
 
-      <!-- majorDeleteModal -->
-
-      <div class="modal fade" id="majorDeleteModal{{major.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <!-- unitDeleteModal -->
+      <div class="modal fade" id="unitDeleteModal{{unit.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title" id="majorDeleteModalLabel">删除专业</h4>
+              <h4 class="modal-title" id="myModalLabel">删除学院</h4>
             </div>
             <div class="modal-body">
-              <p class="hidden">{{major.id}}</p>
+              <p class="hidden">{{unit.id}}</p>
               <div class="form-group">
-                <input id="deleteInput" placeholder="{{major.major_name}}" type="text" class="form-control major">
+                <input id="deleteInput" placeholder="{{unit.unit_name}}" type="text" class="form-control unit">
               </div>
-              <button id="deleteButton" type="button" class="btn btn-danger btn-block major" disabled="disabled" data-dismiss="modal">删除</button>
+              <button id="deleteButton" type="button" class="btn btn-danger btn-block unit" disabled="disabled" data-dismiss="modal">删除</button>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- endMajorDeleteModal -->
+      <!-- endUnitDeleteModal -->
+
+      <!-- loopMajors -->
+      
+      {% for major in unit.majors %}
+
+        <!-- majorUpdateModal -->
+        
+        <div class="modal fade" id="majorUpdateModal{{major.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="majorUpdateModalLabel">修改专业名称</h4>
+              </div>
+              <div class="modal-body">
+                <p class="hidden">{{major.id}}</p>
+                <div class="form-group">
+                  <input id="updateInput" placeholder="{{major.major_name}}" type="text" class="form-control major">
+                </div>
+                <button id="updateButton" type="button" class="btn btn-success btn-block major" disabled="disabled" data-dismiss="modal">修改</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- endMajorUpdateModal -->
+
+        <!-- majorDeleteModal -->
+
+        <div class="modal fade" id="majorDeleteModal{{major.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="majorDeleteModalLabel">删除专业</h4>
+              </div>
+              <div class="modal-body">
+                <p class="hidden">{{major.id}}</p>
+                <div class="form-group">
+                  <input id="deleteInput" placeholder="{{major.major_name}}" type="text" class="form-control major">
+                </div>
+                <button id="deleteButton" type="button" class="btn btn-danger btn-block major" disabled="disabled" data-dismiss="modal">删除</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- endMajorDeleteModal -->
+
+      {% endfor %}
+
+      <!-- endLoopMajors -->
 
     {% endfor %}
 
-    <!-- endLoopMajors -->
-
-  {% endfor %}
-
-  <!-- endLoopUnits -->
-
-<!-- endModal -->
+  <!-- endModal -->
 
 {% endblock %}
 
@@ -271,11 +289,13 @@
   });
 </script>
 <script>
-$(function(){
-  $('tr.unit').click(function(){  
-    $(this).siblings('.major_'+this.id).toggle();
-  }).click();
-})
+  $(document).ready(function(){
+    $('tr.unit').click(function(){  
+      $(this)
+        .toggleClass("success") 
+        .siblings('.major_'+this.id).toggle();
+    }).click();
+  });
 </script>
 
 {% endblock %}
