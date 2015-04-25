@@ -171,18 +171,19 @@ def teacherInsert():
             for i in range(1, table.nrows):
                 id = table.row(i)[0].value.encode('utf-8')
                 name = table.row(i)[1].value.encode('utf-8')
-                unit = table.row(i)[2].value.encode('utf-8')
-                try:
-                    teacher = User(id, name)
-                    teacher.role = \
-                        Role.query.filter_by(role_name=u'教师').first()
-                    teacher.password = '123'
-                    teacher.unit = \
-                        Unit.query.filter_by(unit_name = unit).first()
-                    db.session.add(teacher)
-                    db.session.commit()
-                except:
-                    pass
+                unit_name = table.row(i)[2].value.encode('utf-8')
+                unit = Unit.query.filter_by(unit_name = unit_name).first()
+                if not unit:
+                    unit = Unit(unit_name)
+                    db.session.add(unit)
+                teacher = User(id, name)
+                teacher.role = \
+                    Role.query.filter_by(role_name=u'教师').first()
+                teacher.password = '123'
+                teacher.unit = unit
+                db.session.add(teacher)
+                db.session.commit()
+
     units = Unit.query.order_by('id').all()
     return render_template('/admin/teacher.html', units=units)
 
