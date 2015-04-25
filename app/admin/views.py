@@ -34,12 +34,42 @@ def grade():
 @login_required
 def unit():
     units = Unit.query.order_by('id').all()
-    print units[0].majors
     return render_template('/admin/unit.html', units = units)
 
 @admin.route('/unit/department')
 @login_required
 def department():
+    return render_template('/admin/unit_department.html')
+
+@admin.route('/unit/department/_insert', methods=['GET', 'POST'])
+@login_required
+def insertDepartment():
+    if request.method == 'POST':
+        utcnow = datetime.utcnow()
+        file = request.files['file']
+        if file and allowed_file(file.filename):
+            file.filename = utcnow.strftime('department_%Y-%m-%d(%H:%M:%S).xls')
+            file_url = os.path.join(UPLOAD_FOLDER, file.filename)
+            file.save(file_url)
+            xls = xlrd.open_workbook(file_url)
+            table = xls.sheets()[0]
+            for i in range(1, table.nrows):
+                '''
+                id = table.row(i)[0].value.encode('utf-8')
+                name = table.row(i)[1].value.encode('utf-8')
+                unit = table.row(i)[2].value.encode('utf-8')
+                try:
+                    teacher = User(id, name)
+                    teacher.role = \
+                        Role.query.filter_by(role_name=u'教师').first()
+                    teacher.password = '123'
+                    teacher.unit = \
+                        Unit.query.filter_by(unit_name = unit).first()
+                    db.session.add(teacher)
+                    db.session.commit()
+                except:
+                    pass
+                '''
     return render_template('/admin/unit_department.html')
 
 @admin.route('/unit/department/_get')
@@ -100,7 +130,7 @@ def unitDelete():
 
 ''' 用户管理'''
 
-@admin.route('/teacher')
+@admin.route('/user/teacher')
 @login_required
 def teacher():
     '''
@@ -156,14 +186,14 @@ def teacherInsert():
     units = Unit.query.order_by('id').all()
     return render_template('/admin/teacher.html', units=units)
 
-@admin.route('/unit_admin')
+@admin.route('/user/unit_admin')
 @login_required
 def unitAdmin():
     unitAdminRole = Role.query.filter_by(role_name=u'单位管理员').first()
     unitAdmins = User.query.filter_by(role=unitAdminRole).all()
     return render_template('/admin/unit_admin.html',unitAdmins = unitAdmins)
 
-@admin.route('/system_admin')
+@admin.route('/user/system_admin')
 @login_required
 def systemAdmin():
     adminRole = Role.query.filter_by(role_name=u'管理员').first()
