@@ -23,8 +23,9 @@
       <thead>
         <tr>
           <th data-field="state" data-checkbox="true"></th>
-          <th class="col-xs-2">#</th>
-          <th class="col-xs-2" data-field="name" data-sortable="true">姓名</th>
+          <th class="col-xs-1">#</th>
+          <th class="col-xs-2" data-field="name" data-sortable="true">用户名</th>
+          <th class="col-xs-2" data-field="nick_name" data-sortable="true">姓名</th>
           <th data-field="unit" data-sortable="true">单位</th>
           <th class="col-xs-1" data-field="action">Action</th>
         </tr>
@@ -32,15 +33,16 @@
       <tbody>
         {% for teacher in teachers %}
         <tr id="teacher{{teacher.user_id}}">
-            <td></td>
-            <td>{{ teacher.user_id }}</td>
-            <td>{{ teacher.user_name }}</td>
-            <td>{{ teacher.unit.unit_name }}</td>
-            <td>
-                <a class="btn-xs ml10"><i class="glyphicon glyphicon-edit" data-toggle="modal" data-target="#updateModal{{teacher.user_id}}"></i></a>
-                <a class="btn-xs ml10"><i class="glyphicon glyphicon-remove" data-toggle="modal" data-target="#deleteModal{{teacher.user_id}}"></i></a>
-            </td>
-          </tr>
+          <td></td>
+          <td>{{ teacher.id }}</td>
+          <td>{{ teacher.user_name }}</td>
+          <td>{{ teacher.nick_name }}</td>
+          <td>{{ teacher.unit.unit_name }}</td>
+          <td>
+              <a class="btn-xs ml10"><i class="glyphicon glyphicon-edit" data-toggle="modal" data-target="#updateModal{{teacher.user_id}}"></i></a>
+              <a class="btn-xs ml10"><i class="glyphicon glyphicon-remove" data-toggle="modal" data-target="#deleteModal{{teacher.user_id}}"></i></a>
+          </td>
+        </tr>
         {% endfor %}
       </tbody>
     </table>

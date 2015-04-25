@@ -25,30 +25,29 @@
       <thead>
         <tr>
           <th data-field="state" data-checkbox="true"></th>
-          <th class="col-xs-2">#</th>
-          <th class="col-xs-2" data-field="name" data-sortable="true">姓名</th>
+          <th class="col-xs-1">#</th>
+          <th class="col-xs-2" data-field="name" data-sortable="true">用户名</th>
+          <th class="col-xs-2" data-field="nick_name" data-sortable="true">姓名</th>
           <th data-field="unit" data-sortable="true">单位</th>
           <th class="col-xs-1" data-field="action">Action</th>
         </tr>
       </thead>
       <tbody>
         {% for teacher in teachers %}
-        <tr id="teacher{{teacher.user_id}}">
-            <td></td>
-            <td>{{ teacher.user_id }}</td>
-            <td>{{ teacher.user_name }}</td>
-            <td>{{ teacher.unit.unit_name }}</td>
-            <td>
-                <a class="btn-xs ml10"><i class="glyphicon glyphicon-edit" data-toggle="modal" data-target="#updateModal{{teacher.user_id}}"></i></a>
-                <a class="btn-xs ml10"><i class="glyphicon glyphicon-remove" data-toggle="modal" data-target="#deleteModal{{teacher.user_id}}"></i></a>
-            </td>
-          </tr>
+        <tr id="teacher{{teacher.id}}">
+          <td></td>
+          <td>{{ teacher.id }}</td>
+          <td>{{ teacher.user_name }}</td>
+          <td>{{ teacher.nick_name }}</td>
+          <td>{{ teacher.unit.unit_name }}</td>
+          <td>
+              <a class="btn-xs ml10"><i class="glyphicon glyphicon-edit" data-toggle="modal" data-target="#updateModal{{teacher.id}}"></i></a>
+              <a class="btn-xs ml10"><i class="glyphicon glyphicon-remove" data-toggle="modal" data-target="#deleteModal{{teacher.id}}"></i></a>
+          </td>
+        </tr>
         {% endfor %}
       </tbody>
     </table>
-    <!--div style="text-align:center">
-        {#{ macros.pagination_widget(teacher_pagination, '.teacher')}#}
-    </div-->
   </div>
 
   <!-- modal -->
@@ -82,7 +81,7 @@
 
       <!-- updateModal -->
 
-      <div class="modal fade" id="updateModal{{teacher.user_id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal fade" id="updateModal{{teacher.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
@@ -90,7 +89,7 @@
               <h4 class="modal-title" id="myModalLabel">修改教师名称</h4>
             </div>
             <div class="modal-body">
-              <p class="hidden">{{teacher.user_id}}</p>
+              <p class="hidden">{{teacher.id}}</p>
               <div class="form-group">
                 <input id="updateInput" placeholder="{{teacher.user_name}}" type="text" class="form-control">
               </div>
@@ -104,7 +103,7 @@
 
       <!-- deleteModal -->
 
-      <div class="modal fade" id="deleteModal{{teacher.user_id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal fade" id="deleteModal{{teacher.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
@@ -112,9 +111,9 @@
               <h4 class="modal-title" id="myModalLabel">删除教师</h4>
             </div>
             <div class="modal-body">
-              <p class="hidden">{{teacher.user_id}}</p>
+              <p class="hidden">{{teacher.id}}</p>
               <div class="form-group">
-                <input id="deleteInput" placeholder="{{teacher.user_name}}" type="text" class="form-control deleteInput{{teacher.user_id}}">
+                <input id="deleteInput" placeholder="{{teacher.user_name}}" type="text" class="form-control deleteInput{{teacher.id}}">
               </div>
               <button id="deleteButton" type="button" class="btn btn-danger btn-block" disabled="disabled" data-dismiss="modal">删除</button>
             </div>
@@ -193,4 +192,5 @@
 
   });
   </script>
+
 {% endblock %}

@@ -32,7 +32,7 @@
       </thead>
       <tbody>
         {% for unit in units %}
-          <tr class="unit success" id="unit{{unit.id}}">
+          <tr class="unit" id="unit{{unit.id}}">
             <td disabled></td>
             <td>{{ unit.id }}</td>
             <td>{{ unit.unit_name }}</td>
@@ -43,7 +43,7 @@
             </td>
           </tr>
           {% for major in unit.majors %}
-            <tr class="major_unit{{unit.id}}" id="major{{major.id}}">
+            <tr class="success major_unit{{unit.id}}" id="major{{major.id}}">
               <td></td>
               <td>{{ major.id }}</td>
               <td>----{{ major.major_name }}</td>
@@ -292,7 +292,6 @@
   $(document).ready(function(){
     $('tr.unit').click(function(){  
       $(this)
-        .toggleClass("success") 
         .siblings('.major_'+this.id).toggle();
     }).click();
   });
