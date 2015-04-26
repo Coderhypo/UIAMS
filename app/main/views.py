@@ -10,7 +10,7 @@ from .. import db
 @main.route('/login', methods=['GET','POST'])
 def login():
     if request.method == 'POST':
-        user = User.query.filter_by(user_id = request.form['username']).first()
+        user = User.query.filter_by(user_name = request.form['username']).first()
         if user is not None and user.verify_password(request.form['password']):
             login_user(user, request.form.get('remember_me'))
             return redirect('/')
