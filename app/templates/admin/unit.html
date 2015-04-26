@@ -13,6 +13,16 @@
   </div>
   
   <div class="col-md-12">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible" role="alert" >
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>{{ category }} !</strong> {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
     <ul class="nav nav-tabs">
       <li class="active"><a>院系信息</a></li>
       <li class="pull-right" data-toggle="modal" data-target="#updateDepartment"><a><span class="glyphicon glyphicon-open"></span> 更新院系</a></li>
@@ -20,37 +30,39 @@
     <button id="remove" class="btn btn-danger" disabled="">
       <i class="glyphicon glyphicon-trash"></i>
     </button>
-    <table id="table" class="table table-hover table-striped" data-toggle="table" data-toolbar="#remove">
+    <table 
+      id="table" 
+      class="table table-hover table-striped" 
+      data-toggle="table" 
+      data-toolbar="#remove">
       <thead>
         <tr>
           <th data-field="state" data-checkbox="true"></th>
-          <th class="col-xs-2">#</th>
-          <th>单位/院系</th>
-          <th class="col-xs-2">是否学院</th>
-          <th class="col-xs-1">Action</th>
+          <th data-field="id" class="col-xs-1">#</th>
+          <th data-field="name" data-editable="true">单位/院系</th>
+          <th data-field="is_acachemy" class="col-xs-2">是否学院</th>
+          <th data-field="action" class="col-xs-1">Action</th>
         </tr>
       </thead>
       <tbody>
         {% for unit in units %}
-          <tr class="unit" id="unit{{unit.id}}">
-            <td disabled></td>
+          <tr class="unit" id="{{unit.id}}">
+            <td></td>
             <td>{{ unit.id }}</td>
             <td>{{ unit.unit_name }}</td>
             <td>{% if unit.is_acachemy == 1 %}是{% else %}否{% endif %}</td>
             <td>
               <a class="btn-xs ml10"><i class="glyphicon glyphicon-edit" data-toggle="modal" data-target="#unitUpdateModal{{unit.id}}"></i></a>
-              <!--a class="btn-xs ml10"><i class="glyphicon glyphicon-remove" data-toggle="modal" data-target="#unitDeleteModal{{unit.id}}"></i></a-->
             </td>
           </tr>
           {% for major in unit.majors %}
-            <tr class="success major_unit{{unit.id}}" id="major{{major.id}}">
+            <tr class="success unit_{{unit.id}}" id="{{major.id}}">
               <td></td>
               <td>{{ major.id }}</td>
               <td>----{{ major.major_name }}</td>
               <td></td>
               <td>
                 <a class="btn-xs ml10"><i class="glyphicon glyphicon-pencil" data-toggle="modal" data-target="#majorUpdateModal{{major.id}}"></i></a>
-                <a class="btn-xs ml10"><i class="glyphicon glyphicon-remove" data-toggle="modal" data-target="#majorDeleteModal{{major.id}}"></i></a>
               </td>
             </tr>
           {% endfor %}
@@ -66,7 +78,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="myModalLabel">更新教师</h4>
+            <h4 class="modal-title" id="myModalLabel">更新院系</h4>
           </div>
           <form class="form" method="post" action="/admin/unit/department/_insert" enctype="multipart/form-data">
             <div class="modal-body">
@@ -108,27 +120,6 @@
 
       <!-- endUnitUpdateModal -->  <!-- acDeleteModal -->
 
-      <!-- unitDeleteModal -->
-      <div class="modal fade" id="unitDeleteModal{{unit.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title" id="myModalLabel">删除学院</h4>
-            </div>
-            <div class="modal-body">
-              <p class="hidden">{{unit.id}}</p>
-              <div class="form-group">
-                <input id="deleteInput" placeholder="{{unit.unit_name}}" type="text" class="form-control unit">
-              </div>
-              <button id="deleteButton" type="button" class="btn btn-danger btn-block unit" disabled="disabled" data-dismiss="modal">删除</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- endUnitDeleteModal -->
-
       <!-- loopMajors -->
       
       {% for major in unit.majors %}
@@ -155,28 +146,6 @@
 
         <!-- endMajorUpdateModal -->
 
-        <!-- majorDeleteModal -->
-
-        <div class="modal fade" id="majorDeleteModal{{major.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="majorDeleteModalLabel">删除专业</h4>
-              </div>
-              <div class="modal-body">
-                <p class="hidden">{{major.id}}</p>
-                <div class="form-group">
-                  <input id="deleteInput" placeholder="{{major.major_name}}" type="text" class="form-control major">
-                </div>
-                <button id="deleteButton" type="button" class="btn btn-danger btn-block major" disabled="disabled" data-dismiss="modal">删除</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- endMajorDeleteModal -->
-
       {% endfor %}
 
       <!-- endLoopMajors -->
@@ -189,112 +158,124 @@
 
 {% block script %}
 
-{{ super() }}
+  {{ super() }}
 
-<script>
-  $(document).ready(function(){
+  <script>
+    $(document).ready(function(){
 
-    $("input#updateInput").keyup(function(){
-      var name = $(this).val();
-      if ( name != "" ){
-        $(this).parent().next().removeAttr("disabled");
-      } else {
-        $(this).parent().next().attr("disabled", "disabled");
-      }
-    });
+      $("input#updateInput").keyup(function(){
+        var name = $(this).val();
+        if ( name != "" ){
+          $(this).parent().next().removeAttr("disabled");
+        } else {
+          $(this).parent().next().attr("disabled", "disabled");
+        }
+      });
 
-    $("button#updateButton").click(function(){
-      var isUnit = false;
-      if ($(this).hasClass("unit")) {
-        isUnit = true;
-      }
-      var id = $(this).parent().children("p:eq(0)").text();
-      var newName = $(this).prev().children().val();
-      $this = $(this);
-      if ( isUnit == true ){
-        $.getJSON("/admin/unit/_update",{
-          Id: id,
-          Name: newName
-        },function(data){
-          if ( data.status==2){
-            var obj = document.getElementById("unit" + id);
-            $(obj).children(":eq(1)").text(newName);
-            $this.prev().children().attr("placeholder", newName);
-            $("input#deleteInput.unit").attr("placeholder", newName);
-          } else {
-            alert("None");
-          }
-        });
-      } else {
-        $.getJSON("/admin/major/_update",{
+      $("button#updateButton").click(function(){
+        var isUnit = false;
+        if ($(this).hasClass("unit")) {
+          isUnit = true;
+        }
+        var id = $(this).parent().children("p:eq(0)").text();
+        var newName = $(this).prev().children().val();
+        $this = $(this);
+        if ( isUnit == true ){
+          $.getJSON("/admin/unit/_update",{
             Id: id,
             Name: newName
-        },function(data){
-          if ( data.status==2){
-            var obj = document.getElementById("major" + id);
-            $(obj).children(":eq(1)").text("----" + newName);
-            $this.prev().children().attr("placeholder", newName);
-            $("input#deleteInput.major").attr("placeholder", newName);
-          } else {
-            alert("None");
-          }
-        });
-      }
-    });
-    
-    $("input#deleteInput").keyup(function(){
-      var deleteName = $(this).attr("placeholder");
-      var name = $(this).val();
-      if ( deleteName == name ){
-        $(this).parent().next().removeAttr("disabled");
-      }
-      else {
-        $(this).parent().next().attr("disabled", "disabled");
-      }
-    });
+          },function(data){
+            if ( data.status==2){
+              var obj = document.getElementById("unit" + id);
+              $(obj).children(":eq(1)").text(newName);
+              $this.prev().children().attr("placeholder", newName);
+              $("input#deleteInput.unit").attr("placeholder", newName);
+            } else {
+              alert("None");
+            }
+          });
+        } else {
+          $.getJSON("/admin/major/_update",{
+              Id: id,
+              Name: newName
+          },function(data){
+            if ( data.status==2){
+              var obj = document.getElementById("major" + id);
+              $(obj).children(":eq(1)").text("----" + newName);
+              $this.prev().children().attr("placeholder", newName);
+              $("input#deleteInput.major").attr("placeholder", newName);
+            } else {
+              alert("None");
+            }
+          });
+        }
+      });
 
-    $("button#deleteButton").click(function(){
-      var isUnit = false;
-      if ( $(this).hasClass("unit")) {
-        isUnit = true;
-      }
-      var id = $(this).parent().children("p:eq(0)").text();
-      if ( isUnit == true ) {
-        $.getJSON("/admin/unit/_delete",{
-          Id: id
-        },function(data){
-          if (data.status==2){
-            var obj = document.getElementById("unit" + id);
-            $(obj).remove();
-          }
-          else {
-            alert("操作失败")
-          }
-        });
-      } else {
-        $.getJSON("/admin/major/_delete",{
-          Id: id
-        },function(data){
-          if (data.status==2){
-            var obj = document.getElementById("major" + id);
-            $(obj).remove();
-          }
-          else {
-            alert("操作失败");
-          }
-        });
-      }
     });
+  </script>
+  
+  <script>
+    $(document).ready(function(){
+      $('tr.unit').click(function(){  
+        $(this)
+          .siblings('.unit_'+this.id).toggle();
+      }).click();
+    });
+  </script>
 
-  });
-</script>
-<script>
-  $(document).ready(function(){
-    $('tr.unit').click(function(){  
-      $(this)
-        .siblings('.major_'+this.id).toggle();
-    }).click();
-  });
-</script>
+  <script>
+    var $table = $('#table'),
+        $remove = $('#remove');
+    $(function () {
+      $table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
+        $remove.prop('disabled', !$table.bootstrapTable('getSelections').length);
+      });
+
+      $remove.click(function () {
+        var ids = $.map($table.bootstrapTable('getSelections'), function (row) {
+          return row.id
+        });
+        $.getJSON("/admin/unit/department/_delete",{ ids: ids.join(',')}, function(data) {
+          if (data.status) {
+            $table.bootstrapTable('remove', {
+              field: 'id',
+              values: ids
+            });
+            $remove.prop('disabled', true);
+          }
+        });
+      });
+    });
+  </script>
+
+  <script>
+    $(document).ready(function() {
+
+      $('.editable').on('shown', function(e, editable) {
+        $(this).editable('option', 'validate', function(value) { 
+          if($.trim(value) == '') {
+            return 'This field is required';
+          }
+        });
+      });
+
+      $('.editable').on('save',function(e, params){
+        var id = $(this).parents('tr').attr('id');
+
+        $(this).editable('submit', { 
+          ajaxOptions: {
+            url: '/admin/unit/department/_update',
+            method: 'GET',
+            data: { id: id, newName: params.newValue }
+          },
+          success: function(data) {
+            if(data) {
+            }
+          }
+        });
+      });
+
+    });
+  </script>
 
 {% endblock %}
