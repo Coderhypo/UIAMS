@@ -14,42 +14,59 @@
   </div>
 
   <div class="col-md-12">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible" role="alert" >
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>{{ category }} !</strong> {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
     <ul class="nav nav-tabs">
       <li class="active"><a>教师管理</a></li>
       <li class="pull-right" data-toggle="modal" data-target="#updateTeachers"><a><span class="glyphicon glyphicon-open"></span> 更新教师</a></li>
     </ul>
-    <button id="remove" class="btn btn-danger" disabled="">
-      <i class="glyphicon glyphicon-trash"></i> 
-    </button>
-    <table id="table" class="table table-hover table-striped" data-toggle="table" data-sort-order="desc" data-search="true" data-toolbar="#remove" data-pagination="true" data-page-size="10" data-show-pagination-switch="true">
+         
+    <button id="remove" class="btn btn-danger" disabled><i class="glyphicon glyphicon-trash"></i></button>
+    <table 
+      id="table"
+      class="table table-hover table-striped" 
+      data-toggle="table" 
+      data-sort-order="desc" 
+      data-search="true" 
+      data-toolbar="#remove" 
+      data-pagination="true" 
+      data-page-size="10" 
+      data-show-pagination-switch="true">
       <thead>
         <tr>
           <th data-field="state" data-checkbox="true"></th>
-          <th class="col-xs-1">#</th>
-          <th class="col-xs-2" data-field="name" data-sortable="true">用户名</th>
-          <th class="col-xs-2" data-field="nick_name" data-sortable="true">姓名</th>
+          <th data-field="id" class="col-xs-1" data-sortable="true">#</th>
+          <th data-field="name" class="col-xs-2" data-sortable="true">用户名</th>
+          <th data-field="nick_name" class="col-xs-2" id="nick_name" data-sortable="true" data-editable="true">姓名</th>
           <th data-field="unit" data-sortable="true">单位</th>
-          <th class="col-xs-1" data-field="action">Action</th>
+          <th data-field="action" class="col-xs-1">Action</th>
         </tr>
       </thead>
       <tbody>
         {% for teacher in teachers %}
-        <tr id="teacher{{teacher.id}}">
+        <tr id="{{teacher.id}}">
           <td></td>
           <td>{{ teacher.id }}</td>
           <td>{{ teacher.user_name }}</td>
           <td>{{ teacher.nick_name }}</td>
           <td>{{ teacher.unit.unit_name }}</td>
           <td>
-              <a class="btn-xs ml10"><i class="glyphicon glyphicon-edit" data-toggle="modal" data-target="#updateModal{{teacher.id}}"></i></a>
-              <a class="btn-xs ml10"><i class="glyphicon glyphicon-remove" data-toggle="modal" data-target="#deleteModal{{teacher.id}}"></i></a>
+              <a class="btn-xs ml10"><i class="glyphicon glyphicon-lock" data-toggle="modal" data-target="#updateModal{{teacher.id}}"></i></a>
           </td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
   </div>
-
+  
   <!-- modal -->
 
     <div class="modal fade" id="updateTeachers" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -101,28 +118,6 @@
 
       <!-- endUpdateModal -->
 
-      <!-- deleteModal -->
-
-      <div class="modal fade" id="deleteModal{{teacher.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title" id="myModalLabel">删除教师</h4>
-            </div>
-            <div class="modal-body">
-              <p class="hidden">{{teacher.id}}</p>
-              <div class="form-group">
-                <input id="deleteInput" placeholder="{{teacher.user_name}}" type="text" class="form-control deleteInput{{teacher.id}}">
-              </div>
-              <button id="deleteButton" type="button" class="btn btn-danger btn-block" disabled="disabled" data-dismiss="modal">删除</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- endDeleteModal -->
-
     {% endfor %}
 
     <!-- endLoop -->
@@ -163,34 +158,63 @@
       });
     });
 
-    $("input#deleteInput").keyup(function(){
-      var teacherName = $(this).attr("placeholder");
-      var name = $(this).val();
-      if (teacherName == name ){
-        $(this).parent().next().removeAttr("disabled");
-      }
-      else {
-        $(this).parent().next().attr("disabled", "disabled");
-      }
-    });
-
-    $("button#deleteButton").click(function(){
-      var id = $(this).prev().prev().html();
-      $this = $(this);
-      $.getJSON("/admin/competition/project/_delete",{
-        Id: id
-        }, function(data){
-          if (data.status==2){
-            var obj = document.getElementById("teacher" +id);
-            $(obj).remove();
-          }
-          else {
-            alert("");
-          }
-      })
-    });
-
   });
+  </script>
+
+  <script>
+    var $table = $('#table'),
+        $remove = $('#remove');
+    $(function () {
+      $table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
+        $remove.prop('disabled', !$table.bootstrapTable('getSelections').length);
+      });
+
+      $remove.click(function () {
+        var ids = $.map($table.bootstrapTable('getSelections'), function (row) {
+          return row.id
+        }).join(',');
+        $.getJSON("/admin/teacher/_delete",{ ids: ids}, function(data) {
+          if (data.status) {
+            $table.bootstrapTable('remove', {
+              field: 'id',
+              values: ids
+            });
+            $remove.prop('disabled', true);
+          }
+        });
+      });
+    });
+  </script>
+
+  <script>
+    $(document).ready(function() {
+/*
+*/
+      $('.editable').on('shown', function(e, editable) {
+        $(this).editable('option', 'validate', function(value) { 
+          if($.trim(value) == '') {
+            return 'This field is required';
+          }
+        });
+      });
+
+      $('.editable').on('save',function(e, params){
+        var id = $(this).parents('tr').attr('id');
+
+        $(this).editable('submit', { 
+          ajaxOptions: {
+            url: '/admin/teacher/_update',
+            method: 'GET',
+            data: { id: id, newName: params.newValue }
+          },
+          success: function(data) {
+            if(data) {
+            }
+          }
+        });
+      });
+
+    });
   </script>
 
 {% endblock %}
