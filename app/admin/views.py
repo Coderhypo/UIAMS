@@ -1,6 +1,6 @@
 # coding=utf-8
 from flask import render_template, session, redirect, url_for, request,\
-jsonify, current_app
+jsonify, current_app, flash
 from ..models import Grade, Role, User, Unit, CompetitionProject, Major
 from flask.ext.login import login_required
 
@@ -133,15 +133,6 @@ def unitDelete():
 @admin.route('/user/teacher')
 @login_required
 def teacher():
-    '''
-    teacherRole = Role.query.filter_by(role_name=u'教师').first()
-    teacher_page = request.args.get('page', 1, type=int)
-    teacher_pagination = \
-    User.query.filter_by(role=teacherRole).order_by('id').paginate(teacher_page,per_page=current_app.config['FLASK_POSTS_PER_PAGE'],error_out=False)
-    teachers = teacher_pagination.items
-    return render_template('/admin/teacher.html',teachers = teachers,
-            teacher_pagination=teacher_pagination)
-    '''
     teacherRole = Role.query.filter_by(role_name=u'教师').first()
     teachers = User.query.filter_by(role=teacherRole).order_by('id').all()
     return render_template('/admin/teacher.html',teachers = teachers,
@@ -154,6 +145,27 @@ def teacherGet():
     teacherRole = Role.query.filter_by(role_name=u'教师').first()
     teachers = User.query.filter_by(role=teacherRole, id_unit=id).all()
     return jsonify({'teachers': [teacher.to_json() for teacher in teachers ]})
+
+@admin.route('/teacher/_delete')
+@login_required
+def teacherDelete():
+    ids = tuple(int(x) for x in request.args.get('ids', type=str).split(','))
+    db.session.query(User).\
+        filter(User.id.in_(ids)).delete(synchronize_session=False)
+    db.session.commit()
+    return jsonify(status=1)
+
+
+@admin.route('/teacher/_update')
+@login_required
+def teacherUpdate():
+    id = request.args.get('id', type=int)
+    new_name = request.args.get('newName')
+    teacher = User.query.filter_by(id=id).first()
+    teacher.nick_name = new_name
+    db.session.add(teacher)
+    db.session.commit()
+    return jsonify(status=1)
 
 @admin.route('/teacher/_insert', methods=['GET', 'POST'])
 @login_required
@@ -168,24 +180,32 @@ def teacherInsert():
             file.save(file_url)
             xls = xlrd.open_workbook(file_url)
             table = xls.sheets()[0]
-            for i in range(1, table.nrows):
-                id = table.row(i)[0].value.encode('utf-8')
-                name = table.row(i)[1].value.encode('utf-8')
-                unit_name = table.row(i)[2].value.encode('utf-8')
-                unit = Unit.query.filter_by(unit_name = unit_name).first()
-                if not unit:
-                    unit = Unit(unit_name)
-                    db.session.add(unit)
-                teacher = User(id, name)
-                teacher.role = \
-                    Role.query.filter_by(role_name=u'教师').first()
-                teacher.password = '123'
-                teacher.unit = unit
-                db.session.add(teacher)
-                db.session.commit()
-
-    units = Unit.query.order_by('id').all()
-    return render_template('/admin/teacher.html', units=units)
+            try:
+                for i in range(1, table.nrows):
+                    id = table.row(i)[0].value.encode('utf-8')
+                    name = table.row(i)[1].value.encode('utf-8')
+                    unit_name = table.row(i)[2].value.encode('utf-8')
+                    unit = Unit.query.filter_by(unit_name = unit_name).first()
+                    if not unit:
+                        unit = Unit(unit_name)
+                        db.session.add(unit)
+                    teacher = User(id, name)
+                    teacher.role = \
+                        Role.query.filter_by(role_name=u'教师').first()
+                    teacher.password = '123'
+                    teacher.unit = unit
+                    db.session.add(teacher)
+            except:
+                flash(u'更新教师失败，文件内容错误', 'danger')
+            else:
+                try:
+                    db.session.commit()
+                    flash(u'更新教师成功', 'success')
+                except:
+                    flash(u'更新教师失败', 'danger')
+        else:
+            flash(u'更新教师失败，文件格式错误', 'danger')
+        return redirect(url_for('.teacher'))
 
 @admin.route('/user/unit_admin')
 @login_required
