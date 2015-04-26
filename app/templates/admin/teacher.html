@@ -98,17 +98,17 @@
 
       <!-- updateModal -->
 
-      <div class="modal fade" id="updateModal{{teacher.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+      <div class="modal fade bs-example-modal-sm" id="updateModal{{teacher.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
           <div class="modal-content">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title" id="myModalLabel">修改教师名称</h4>
+              <h4 class="modal-title" id="myModalLabel">修改密码</h4>
             </div>
             <div class="modal-body">
               <p class="hidden">{{teacher.id}}</p>
               <div class="form-group">
-                <input id="updateInput" placeholder="{{teacher.user_name}}" type="text" class="form-control">
+                <input id="updateInput" type="password" class="form-control">
               </div>
               <button id="updateButton" type="button" class="btn btn-success btn-block" disabled="disabled" data-dismiss="modal">修改</button>
             </div>
