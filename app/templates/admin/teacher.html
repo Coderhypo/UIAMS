@@ -78,10 +78,10 @@
           </div>
           <form class="form" method="post" action="/admin/teacher/_insert" enctype="multipart/form-data">
             <div class="modal-body">
-                <div class="form-group">
-                  <label class="control-label">上传文件</label>
-                  <input class="form-control" type="file" name="file"></input>
-                </div>
+              <div class="form-group">
+                <label class="control-label">上传文件</label>
+                <input class="form-control" type="file" name="file"></input>
+              </div>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
@@ -172,8 +172,8 @@
       $remove.click(function () {
         var ids = $.map($table.bootstrapTable('getSelections'), function (row) {
           return row.id
-        }).join(',');
-        $.getJSON("/admin/teacher/_delete",{ ids: ids}, function(data) {
+        });
+        $.getJSON("/admin/teacher/_delete",{ ids: ids.join(',')}, function(data) {
           if (data.status) {
             $table.bootstrapTable('remove', {
               field: 'id',
@@ -188,8 +188,7 @@
 
   <script>
     $(document).ready(function() {
-/*
-*/
+
       $('.editable').on('shown', function(e, editable) {
         $(this).editable('option', 'validate', function(value) { 
           if($.trim(value) == '') {
