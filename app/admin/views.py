@@ -150,11 +150,14 @@ def teacherGet():
 @login_required
 def teacherDelete():
     ids = tuple(int(x) for x in request.args.get('ids', type=str).split(','))
-    db.session.query(User).\
-        filter(User.id.in_(ids)).delete(synchronize_session=False)
-    db.session.commit()
-    return jsonify(status=1)
-
+    try:
+        db.session.query(User).\
+            filter(User.id.in_(ids)).delete(synchronize_session=False)
+    except:
+        return jsonify(status=0)
+    else:
+        db.session.commit()
+        return jsonify(status=1)
 
 @admin.route('/teacher/_update')
 @login_required
