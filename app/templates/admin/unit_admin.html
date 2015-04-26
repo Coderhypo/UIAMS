@@ -23,24 +23,23 @@
       <thead>
         <tr>
           <th data-field="state" data-checkbox="true"></th>
-          <th class="col-xs-1">#</th>
-          <th class="col-xs-2" data-field="name" data-sortable="true">用户名</th>
-          <th class="col-xs-2" data-field="nick_name" data-sortable="true">姓名</th>
+          <th data-field="id" class="col-xs-1" data-sortable="true">#</th>
+          <th data-field="name" class="col-xs-2" data-sortable="true">用户名</th>
+          <th data-field="nick_name" class="col-xs-2" id="nick_name" data-sortable="true" data-editable="true">姓名</th>
           <th data-field="unit" data-sortable="true">单位</th>
-          <th class="col-xs-1" data-field="action">Action</th>
+          <th data-field="action" class="col-xs-1">Action</th>
         </tr>
       </thead>
       <tbody>
-        {% for teacher in teachers %}
-        <tr id="teacher{{teacher.user_id}}">
+        {% for unit_admin in unit_admins %}
+        <tr id="{{unit_admin.id}}">
           <td></td>
-          <td>{{ teacher.id }}</td>
-          <td>{{ teacher.user_name }}</td>
-          <td>{{ teacher.nick_name }}</td>
-          <td>{{ teacher.unit.unit_name }}</td>
+          <td>{{ unit_admin.id }}</td>
+          <td>{{ unit_admin.user_name }}</td>
+          <td>{{ unit_admin.nick_name }}</td>
+          <td>{{ unit_admin.unit.unit_name }}</td>
           <td>
-              <a class="btn-xs ml10"><i class="glyphicon glyphicon-edit" data-toggle="modal" data-target="#updateModal{{teacher.user_id}}"></i></a>
-              <a class="btn-xs ml10"><i class="glyphicon glyphicon-remove" data-toggle="modal" data-target="#deleteModal{{teacher.user_id}}"></i></a>
+              <a class="btn-xs ml10"><i class="glyphicon glyphicon-lock" data-toggle="modal" data-target="#updateModal{{teacher.user_id}}"></i></a>
           </td>
         </tr>
         {% endfor %}
@@ -50,3 +49,63 @@
   
 {% endblock %}
 
+{% block script %}
+
+  {{ super() }}
+
+  <script>
+    var $table = $('#table'),
+        $remove = $('#remove');
+    $(function () {
+      $table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
+        $remove.prop('disabled', !$table.bootstrapTable('getSelections').length);
+      });
+
+      $remove.click(function () {
+        var ids = $.map($table.bootstrapTable('getSelections'), function (row) {
+          return row.id
+        });
+        $.getJSON("/admin/unit_admin/_delete",{ ids: ids.join(',')}, function(data) {
+          if (data.status) {
+            $table.bootstrapTable('remove', {
+              field: 'id',
+              values: ids
+            });
+            $remove.prop('disabled', true);
+          }
+        });
+      });
+    });
+  </script>
+
+  <script>
+    $(document).ready(function() {
+
+      $('.editable').on('shown', function(e, editable) {
+        $(this).editable('option', 'validate', function(value) { 
+          if($.trim(value) == '') {
+            return 'This field is required';
+          }
+        });
+      });
+
+      $('.editable').on('save',function(e, params){
+        var id = $(this).parents('tr').attr('id');
+
+        $(this).editable('submit', { 
+          ajaxOptions: {
+            url: '/admin/unit_admin/_update',
+            method: 'GET',
+            data: { id: id, newName: params.newValue }
+          },
+          success: function(data) {
+            if(data) {
+            }
+          }
+        });
+      });
+
+    });
+  </script>
+
+{% endblock %}
