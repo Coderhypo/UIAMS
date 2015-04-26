@@ -173,7 +173,6 @@ def teacherUpdate():
 @admin.route('/teacher/_insert', methods=['GET', 'POST'])
 @login_required
 def teacherInsert():
-    error_message = None
     if request.method == 'POST':
         utcnow = datetime.utcnow()
         file = request.files['file']
@@ -239,30 +238,52 @@ def competition_project():
 @login_required
 def projectInsert():
     if request.method == "POST":
+        utcnow = datetime.utcnow()
         file = request.files['file']
         if file and allowed_file(file.filename):
+            file.filename = utcnow.strftime('projects_%Y-%m-%d(%H:%M:%S).xls')
             file_url = os.path.join(UPLOAD_FOLDER, file.filename)
             file.save(file_url)
             xls = xlrd.open_workbook(file_url)
             table = xls.sheets()[0]
-            for i in range(table.nrows):
-                projectName = table.row(i)[0].value.encode('utf-8')
-                if CompetitionProject.query.filter_by(project_name=projectName).first() == None:
-                    competitionProject = CompetitionProject(projectName)
-                    db.session.add(competitionProject)
-            db.session.commit()
-        return redirect(url_for('.competition'))
-    return render_template('/admin/competition_project_insert.html')
+            try:
+                for i in range(table.nrows):
+                    projectName = table.row(i)[0].value.encode('utf-8')
+                    if CompetitionProject.query.filter_by(project_name=projectName).first() == None:
+                        competitionProject = CompetitionProject(projectName)
+                        db.session.add(competitionProject)
+            except:
+                flash(u'更新竞赛失败，文件内容错误', 'danger')
+            else:
+                try:
+                    db.session.commit()
+                    flash(u'更新教师成功', 'success')
+                except:
+                    flash(u'更新教师失败', 'danger')
+        else:
+            flash(u'更新竞赛失败，文件格式错误', 'danger')
+        return redirect(url_for('.competition_project'))
 
 @admin.route('/competition/project/_update')
 @login_required
 def projectUpdate():
-    id = request.args.get('Id', type=int)
-    newName = request.args.get('Name')
-    return jsonify(status=2)
+    id = request.args.get('id', type=int)
+    new_name = request.args.get('newName')
+    project = CompetitionProject.query.filter_by(id=id).first()
+    project.project_name = new_name
+    db.session.add(project)
+    db.session.commit()
+    return jsonify(status=1)
 
 @admin.route("/competition/project/_delete")
 @login_required
 def projectDelete():
-    id = request.args.get('Id', type=int)
-    return jsonify(status=2)
+    ids = tuple(int(x) for x in request.args.get('ids', type=str).split(','))
+    try:
+        db.session.query(CompetitionProject).\
+            filter(CompetitionProject.id.in_(ids)).delete(synchronize_session=False)
+    except:
+        return jsonify(status=0)
+    else:
+        db.session.commit()
+        return jsonify(status=1)
