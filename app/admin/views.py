@@ -27,8 +27,32 @@ def index():
 @admin.route('/grade')
 @login_required
 def grade():
-    grades_data = Grade.query.order_by('id').all()
-    return render_template('/admin/grade.html', grades_data = grades_data)
+    grades = Grade.query.order_by('id').all()
+    return render_template('/admin/grade.html', grades = grades)
+
+@admin.route('/grade/_update')
+@login_required
+def gradeUpdate():
+    id = request.args.get('id', type=int)
+    new_name = request.args.get('newName')
+    grade = Grade.query.filter_by(id=id).first()
+    grade.grade_name = new_name
+    db.session.add(grade)
+    db.session.commit()
+    return jsonify(status=1)
+
+@admin.route('/grade/_delete')
+@login_required
+def gradeDelete():
+    ids = tuple(int(x) for x in request.args.get('ids', type=str).split(','))
+    try:
+        db.session.query(Grade).\
+            filter(Grade.id.in_(ids)).delete(synchronize_session=False)
+    except:
+        return jsonify(status=0)
+    else:
+        db.session.commit()
+        return jsonify(status=1)
 
 @admin.route('/unit')
 @login_required
@@ -78,19 +102,6 @@ def getDepartment():
     id = request.args.get('Id')
     majors = Major.query.filter_by(id_acachemy=id).order_by('id').all()
     return jsonify({'majors': [ major.to_json() for major in majors] })
-
-@admin.route('/grade/_update')
-@login_required
-def gradeUpdate():
-    id = request.args.get('Id', type=int)
-    newName = request.args.get('Name')
-    return jsonify(status=2)
-
-@admin.route('/grade/_delete')
-@login_required
-def gradeDelete():
-    id = request.args.get('Id', type=int)
-    return jsonify(status=2)
 
 @admin.route('/major/_insert')
 @login_required
