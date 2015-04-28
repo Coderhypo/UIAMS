@@ -268,9 +268,9 @@ def projectInsert():
             else:
                 try:
                     db.session.commit()
-                    flash(u'更新教师成功', 'success')
+                    flash(u'更新竞赛成功', 'success')
                 except:
-                    flash(u'更新教师失败', 'danger')
+                    flash(u'更新竞赛失败', 'danger')
         else:
             flash(u'更新竞赛失败，文件格式错误', 'danger')
         return redirect(url_for('.competition_project'))
