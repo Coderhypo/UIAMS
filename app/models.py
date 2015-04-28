@@ -162,7 +162,7 @@ class User(UserMixin, db.Model):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
     user_name = db.Column(db.String(128), nullable=False, unique=True)
-    nick_name = db.Column(db.String(128), nullable=False, unique=True)
+    nick_name = db.Column(db.String(128), nullable=False)
     user_password_hash = db.Column(db.String(128), nullable=False)
 
     id_unit = db.Column(db.Integer, db.ForeignKey('unit.id'))
