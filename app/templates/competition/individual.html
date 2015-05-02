@@ -8,6 +8,7 @@
 </div>
 <div class="container">
   <form method="post" class="form-horizontal col-sm-9 col-sm-offset-1">
+    <fieldset>
         <legend>
         竞赛信息
         </legend>
@@ -60,6 +61,8 @@
             <input class="form-control" required name="awards_unit"></input>
           </div>
         </div>
+     </fieldset>        
+     <fieldset>        
         <legend>
         参赛学生
         </legend>
@@ -105,7 +108,8 @@
             </select>
           </div>
         </div>
-
+     </fieldset>        
+     <fieldset>        
         <legend>
         指导教师
         </legend>
@@ -145,6 +149,8 @@
             </div>
           </div>
         </div>
+     </fieldset>        
+     <fieldset>        
 
         <legend>
         上传附件
@@ -162,6 +168,7 @@
         <div class="col-sm-6">
               <input type="reset" class="btn btn-block" value="重置"></input>
         </div>
+     </fieldset>        
   </form>
 </div>
 {% endblock %}
@@ -173,7 +180,7 @@
 
 {% block script %}
 {{ super() }}
-<script src="{{ url_for('static', filename='js/bootstrap-datetimepicker.js') }}"></script>
+<script src="{{ url_for('static', filename='js/bootstrap-datetimepicker.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/locales/bootstrap-datetimepicker.zh-CN.js') }}"></script>
 <script>  
 $(".form_datetime").datetimepicker({
