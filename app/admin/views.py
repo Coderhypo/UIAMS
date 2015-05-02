@@ -1,7 +1,8 @@
 # coding=utf-8
 from flask import render_template, session, redirect, url_for, request,\
 jsonify, current_app, flash
-from ..models import Grade, Role, User, Unit, CompetitionProject, Major
+from ..models import Grade, Role, User, Unit, CompetitionProject, Major,\
+Competition
 from flask.ext.login import login_required
 
 import os
@@ -237,7 +238,23 @@ def systemAdmin():
 @admin.route('/competition')
 @login_required
 def competition():
-    return render_template('/admin/competition.html')
+    competitions = Competition.query.order_by('id').all()
+    return render_template('/admin/competition.html', competitions =
+            competitions)
+
+@admin.route("/competition/_delete")
+@login_required
+def competitionDelete():
+    ids = tuple(int(x) for x in request.args.get('ids', type=str).split(','))
+    try:
+        db.session.query(Competition).\
+            filter(Competition.id.in_(ids)).delete(
+                synchronize_session=False)
+    except:
+        return jsonify(status=0)
+    else:
+        db.session.commit()
+        return jsonify(status=1)
 
 @admin.route('/competition/project')
 @login_required
