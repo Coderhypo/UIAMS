@@ -8,6 +8,7 @@
   <div class="col-md-12">
     <ol class="breadcrumb">
       <li><a href="/">Home</a></li>
+      <li><a href="#">创新活动</a></li>
       <li><a href="#">竞赛管理</a></li>
       <li class="active">竞赛项目</li>
     </ol>
@@ -36,9 +37,9 @@
       <thead>
         <tr>
           <th data-field="state" data-checkbox="true"></th>
-          <th data-field="id" class="col-xs-1" data-sortable="true">#</th>
+          <th data-field="id" data-sortable="true">#</th>
           <th data-field="name" data-sortable="true" data-editable="true">项目名称</th>
-          <th data-field="action" class="col-xs-1" data-field="action">Action</th>
+          <!--th data-field="action" class="col-xs-1" data-field="action">Action</th-->
         </tr>
       </thead>
       <tbody>
@@ -47,9 +48,9 @@
           <td></td>
           <td>{{projectName.id}}</td>
           <td>{{projectName.project_name}}</td>
-          <td>
+          <!--td>
             <a class="btn-xs ml10"><i class="glyphicon glyphicon-lock" data-toggle="modal" data-target="#updateModel{{projectName.id}}"></i></a>
-          </td>
+          </td-->
         </tr>
       {% endfor%}
       </tbody>
