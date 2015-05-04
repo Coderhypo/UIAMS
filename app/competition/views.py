@@ -24,7 +24,7 @@ def individual():
         rate = request.form['rate']
         winning_time = request.form['winning_time']
         awards_unit = request.form['awards_unit']
-        
+
         competition = Competition(achievement_name, winning_level, rate, awards_unit,winning_time)
         competition.student = student
         competition.id_competitionproject = request.form['competitionproject']
@@ -34,11 +34,11 @@ def individual():
         db.session.add(competition)
         db.session.commit()
 
-        return render_template('/competition/individual.html',competitionProjects=competitionProjects, grades = grades, acachemys = acachemys, units = units ) 
+        return render_template('/competition/individual.html',competitionProjects=competitionProjects, grades = grades, acachemys = acachemys, units = units )
 
-    return render_template('/competition/individual.html',competitionProjects=competitionProjects, grades = grades, acachemys = acachemys, units = units ) 
+    return render_template('/competition/individual.html',competitionProjects=competitionProjects, grades = grades, acachemys = acachemys, units = units )
 
 @competition.route('/team')
 @login_required
 def team():
-    return render_template('/competition/team.html') 
+    return render_template('/competition/team.html')
