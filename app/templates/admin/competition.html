@@ -39,7 +39,7 @@
         <tr id="{{competition.id}}">
           <td></td>
           <td>{{competition.id}}</td>
-          <td>{{competition.competitionproject.project_name}}</td>
+          <td><a href="{{url_for('.competitionShow',id=competition.id)}}">{{competition.competitionproject.project_name}}</a></td>
           <td>{{competition.winning_level}}</td>
           <td>{{competition.winning_level}}</td>
           <td>{{competition.winning_time}}</td>
