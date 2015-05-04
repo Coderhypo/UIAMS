@@ -242,6 +242,13 @@ def competition():
     return render_template('/admin/competition.html', competitions =
             competitions)
 
+@admin.route('/competition/show/<int:id>')
+@login_required
+def competitionShow(id):
+    competition = Competition.query.filter_by(id=id).first()
+    return render_template('/admin/competition_show.html', competition =
+            competition)
+
 @admin.route("/competition/_delete")
 @login_required
 def competitionDelete():
