@@ -1,0 +1,67 @@
+{% extends "/admin/base.html" %}
+
+{% import "_macros.html" as macros %}
+{% block title %}竞赛管理{% endblock %}
+
+{% block page_content %}
+
+  <div class="col-md-12">
+    <ol class="breadcrumb">
+      <li><a href="/">Home</a></li>
+      <li><a href="#">创新活动</a></li>
+      <li><a href="#">竞赛管理</a></li>
+      <li class="active">竞赛审核</li>
+    </ol>
+  </div>
+  
+  <div class="col-md-12">
+    <dl class="dl-horizontal">
+      <dt> 状态 </dt>
+      <dd> 未审核 </dd>
+      <dt> 竞赛项目 </dt>
+      <dd> {{competition.competitionproject.project_name}} </dd>
+      <dt> 成果名称 </dt>
+      <dd> {{competition.achievement_name}} </dd>
+      <dt> 获奖级别 </dt>
+      <dd> {{competition.winning_level}} </dd>
+      <dt> 等级 </dt>
+      <dd> {{competition.rate}} </dd>
+      <dt> 获奖时间 </dt>
+      <dd> {{competition.winning_time}} </dd>
+      <dt> 颁奖单位 </dt>
+      <dd> {{competition.awards_unit}} </dd>
+
+    </dl>
+  </div>
+
+{% endblock %}
+
+{% block script %}
+
+  {{ super() }}
+  <script>
+    var $table = $('#table'),
+        $remove = $('#remove');
+    $(function () {
+      $table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
+        $remove.prop('disabled', !$table.bootstrapTable('getSelections').length);
+      });
+
+      $remove.click(function () {
+        var ids = $.map($table.bootstrapTable('getSelections'), function (row) {
+          return row.id
+        });
+        $.getJSON("/admin/competition/_delete",{ ids: ids.join(',')}, function(data) {
+          if (data.status) {
+            $table.bootstrapTable('remove', {
+              field: 'id',
+              values: ids
+            });
+            $remove.prop('disabled', true);
+          }
+        });
+      });
+    });
+  </script>
+
+{% endblock %}
