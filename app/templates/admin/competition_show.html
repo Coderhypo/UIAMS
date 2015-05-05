@@ -15,23 +15,47 @@
   </div>
   
   <div class="col-md-12">
-    <dl class="dl-horizontal">
-      <dt> 状态 </dt>
-      <dd> 未审核 </dd>
-      <dt> 竞赛项目 </dt>
-      <dd> {{competition.competitionproject.project_name}} </dd>
-      <dt> 成果名称 </dt>
-      <dd> {{competition.achievement_name}} </dd>
-      <dt> 获奖级别 </dt>
-      <dd> {{competition.winning_level}} </dd>
-      <dt> 等级 </dt>
-      <dd> {{competition.rate}} </dd>
-      <dt> 获奖时间 </dt>
-      <dd> {{competition.winning_time}} </dd>
-      <dt> 颁奖单位 </dt>
-      <dd> {{competition.awards_unit}} </dd>
+    <div class="col-md-12">
+      <dl class="dl-horizontal">
+        <dt> 状态 </dt>
+        <dd> 未审核 </dd>
+        <dt> 竞赛项目 </dt>
+        <dd> {{competition.competitionproject.project_name}} </dd>
+        <dt> 成果名称 </dt>
+        <dd> {{competition.achievement_name}} </dd>
+        <dt> 获奖级别 </dt>
+        <dd> {{competition.winning_level}} </dd>
+        <dt> 等级 </dt>
+        <dd><a href="#" id="rate" data-type="select2" data-value="{{competition.rate}}">{{competition.rate}}</a></dd>
+        <dt> 获奖时间 </dt>
+        <dd><a href="#" id="winning_time" data-type="combodate">{{competition.winning_time}}</a></dd>
+        <dt> 颁奖单位 </dt>
+        <dd><a href="#" id="awards_unit" data-type="text">{{competition.awards_unit}}</a></dd>
 
-    </dl>
+      </dl>
+    </div>
+    <div class="col-md-12">
+      <dl class="dl-horizontal">
+        <dt> 学号 </dt>
+        <dd>  </dd>
+        <dt> 姓名 </dt>
+        <dd>  </dd>
+        <dt> 年级 </dt>
+        <dd> {{competition.achievement_name}} </dd>
+        <dt> 院系 </dt>
+        <dd> {{competition.winning_level}} </dd>
+
+      </dl>
+    </div>
+    <div class="col-md-12">
+      <dl class="dl-horizontal">
+        <dt> 指导教师1 </dt>
+        <dd> 未审核 </dd>
+        <dt> 指导教师2 </dt>
+        <dd> 未审核 </dd>
+
+      </dl>
+    </div>
   </div>
 
 {% endblock %}
@@ -39,29 +63,38 @@
 {% block script %}
 
   {{ super() }}
+  <script src="{{ url_for('static', filename='js/moment-with-locales.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/combodate.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/select2.min.js') }}"></script>
   <script>
-    var $table = $('#table'),
-        $remove = $('#remove');
-    $(function () {
-      $table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
-        $remove.prop('disabled', !$table.bootstrapTable('getSelections').length);
+  $.fn.editable.defaults.mode = 'inline';
+  $(function(){
+    $('#rate').editable({
+        source: [
+              {id: '一等奖', text: '一等奖'},
+              {id: '二等奖', text: '二等奖'},
+              {id: '三等奖', text: '三等奖'}
+           ],
+    });
+
+    $('#winning_time').editable({
+      format: 'YYYY-MM-DD',    
+      viewformat: 'yyyy-mm-dd',    
+      template: 'D / MMMM / YYYY',
+      combodate: {
+          minYear: 2000,
+          maxYear: 2030,
+          minuteStep: 1
+        }
       });
 
-      $remove.click(function () {
-        var ids = $.map($table.bootstrapTable('getSelections'), function (row) {
-          return row.id
-        });
-        $.getJSON("/admin/competition/_delete",{ ids: ids.join(',')}, function(data) {
-          if (data.status) {
-            $table.bootstrapTable('remove', {
-              field: 'id',
-              values: ids
-            });
-            $remove.prop('disabled', true);
-          }
-        });
-      });
+    $('#awards_unit').editable({
+      url: '/post',
+      title: 'Enter username'
     });
+
+  });
+
   </script>
 
 {% endblock %}
