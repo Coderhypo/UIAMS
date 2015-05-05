@@ -9,14 +9,13 @@
     <ol class="breadcrumb">
       <li><a href="/">Home</a></li>
       <li><a href="#">创新活动</a></li>
-      <li><a href="#">竞赛管理</a></li>
-      <li class="active">竞赛审核</li>
+      <li class="active">竞赛管理</li>
     </ol>
   </div>
   
   <div class="col-md-12">
     <ul class="nav nav-tabs" role="tablist">
-      <li class="active"><a>竞赛审核</a></li>
+      <li class="active"><a>竞赛管理</a></li>
       <li><a href="/admin/competition/project">竞赛项目</a></li>
     </ul>
     <button id="remove" class="btn btn-danger" disabled="">
@@ -43,7 +42,7 @@
           <td>{{competition.winning_level}}</td>
           <td>{{competition.winning_level}}</td>
           <td>{{competition.winning_time}}</td>
-          <td>未审核</td>
+          <td><span class="label label-danger">未审核</span></td>
         </tr>
       {% endfor%}
       </tbody>
