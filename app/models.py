@@ -31,6 +31,12 @@ class CompetitionProject(db.Model):
     def __repr__(self):
         return '<ComName %r>' % self.project_name
 
+    def to_json(self):
+        return {
+            'id': self.id,
+            'project_name': self.project_name
+        }
+
 class Participants(db.Model):
 
     __tablename__ = 'participants'
@@ -45,6 +51,7 @@ class Participants(db.Model):
     id_student_8 = db.Column(db.Integer, db.ForeignKey('student.id'))
     id_student_9 = db.Column(db.Integer, db.ForeignKey('student.id'))
     id_student_10 = db.Column(db.Integer, db.ForeignKey('student.id'))
+
 
 class Competition(db.Model):
 
