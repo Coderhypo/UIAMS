@@ -52,7 +52,6 @@
             <td>{{ unit.unit_name }}</td>
             <td>{% if unit.is_acachemy == 1 %}是{% else %}否{% endif %}</td>
             <td>
-              <a class="btn-xs ml10"><i class="glyphicon glyphicon-edit" data-toggle="modal" data-target="#unitUpdateModal{{unit.id}}"></i></a>
             </td>
           </tr>
           {% for major in unit.majors %}
@@ -62,7 +61,6 @@
               <td>{{ major.major_name }}</td>
               <td></td>
               <td>
-                <a class="btn-xs ml10"><i class="glyphicon glyphicon-pencil" data-toggle="modal" data-target="#majorUpdateModal{{major.id}}"></i></a>
               </td>
             </tr>
           {% endfor %}
@@ -95,62 +93,6 @@
         </div>
       </div>
     </div>
-
-    {% for unit in units %}
-      
-      <!-- unitUpdateModal -->
-
-      <div class="modal fade" id="unitUpdateModal{{unit.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title" id="myModalLabel">修改学院名称</h4>
-            </div>
-            <div class="modal-body">
-              <p class="hidden">{{unit.id}}</p>
-              <div class="form-group">
-                <input id="updateInput" placeholder="{{unit.unit_name}}" type="text" class="form-control unit">
-              </div>
-              <button id="updateButton" type="button" class="btn btn-success btn-block unit" disabled="disabled" data-dismiss="modal">修改</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- endUnitUpdateModal -->  <!-- acDeleteModal -->
-
-      <!-- loopMajors -->
-      
-      {% for major in unit.majors %}
-
-        <!-- majorUpdateModal -->
-        
-        <div class="modal fade" id="majorUpdateModal{{major.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="majorUpdateModalLabel">修改专业名称</h4>
-              </div>
-              <div class="modal-body">
-                <p class="hidden">{{major.id}}</p>
-                <div class="form-group">
-                  <input id="updateInput" placeholder="{{major.major_name}}" type="text" class="form-control major">
-                </div>
-                <button id="updateButton" type="button" class="btn btn-success btn-block major" disabled="disabled" data-dismiss="modal">修改</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- endMajorUpdateModal -->
-
-      {% endfor %}
-
-      <!-- endLoopMajors -->
-
-    {% endfor %}
 
   <!-- endModal -->
 
