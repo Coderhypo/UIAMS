@@ -79,22 +79,21 @@ def insertDepartment():
             xls = xlrd.open_workbook(file_url)
             table = xls.sheets()[0]
             for i in range(1, table.nrows):
-                '''
-                id = table.row(i)[0].value.encode('utf-8')
-                name = table.row(i)[1].value.encode('utf-8')
-                unit = table.row(i)[2].value.encode('utf-8')
-                try:
-                    teacher = User(id, name)
-                    teacher.role = \
-                        Role.query.filter_by(role_name=u'教师').first()
-                    teacher.password = '123'
-                    teacher.unit = \
-                        Unit.query.filter_by(unit_name = unit).first()
-                    db.session.add(teacher)
-                    db.session.commit()
-                except:
-                    pass
-                '''
+                unit_id = str(int(table.row(i)[0].value)).encode('utf-8')
+                unit_name = table.row(i)[1].value.encode('utf-8')
+                major_id = table.row(i)[2].value.encode('utf-8')
+                major_name = table.row(i)[3].value.encode('utf-8')
+                unit = Unit.query.filter_by(unit_id = unit_id).first()
+                if not unit:
+                    unit = Unit(unit_id, unit_name)
+                    db.session.add(unit)
+
+                major = Major(major_id, major_name)
+                major.id_acachemy = unit.id
+
+                db.session.add(major)
+                db.session.commit()
+
     return render_template('/admin/unit_department.html')
 
 @admin.route('/unit/department/_get')
@@ -282,7 +281,7 @@ def projectInsert():
             xls = xlrd.open_workbook(file_url)
             table = xls.sheets()[0]
             try:
-                for i in range(table.nrows):
+                for i in range(1, table.nrows):
                     projectName = table.row(i)[0].value.encode('utf-8')
                     if CompetitionProject.query.filter_by(project_name=projectName).first() == None:
                         competitionProject = CompetitionProject(projectName)
