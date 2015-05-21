@@ -322,3 +322,9 @@ def projectDelete():
     else:
         db.session.commit()
         return jsonify(status=1)
+
+@admin.route("/competition/project/_get")
+@login_required
+def projectGet():
+    projects = CompetitionProject.query.order_by('id').all()
+    return jsonify({'projects': [ project.to_json() for project in projects] })
