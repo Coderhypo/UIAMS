@@ -14,7 +14,7 @@ def index():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(user_id=form.userid.data).first()
+        user = User.query.filter_by(user_name=form.userid.data).first()
         if user is not None and user.verify_password(form.passwd.data):
             login_user(user, form.remember_me.data)
             return redirect(url_for('index'))
@@ -32,7 +32,7 @@ def logout():
 @app.route('/competition')
 @login_required
 def competition():
-    return render_template('competition.html')  
+    return render_template('competition.html')
 
 @app.route('/individual_com', methods=['GET', 'POST'])
 @login_required
@@ -58,7 +58,7 @@ def individual_com():
                 stu_class = form.student_class.data
             )
             student.acachemy = acachemy
-            
+
             db.session.add(student)
             db.session.commit()
 
@@ -87,7 +87,7 @@ def patent():
     form = PatentForm()
     if request.method == 'POST':
             Pat_info = Patent.query.filter_by(pea_name = form.peaname.data).first()
-            if Pat_info == None: 
+            if Pat_info == None:
                 '''
                 Pat_info = Patent(
                     pea_type = form.type.data,
@@ -97,13 +97,13 @@ def patent():
                     pea_patentee = form.patentee.data,
                     pea_announcement = form.announcement.data
                 )
-            
+
                 db.session.add(Pat_info)
                 db.session.commit()
                 '''
             return redirect (url_for('index'))
     return render_template('patent.html',form = form)
-    
+
 
 @app.route('/admin')
 @login_required
@@ -130,7 +130,7 @@ def admin_user():
             form = create_form
             user = User.query.filter_by(user_id=form.create_id.data).first()
             role = form.roles.data
-            
+
             if user == None:
                 user = User(
                     user_id=form.create_id.data,
@@ -140,17 +140,17 @@ def admin_user():
 
             db.session.add(user)
             db.session.commit()
-            
+
             session['status'] = u'success'
             flash(u'成功添加登录用户信息!')
             return redirect(url_for('admin_user'))
         elif delete_form.data['delete'] and delete_form.validate():
             form = delete_form
             user = form.users.data
-            
+
             db.session.delete(user)
             db.session.commit()
-            
+
             session['status'] = u'warning'
             flash(u'成功删除登录用户信息!')
             return redirect(url_for('admin_user'))
@@ -161,15 +161,15 @@ def admin_user():
             name = form.update_name.data
             password = form.update_passwd.data
             user.role = role
-            
+
             if password != '':
                 user.password = password
             elif name != '':
                 user.user_name = name
-            
+
             db.session.add(user)
             db.session.commit()
-            
+
             session['status'] = u'info'
             flash(u'成功修改登录用户信息!')
             return redirect(url_for('admin_user'))
@@ -195,17 +195,17 @@ def admin_teacher():
         if create_form.data['create'] and create_form.validate():
             form = create_form
             teacher = Teacher.query.filter_by(tea_id=form.create_id.data).first()
-            
+
             if teacher == None:
                 teacher = Teacher(
                     tea_id=form.create_id.data,
                     tea_name=form.create_name.data,
                     tea_unit=form.create_unit.data
                 )
-            
+
             db.session.add(teacher)
             db.session.commit()
-            
+
             session['status'] = 'success'
             flash(u'成功添加教师信息!')
             return redirect(url_for('admin_teacher'))
@@ -213,17 +213,17 @@ def admin_teacher():
             form = retrieve_form
             teacher = form.teachers.data
             print teacher
-            
+
             return render_template('admin-teacher.html', create_form=create_form, retrieve_form=retrieve_form, delete_form=delete_form, update_form=update_form, teacher=teacher)
         elif update_form.data['update'] and update_form.validate():
             form = update_form
             teacher = form.teachers.data
             name = form.update_name.data
             unit = form.update_unit.data
-            
+
             if name != '':
                 teacher.tea_name = name
-            
+
             if unit !='':
                 teacher.tea_unit = unit
 
@@ -236,17 +236,17 @@ def admin_teacher():
         elif delete_form.data['delete'] and delete_form.validate():
             form = delete_form
             teacher = form.teachers.data
-            
+
             db.session.delete(teacher)
             db.session.commit()
-            
+
             session['status'] = 'warning'
             flash(u'成功删除教师信息!')
             return redirect(url_for('admin_teacher'))
     return render_template('admin-teacher.html',
-            create_form=create_form, 
+            create_form=create_form,
             retrieve_form=retrieve_form,
-            delete_form=delete_form, 
+            delete_form=delete_form,
             update_form=update_form
         )
 
@@ -257,7 +257,7 @@ def admin_acachemy():
     create_form = CreateAcachemyForm()
 
     delete_form = DeleteAcachemyForm()
-    delete_form.acachemys.query = Acachemy.query.all() 
+    delete_form.acachemys.query = Acachemy.query.all()
 
     update_form = UpdateAcachemyForm()
     update_form.acachemys.query = Acachemy.query.all()
@@ -266,23 +266,23 @@ def admin_acachemy():
         if create_form.data['create'] and create_form.validate():
             form = create_form
             acachemy = Acachemy.query.filter_by(aca_name=form.create_name.data).first()
-            
+
             if acachemy == None:
                 acachemy = Acachemy(aca_name=form.create_name.data)
-            
+
             db.session.add(acachemy)
             db.session.commit()
-            
-            session['status'] = u'success' 
+
+            session['status'] = u'success'
             flash(u'成功添加学院信息!')
             return redirect(url_for('admin_acachemy'))
         elif delete_form.data['delete'] and delete_form.validate():
             form = delete_form
             acachemy = form.acachemys.data
-            
+
             db.session.delete(acachemy)
             db.session.commit()
-            
+
             session['status'] = 'warning'
             flash(u'成功删除学院信息!')
             return redirect(url_for('admin_acachemy'))
@@ -293,17 +293,17 @@ def admin_acachemy():
 
             if name != '':
                 acachemy.aca_name = name
-            
+
             db.session.add(acachemy)
             db.session.commit()
-            
+
             status = u'info'
             session['status'] = u'info'
             flash(u'成功修改学院信息!')
             return redirect(url_for('admin_acachemy'))
     return render_template('admin-acachemy.html',
-            create_form=create_form, 
-            delete_form=delete_form, 
+            create_form=create_form,
+            delete_form=delete_form,
             update_form=update_form
         )
 
