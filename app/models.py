@@ -108,7 +108,8 @@ class Unit(db.Model):
 
     __tablename__ = 'unit'
     id = db.Column(db.Integer, primary_key=True)
-    unit_name = db.Column(db.String(128), nullable=False, unique=True)
+    unit_id = db.Column(db.String(128))
+    unit_name = db.Column(db.String(128))
     is_acachemy = db.Column(db.Integer, nullable=False, default=1)
 
     # 反向关系
@@ -116,8 +117,9 @@ class Unit(db.Model):
     majors = db.relationship('Major', backref='acachemy', lazy='dynamic')
     unit = db.relationship('User', backref='unit',lazy='dynamic')
 
-    def __init__(self, unit_name):
-        self.unit_name=unit_name
+    def __init__(self, unit_id, unit_name):
+        self.unit_id = unit_id
+        self.unit_name = unit_name
 
     def __repr__(self):
         return '<Acachemy %r>' % self.unit_name
@@ -129,17 +131,18 @@ class Major(db.Model):
 
     __tablename__ = 'major'
     id = db.Column(db.Integer, primary_key=True)
-    major_name = db.Column(db.String(128), nullable=False, unique=True)
+    major_id = db.Column(db.String(128))
+    major_name = db.Column(db.String(128))
     id_acachemy = db.Column(db.Integer, db.ForeignKey('unit.id'))
 
     def to_json(self):
         return {
-            'id': self.id,
+            'id': self.major_id,
             'major_name': self.major_name
         }
 
-    def __init__(self,id, major_name):
-        self.id = id
+    def __init__(self, major_id, major_name):
+        self.major_id = major_id
         self.major_name = major_name
 
     def __repr__(self):
