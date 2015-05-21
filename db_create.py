@@ -1,11 +1,10 @@
 #-*- coding: UTF-8 -*-
 import os
 from app import create_app, db
-from app.models import CompetitionName, User, Role, Major, Grade, Unit
+from app.models import CompetitionProject, User, Role, Major, Grade, Unit
 
 def createdb():
     app = create_app(os.getenv('FLASK_CONFIG') or 'default')
-    print 'MANAGE: ', db
     db.drop_all()
     db.create_all()
 
@@ -29,7 +28,6 @@ def createdb():
         '2019': u'2019级'
     }
     for g in grades:
-        print grades[g]
         grade = Grade(g, grades[g])
         db.session.add(grade)
     db.session.commit()
@@ -48,9 +46,8 @@ def createdb():
         [u'数字媒体技术','080906']
     ],
     u'教务处':None
-    } 
+    }
     for a in acas:
-        print a
         aca = Unit(a)
         db.session.add(aca)
         aca = Unit.query.filter_by(unit_name=a).first()
@@ -61,28 +58,9 @@ def createdb():
 
         for i in acas[a]:
             major = Major(id=i[1],major_name=i[0])
-            major.major_acachemy = aca.id
+            major.id_acachemy = aca.id
             db.session.add(major)
         db.session.commit()
-
-    teachers = [
-    ('050114', u'张先伟', u'计算机科学与技术学院'),
-    ('110413', u'许敬', u'机械工程学院'),
-    ('170518', u'巴奉丽', u'交通与车辆工程学院')]
-
-    for t in teachers:
-        tea = User(t[0],t[1])
-        tea.role = teacher_role
-        tea.password = '123'
-        unit = Unit.query.filter_by(unit_name = t[2]).first()
-        if unit == None:
-            unit = Unit(t[2])
-            db.session.add(unit)
-            tea.unit = unit
-        else :
-            tea.unit = unit
-        db.session.add(tea)
-    db.session.commit()
 
 if __name__ == '__main__':
     createdb()
