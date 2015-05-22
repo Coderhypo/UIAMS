@@ -58,7 +58,7 @@ def gradeDelete():
 @admin.route('/unit')
 @login_required
 def unit():
-    units = Unit.query.order_by('unit_id').all()
+    units = Unit.query.order_by('id').all()
     return render_template('/admin/unit.html', units = units)
 
 @admin.route('/unit/department')
@@ -108,6 +108,7 @@ def insertDepartment():
                     flash(u'更新院系成功', 'success')
                 except:
                     db.session.rollback()
+                    flash(u'更新院系失败，未知错误', 'danger')
 
         else:
             flash(u'更新院系失败，文件格式错误', 'danger')
@@ -240,6 +241,7 @@ def teacherInsert():
                     flash(u'更新教师成功', 'success')
                 except:
                     db.session.rollback()
+                    flash(u'更新教师失败，未知错误', 'danger')
         else:
             flash(u'更新教师失败，文件格式错误', 'danger')
         return redirect(url_for('.teacher'))
@@ -304,20 +306,26 @@ def projectInsert():
             file.save(file_url)
             xls = xlrd.open_workbook(file_url)
             table = xls.sheets()[0]
-            try:
-                for i in range(1, table.nrows):
-                    projectName = table.row(i)[0].value.encode('utf-8')
-                    if CompetitionProject.query.filter_by(project_name=projectName).first() == None:
-                        competitionProject = CompetitionProject(projectName)
-                        db.session.add(competitionProject)
-            except:
-                flash(u'更新竞赛失败，文件内容错误', 'danger')
+            for i in range(1, table.nrows):
+                try:
+                    project_name = table.row(i)[0].value.encode('utf-8')
+                except:
+                    flash(u'更新竞赛失败，错误数据格式第%s行'%i, 'danger')
+                    db.session.rollback()
+                    break
+
+                competition_project = \
+                    CompetitionProject.query.filter_by(project_name=project_name).first()
+                if not competition_project:
+                    competitionProject = CompetitionProject(project_name)
+                    db.session.add(competitionProject)
             else:
                 try:
                     db.session.commit()
                     flash(u'更新竞赛成功', 'success')
                 except:
-                    flash(u'更新竞赛失败', 'danger')
+                    db.session.rollback()
+                    flash(u'更新竞赛失败，未知错误', 'danger')
         else:
             flash(u'更新竞赛失败，文件格式错误', 'danger')
         return redirect(url_for('.competition_project'))
