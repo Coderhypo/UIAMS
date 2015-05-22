@@ -46,18 +46,18 @@
       </thead>
       <tbody>
         {% for unit in units %}
-          <tr class="unit" id="{{unit.id}}">
+          <tr class="unit" id="{{unit.unit_id}}">
             <td></td>
-            <td>{{ unit.id }}</td>
+            <td>{% if unit.unit_id %}{{ unit.unit_id }}{% endif %}</td>
             <td>{{ unit.unit_name }}</td>
-            <td>{% if unit.is_acachemy == 1 %}是{% else %}否{% endif %}</td>
+            <td>{% if unit.unit_id %}是{% else %}否{% endif %}</td>
             <td>
             </td>
           </tr>
           {% for major in unit.majors %}
-            <tr class="success unit_{{unit.id}}" id="{{major.id}}">
+            <tr class="success unit_{{unit.unit_id}}" id="{{major.major_id}}">
               <td></td>
-              <td>{{ major.id }}</td>
+              <td>{{ major.major_id }}</td>
               <td>{{ major.major_name }}</td>
               <td></td>
               <td>
@@ -101,60 +101,6 @@
 {% block script %}
 
   {{ super() }}
-
-  <script>
-    $(document).ready(function(){
-
-      $("input#updateInput").keyup(function(){
-        var name = $(this).val();
-        if ( name != "" ){
-          $(this).parent().next().removeAttr("disabled");
-        } else {
-          $(this).parent().next().attr("disabled", "disabled");
-        }
-      });
-
-      $("button#updateButton").click(function(){
-        var isUnit = false;
-        if ($(this).hasClass("unit")) {
-          isUnit = true;
-        }
-        var id = $(this).parent().children("p:eq(0)").text();
-        var newName = $(this).prev().children().val();
-        $this = $(this);
-        if ( isUnit == true ){
-          $.getJSON("/admin/unit/_update",{
-            Id: id,
-            Name: newName
-          },function(data){
-            if ( data.status==2){
-              var obj = document.getElementById("unit" + id);
-              $(obj).children(":eq(1)").text(newName);
-              $this.prev().children().attr("placeholder", newName);
-              $("input#deleteInput.unit").attr("placeholder", newName);
-            } else {
-              alert("None");
-            }
-          });
-        } else {
-          $.getJSON("/admin/major/_update",{
-              Id: id,
-              Name: newName
-          },function(data){
-            if ( data.status==2){
-              var obj = document.getElementById("major" + id);
-              $(obj).children(":eq(1)").text("----" + newName);
-              $this.prev().children().attr("placeholder", newName);
-              $("input#deleteInput.major").attr("placeholder", newName);
-            } else {
-              alert("None");
-            }
-          });
-        }
-      });
-
-    });
-  </script>
   
   <script>
     $(document).ready(function(){
