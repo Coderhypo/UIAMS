@@ -108,9 +108,8 @@ class Unit(db.Model):
 
     __tablename__ = 'unit'
     id = db.Column(db.Integer, primary_key=True)
-    unit_id = db.Column(db.String(128))
+    unit_id = db.Column(db.Integer)
     unit_name = db.Column(db.String(128))
-    is_acachemy = db.Column(db.Integer, nullable=False, default=1)
 
     # 反向关系
     students = db.relationship('Student', backref='acachemy', lazy='dynamic')
@@ -131,7 +130,7 @@ class Major(db.Model):
 
     __tablename__ = 'major'
     id = db.Column(db.Integer, primary_key=True)
-    major_id = db.Column(db.String(128))
+    major_id = db.Column(db.String(128), unique = True)
     major_name = db.Column(db.String(128))
     id_acachemy = db.Column(db.Integer, db.ForeignKey('unit.id'))
 
