@@ -58,7 +58,7 @@ def gradeDelete():
 @admin.route('/unit')
 @login_required
 def unit():
-    units = Unit.query.order_by('id').all()
+    units = Unit.query.order_by('unit_id').all()
     return render_template('/admin/unit.html', units = units)
 
 @admin.route('/unit/department')
@@ -79,22 +79,39 @@ def insertDepartment():
             xls = xlrd.open_workbook(file_url)
             table = xls.sheets()[0]
             for i in range(1, table.nrows):
-                unit_id = str(int(table.row(i)[0].value)).encode('utf-8')
-                unit_name = table.row(i)[1].value.encode('utf-8')
-                major_id = table.row(i)[2].value.encode('utf-8')
-                major_name = table.row(i)[3].value.encode('utf-8')
-                unit = Unit.query.filter_by(unit_id = unit_id).first()
+                try:
+                    unit_id = int(table.row(i)[0].value.encode('utf-8'))
+                    unit_name = table.row(i)[1].value.encode('utf-8')
+                    major_id = table.row(i)[2].value.encode('utf-8')
+                    major_name = table.row(i)[3].value.encode('utf-8')
+                except:
+                    flash(u'更新院系失败，错误数据格式第%s行'%i, 'danger')
+                    db.session.rollback()
+                    break
+
+                unit = Unit.query.filter_by(unit_id = unit_id,
+                    unit_name = unit_name).first()
+                major = Major.query.filter_by(major_id = major_id,
+                    major_name = major_name).first()
                 if not unit:
                     unit = Unit(unit_id, unit_name)
                     db.session.add(unit)
 
-                major = Major(major_id, major_name)
-                major.id_acachemy = unit.id
+                if not major:
+                    major = Major(major_id, major_name)
+                    major.acachemy = unit
+                    db.session.add(major)
 
-                db.session.add(major)
-                db.session.commit()
+            else:
+                try:
+                    db.session.commit()
+                    flash(u'更新院系成功', 'success')
+                except:
+                    db.session.rollback()
 
-    return render_template('/admin/unit_department.html')
+        else:
+            flash(u'更新院系失败，文件格式错误', 'danger')
+        return redirect(url_for('.unit'))
 
 @admin.route('/unit/department/_get')
 @login_required
@@ -120,11 +137,6 @@ def majorUpdate():
 def majorDelete():
     id = request.args.get('Id', type=int)
     return jsonify(status=2)
-
-@admin.route('/unit/_insert')
-@login_required
-def unitInsert():
-    return render_template('/admin/unit_insert.html')
 
 @admin.route('/unit/_update')
 @login_required
@@ -193,29 +205,41 @@ def teacherInsert():
             file.save(file_url)
             xls = xlrd.open_workbook(file_url)
             table = xls.sheets()[0]
-            try:
-                for i in range(1, table.nrows):
-                    id = table.row(i)[0].value.encode('utf-8')
-                    name = table.row(i)[1].value.encode('utf-8')
-                    unit_name = table.row(i)[2].value.encode('utf-8')
-                    unit = Unit.query.filter_by(unit_name = unit_name).first()
-                    if not unit:
-                        unit = Unit(unit_name)
-                        db.session.add(unit)
-                    teacher = User(id, name)
+            for i in range(1, table.nrows):
+                try:
+                    teacher_id = table.row(i)[0].value.encode('utf-8')
+                    teacher_name = table.row(i)[1].value.encode('utf-8')
+
+                    unit_id = int(table.row(i)[2].value.encode('utf-8'))
+                    unit_name = table.row(i)[3].value.encode('utf-8')
+                except:
+                    flash(u'更新教师失败，错误数据格式第%s行'%i, 'danger')
+                    db.session.rollback()
+                    break
+
+                teacher = User.query.filter_by(user_name = teacher_id,
+                    nick_name = teacher_name).first()
+                unit = Unit.query.filter_by(unit_id = unit_id,
+                    unit_name = unit_name).first()
+
+                if not unit:
+                    unit = Unit(unit_id=unit_id, unit_name=unit_name)
+                    db.session.add(unit)
+
+                if not teacher:
+                    teacher = User(teacher_id, teacher_name)
                     teacher.role = \
                         Role.query.filter_by(role_name=u'教师').first()
                     teacher.password = '123'
                     teacher.unit = unit
                     db.session.add(teacher)
-            except:
-                flash(u'更新教师失败，文件内容错误', 'danger')
+
             else:
                 try:
                     db.session.commit()
                     flash(u'更新教师成功', 'success')
                 except:
-                    flash(u'更新教师失败', 'danger')
+                    db.session.rollback()
         else:
             flash(u'更新教师失败，文件格式错误', 'danger')
         return redirect(url_for('.teacher'))
