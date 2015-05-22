@@ -12,3 +12,4 @@ Werkzeug==0.9.6
 WTForms==2.0.1
 Flask-Migrate==1.4.0
 xlrd==0.9.3
+ipython==3.1.0
