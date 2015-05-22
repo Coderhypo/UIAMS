@@ -48,7 +48,7 @@
         {% for unit in units %}
           <tr class="unit" id="{{unit.unit_id}}">
             <td></td>
-            <td>{% if unit.unit_id %}{{ unit.unit_id }}{% endif %}</td>
+            <td>{% if unit.unit_id %}{{ unit.unit_id }}{% else %}#{% endif %}</td>
             <td>{{ unit.unit_name }}</td>
             <td>{% if unit.unit_id %}是{% else %}否{% endif %}</td>
             <td>
