@@ -8,7 +8,7 @@ from flask.ext.migrate import Migrate, MigrateCommand
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
 manager = Manager(app)
 def make_shell_context():
-    return dict(app=app, db=db, Acachemy=Acachemy,  User=User, Role=Role)
+    return dict(app=app, db=db,  User=User, Role=Role)
 
 manager.add_command("runserver", Server(host="0.0.0.0", port=5000, use_debugger=True))
 manager.add_command("shell", Shell(make_context=make_shell_context))
