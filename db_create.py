@@ -4,7 +4,6 @@ from app import create_app, db
 from app.models import CompetitionProject, User, Role, Major, Grade, Unit
 
 def createdb():
-    app = create_app(os.getenv('FLASK_CONFIG') or 'default')
     db.drop_all()
     db.create_all()
 
