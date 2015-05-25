@@ -1,13 +1,11 @@
-#!/usr/bin/env python2
-# coding=utf-8
+#_*_ coding= UTF-8 _*_
 from flask import render_template, session, redirect, url_for, request, flash
 from ..models import User
 from flask.ext.login import login_user, login_required, logout_user
 
-from . import main
-from .. import db
+from .. import app, db
 
-@main.route('/login', methods=['GET','POST'])
+@app.route('/login', methods=['GET','POST'])
 def login():
     if request.method == 'POST':
         user = User.query.filter_by(user_name = request.form['username']).first()
@@ -18,14 +16,9 @@ def login():
             flash('Invalid username or password')
     return redirect('/')
 
-@main.route('/logout')
+@app.route('/logout')
 @login_required
 def logout():
     logout_user()
     flash('You have been logged out.')
     return redirect('/')
-
-@main.route('/')
-def index():
-    return render_template('/main/index.html')
-

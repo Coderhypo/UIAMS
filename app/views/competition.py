@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 # coding=utf-8
 from flask import render_template, session, redirect, url_for, request
 from ..models import CompetitionProject, Grade, Unit, Major, Student, User, Participants, Competition
