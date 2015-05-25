@@ -24,9 +24,8 @@ with app.app_context():
     from admin import admin as admin_blueprint
     app.register_blueprint(admin_blueprint, url_prefix='/admin')
 
-    from competition import competition as competition_blueprint
-    app.register_blueprint(competition_blueprint, url_prefix='/competition')
-
     login_manager.setup_app(app)
     login_manager.session_protection = 'strong'
     login_manager.login_view = 'login'
+
+from views import *
