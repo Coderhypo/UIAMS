@@ -34,7 +34,8 @@ class User(UserMixin, db.Model):
     def to_json(self):
         return {
             'id': self.id,
-            'user_name': self.user_name
+            'user_name': self.user_name,
+            'nick_name': self.nick_name
         }
 
     @property
