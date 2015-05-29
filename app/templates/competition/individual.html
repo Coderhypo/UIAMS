@@ -15,7 +15,7 @@
         <div class="form-group">
           <label class="col-sm-2 control-label">竞赛项目</label>
           <div class="col-sm-10">
-            <select class="form-control" name="competitionproject">
+            <select class="form-control project" name="competitionproject">
               {% for projectName in competitionProjects %}
               <option value="{{projectName.id}}">{{projectName.project_name}}</option>
               {% endfor%}
@@ -66,8 +66,8 @@
             <input class="form-control" required name="awards_unit"></input>
           </div>
         </div>
-     </fieldset>        
-     <fieldset>        
+     </fieldset>
+     <fieldset>
         <legend>
         参赛学生
         </legend>
@@ -86,7 +86,7 @@
         <div class="form-group">
           <label class="col-sm-2 control-label">年级</label>
           <div class="col-sm-10">
-            <select class="form-control" name="grade" required>
+            <select class="form-control grade" name="grade" required>
               <option value="" disabled selected>==选择年级==</option>
               {% for grade in grades %}
               <option value="{{grade.id}}">{{grade.grade_name}}</option>
@@ -97,7 +97,7 @@
         <div class="form-group">
           <label class="col-sm-2 control-label">学院</label>
           <div class="col-sm-10">
-            <select class="form-control" name="acachemy" id="acachemy" required>
+            <select class="form-control acachemy" name="acachemy" id="acachemy" required>
               <option value="" disabled selected>==选择学院==</option>
               {% for acachemy in acachemys %}
               <option value="{{acachemy.id}}">{{acachemy.unit_name}}</option>
@@ -108,13 +108,13 @@
         <div class="form-group">
           <label class="col-sm-2 control-label">专业</label>
           <div class="col-sm-10">
-            <select class="form-control" name="major" id="major" required>
+            <select class="form-control major" name="major" id="major" required>
               <option value="" disabled selected>==选择专业==</option>
             </select>
           </div>
         </div>
-     </fieldset>        
-     <fieldset>        
+     </fieldset>
+     <fieldset>
         <legend>
         指导教师
         </legend>
@@ -154,8 +154,8 @@
             </div>
           </div>
         </div>
-     </fieldset>        
-     <fieldset>        
+     </fieldset>
+     <fieldset>
 
         <legend>
         上传附件
@@ -163,7 +163,7 @@
         <div class="form-group">
           <label class="col-sm-2 control-label">获奖证书</label>
           <div class="col-sm-10">
-            <input class="form-control" type="file" required> 
+            <input class="form-control" type="file" required>
           </div>
         </div>
         <hr />
@@ -173,7 +173,7 @@
         <div class="col-sm-6">
               <input type="reset" class="btn btn-block" value="重置"></input>
         </div>
-     </fieldset>        
+     </fieldset>
   </form>
 </div>
 {% endblock %}
@@ -187,7 +187,7 @@
 {{ super() }}
 <script src="{{ url_for('static', filename='js/bootstrap-datetimepicker.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/locales/bootstrap-datetimepicker.zh-CN.js') }}"></script>
-<script>  
+<script>
 $(".form_datetime").datetimepicker({
   format: 'yyyy-mm-dd',
   autoclose: true,
@@ -198,7 +198,7 @@ $(".form_datetime").datetimepicker({
 </script>
 <script>
 $(document).ready(function(){
-  $("#acachemy").change(function(){ 
+  $("#acachemy").change(function(){
     acachemyId = $(this).val();
     $.getJSON("/admin/unit/department/_get",{
       Id: acachemyId
@@ -221,14 +221,21 @@ $(document).ready(function(){
         var opt = "";
         opt += "<option value=\"\" disabled selected>==选择教师==</option>";
         for (var i=0; i<data.teachers.length; i++) {
-          opt += "<option value=\"" + data.teachers[i].id + "\">" + data.teachers[i].user_name + "</option>"
+          opt += "<option value=\"" + data.teachers[i].id + "\">"  + data.teachers[i].nick_name + "/" + data.teachers[i].user_name + "</option>"
         }
         if ($this.attr("id")=="unit1")
             $("#teacher1").html(opt);
-        else if ($this.attr("id")=="unit2") 
+        else if ($this.attr("id")=="unit2")
             $("#teacher2").html(opt);
     });
   });
+
+  $(".unit").select2();
+  $(".teacher").select2();
+  $(".project").select2();
+  $(".acachemy").select2();
+  $(".major").select2();
+  $(".grade").select2();
 });
 </script>
 {% endblock %}
