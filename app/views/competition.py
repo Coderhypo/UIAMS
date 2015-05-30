@@ -32,9 +32,12 @@ def individual():
         db.session.add(competition)
         db.session.commit()
 
-        return render_template('/competition/individual.html',competitionProjects=competitionProjects, grades = grades)
+        return render_template('/competition/individual.html',
+            competitionProjects=competitionProjects, grades = grades)
 
-    return render_template('/competition/individual.html',competitionProjects=competitionProjects, grades = grades)
+    return render_template('/competition/individual.html',
+        competitionProjects=competitionProjects, units = units, acachemys =
+        acachemys, grades = grades)
 
 @app.route('/competition/team')
 @login_required
