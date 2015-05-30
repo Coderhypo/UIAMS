@@ -27,7 +27,7 @@ def allowed_file(filename):
 def teacher():
     teacherRole = Role.query.filter_by(role_name=u'教师').first()
     teachers = User.query.filter_by(role=teacherRole).order_by('id').all()
-    return render_template('/admin/teacher.html',teachers = teachers,
+    return render_template('/admin/teacher_admin.html',teachers = teachers,
             error_message = None)
 
 @admin.route('/teacher/_get')
