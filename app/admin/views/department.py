@@ -20,18 +20,13 @@ UPLOAD_FOLDER = '/tmp'
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
-@admin.route('/unit')
-@login_required
-def unit():
-    units = Unit.query.order_by('id').all()
-    return render_template('/admin/unit.html', units = units)
-
-@admin.route('/unit/department')
+@admin.route('/department')
 @login_required
 def department():
-    return render_template('/admin/unit_department.html')
+    units = Unit.query.order_by('id').all()
+    return render_template('/admin/department.html', units = units)
 
-@admin.route('/unit/department/_insert', methods=['GET', 'POST'])
+@admin.route('/department/_insert', methods=['GET', 'POST'])
 @login_required
 def insertDepartment():
     if request.method == 'POST':
@@ -77,44 +72,12 @@ def insertDepartment():
 
         else:
             flash(u'更新院系失败，文件格式错误', 'danger')
-        return redirect(url_for('.unit'))
+        return redirect(url_for('.department'))
 
-@admin.route('/unit/department/_get')
+@admin.route('/department/_get')
 @login_required
 def getDepartment():
     id = request.args.get('Id')
     majors = Major.query.filter_by(id_acachemy=id).order_by('id').all()
     return jsonify({'majors': [ major.to_json() for major in majors] })
-
-@admin.route('/major/_insert')
-@login_required
-def majorInsert():
-    return render_template('/admin/major_insert.html')
-
-@admin.route('/major/_update')
-@login_required
-def majorUpdate():
-    id = request.args.get('Id', type=int)
-    newName = request.args.get('Name')
-    return jsonify(status=2)
-
-@admin.route('/major/_delete')
-@login_required
-def majorDelete():
-    id = request.args.get('Id', type=int)
-    return jsonify(status=2)
-
-@admin.route('/unit/_update')
-@login_required
-def unitUpdate():
-    id = request.args.get('Id', type=int)
-    newName = request.args.get('Name')
-    return jsonify(status=2)
-
-@admin.route('/unit/_delete')
-@login_required
-def unitDelete():
-    id = request.args.get('Id', type=int)
-    return jsonify(status=2)
-
 
