@@ -44,6 +44,8 @@ class ProjectAdmin(Mixin):
     can_edit = True
     can_delete = True
 
+    list_template = 'admin/competition_project.html'
+
     #column_searchable_list = ['nick_name']
 
     #column_list = ('id', 'user_name', 'nick_name', 'unit', 'role')
