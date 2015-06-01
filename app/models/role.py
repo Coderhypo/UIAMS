@@ -14,7 +14,7 @@ class Role(db.Model):
     users = db.relationship('User', backref='role', lazy='dynamic')
 
     def __repr__(self):
-        return '<Role %r>' % self.role_name
+        return self.role_name
 
     def __init__(self, role_name):
         self.role_name = role_name

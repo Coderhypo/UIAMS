@@ -15,11 +15,11 @@ class Unit(db.Model):
     # 反向关系
     students = db.relationship('Student', backref='acachemy', lazy='dynamic')
     majors = db.relationship('Major', backref='acachemy', lazy='dynamic')
-    unit = db.relationship('User', backref='unit',lazy='dynamic')
+    teachers = db.relationship('User', backref='teacher',lazy='dynamic')
 
     def __init__(self, unit_id, unit_name):
         self.unit_id = unit_id
         self.unit_name = unit_name
 
     def __repr__(self):
-        return '<Acachemy %r>' % self.unit_name
+        return self.unit_name
