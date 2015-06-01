@@ -16,7 +16,7 @@ class CompetitionProject(db.Model):
         self.project_name=project_name
 
     def __repr__(self):
-        return '<ComName %r>' % self.project_name
+        return self.project_name
 
     def to_json(self):
         return {
