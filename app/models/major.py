@@ -24,4 +24,4 @@ class Major(db.Model):
         self.major_name = major_name
 
     def __repr__(self):
-        return '<Major %r>' % self.major_name
+        return self.major_name
