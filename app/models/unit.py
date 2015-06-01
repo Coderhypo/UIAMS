@@ -15,7 +15,7 @@ class Unit(db.Model):
     # 反向关系
     students = db.relationship('Student', backref='acachemy', lazy='dynamic')
     majors = db.relationship('Major', backref='acachemy', lazy='dynamic')
-    teachers = db.relationship('User', backref='teacher',lazy='dynamic')
+    teachers = db.relationship('User', backref='unit',lazy='dynamic')
 
     def __init__(self, unit_id, unit_name):
         self.unit_id = unit_id
