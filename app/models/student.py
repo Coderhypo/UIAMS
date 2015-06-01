@@ -26,4 +26,4 @@ class Student(db.Model):
         self.id_major = id_major
 
     def __repr__(self):
-        return '<Student %r>' % self.student_id
+        return self.student_id

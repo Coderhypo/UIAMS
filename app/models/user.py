@@ -55,9 +55,12 @@ class User(UserMixin, db.Model):
     def is_administrator(self):
         return self.can(Permission.ADMINISTER)
 
+    def get_teacher(self):
+        pass
+
     def __init__(self, user_name, nick_name):
         self.user_name = user_name
         self.nick_name = nick_name
 
     def __repr__(self):
-        return '<User %r>' % self.user_name
+        return self.user_name
