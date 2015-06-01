@@ -1,0 +1,215 @@
+{% extends "/admin/base.html" %}
+
+{% block title %}年级信息 | 信息管理{% endblock %}
+
+{% block page_content %}
+
+  <div class="col-md-12">
+    <ol class="breadcrumb">
+      <li><a href="/">Home</a></li>
+      <li><a href="#">信息管理</a></li>
+      <li class="active">年级信息</li>
+    </ol>
+  </div>
+
+  <div class="col-md-12">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible" role="alert" >
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>{{ category }} !</strong> {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    <ul class="nav nav-tabs">
+      <li class="active"><a>年级信息</a></li>
+      <li class="pull-right" data-toggle="modal" data-target="#updateGrade"><a><span class="glyphicon glyphicon-plus"></span> 更新年级</a></li>
+    </ul>
+    <button id="remove" class="btn btn-danger" disabled="">
+      <i class="glyphicon glyphicon-trash"></i> 
+    </button>
+    <table 
+      id="table" 
+      class="table table-hover table-striped" 
+      data-toggle="table" 
+      data-sort-order="desc" 
+      data-search="true" 
+      data-toolbar="#remove" 
+      data-pagination="true" 
+      data-page-size="10" 
+      data-show-pagination-switch="true">
+      <thead>
+        <tr>
+          <th data-field="state" data-checkbox="true"></th>
+          <th data-field="id" class="col-xs-2" data-sortable="true">#</th>
+          <th data-field="name" class="col-xs-2" data-sortable="true" data-editable="true">年级</th>
+          <th data-field="describe">描述</th>
+          <th class="col-xs-1" data-field="action">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for grade in grades %}
+          <tr id="{{grade.id}}">
+            <td></td>
+            <td>{{grade.id}}</td>
+            <td>{{grade.grade_name}}</td>
+            <td></td>
+            <td>
+              <a class="btn-xs ml10"><i class="glyphicon glyphicon-edit" data-toggle="modal" data-target="#gradeUpdateModal{{grade.id}}"></i></a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>  
+
+<!-- modal -->
+
+    <div class="modal fade" id="updateGrade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">添加年级</h4>
+          </div>
+          <form class="form" method="post" action="/admin/grade/_insert" enctype="multipart/form-data">
+            <div class="modal-body">
+              <div class="form-group">
+                <label class="control-label">上传文件</label>
+                <input class="form-control" type="file" name="file"></input>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+              <button type="submit" class="btn btn-primary">提交</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  {% for grade in grades %}
+    
+    <div class="modal fade" id="gradeUpdateModal{{grade.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">修改年级名称</h4>
+          </div>
+          <div class="modal-body">
+            <p class="hidden">{{grade.id}}</p>
+            <div class="form-group">
+              <input id="updateInput" placeholder="{{grade.grade_name}}" type="text" class="form-control">
+            </div>
+            <button id="updateButton" type="button" class="btn btn-success btn-block" disabled="disabled" data-dismiss="modal">修改</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  {% endfor %}
+
+<!-- endModal -->
+
+{% endblock %}
+
+{% block script %}
+
+  {{ super() }}
+
+  <script>
+
+    $(document).ready(function(){
+      
+      $("input#updateInput").keyup(function(){
+        var newName = $(this).val();
+        if ( newName != "" ){
+          $(this).parent().next().removeAttr("disabled");
+        } else {
+          $(this).parent().next().attr("disabled", "disabled");
+        }
+      });
+
+      $("button#updateButton").click(function(){
+        var gradeId = $(this).parent().children("p").text();
+        var newName = $(this).prev().children().val();
+        $this = $(this);
+        $.getJSON("/admin/grade/_update",{
+          Id: gradeId,
+          Name: newName
+        },function(data){
+          if ( data.status==2){
+            var obj = document.getElementById("grade" + gradeId);
+            $(obj).children().eq(1).text(newName);
+            $this.prev().children().attr("placeholder", newName);
+            $("input#deleteInput.grade").attr("placeholder", newName);
+          } else {
+            alert("None");
+          }
+        });
+      });
+
+    });
+
+  </script>
+
+  <script>
+    var $table = $('#table'),
+        $remove = $('#remove');
+    $(function () {
+      $table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
+        $remove.prop('disabled', !$table.bootstrapTable('getSelections').length);
+      });
+
+      $remove.click(function () {
+        var ids = $.map($table.bootstrapTable('getSelections'), function (row) {
+          return row.id
+        });
+        $.getJSON("/admin/grade/_delete",{ ids: ids.join(',')}, function(data) {
+          if (data.status) {
+            $table.bootstrapTable('remove', {
+              field: 'id',
+              values: ids
+            });
+            $remove.prop('disabled', true);
+          }
+        });
+      });
+    });
+  </script>
+
+  <script>
+    $(document).ready(function() {
+
+      $('.editable').on('shown', function(e, editable) {
+        $(this).editable('option', 'validate', function(value) { 
+          if($.trim(value) == '') {
+            return 'This field is required';
+          }
+        });
+      });
+
+      $('.editable').on('save',function(e, params){
+        var id = $(this).parents('tr').attr('id');
+
+        $(this).editable('submit', { 
+          ajaxOptions: {
+            url: '/admin/grade/_update',
+            method: 'GET',
+            data: { id: id, newName: params.newValue }
+          },
+          success: function(data) {
+            if(data) {
+            }
+          }
+        });
+      });
+
+    });
+  </script>
+
+{% endblock %}
+

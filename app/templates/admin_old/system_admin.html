@@ -1,0 +1,145 @@
+{% extends "/admin/base.html" %}
+
+{% block title %}系统管理员管理 | 用户管理{% endblock %}
+
+{% block page_content %}
+
+  <div class="col-md-12">
+    <ol class="breadcrumb">
+      <li><a href="/">Home</a></li>
+      <li><a href="/admin/user">用户管理</a></li>
+      <li class="active">系统管理员管理</li>
+    </ol>
+  </div>
+
+  <div class="col-md-12">
+    <ul class="nav nav-tabs">
+      <li class="active"><a>系统管理员管理</a></li>
+    </ul>
+    <button id="remove" class="btn btn-danger" disabled="">
+      <i class="glyphicon glyphicon-trash"></i> 
+    </button>
+    <table id="table" class="table table-hover table-striped" data-toggle="table" data-sort-order="desc" data-search="true" data-toolbar="#remove" data-pagination="true" data-page-size="10" data-show-pagination-switch="true">
+      <thead>
+        <tr>
+          <th data-field="state" data-checkbox="true"></th>
+          <th data-field="id" class="col-xs-1" data-sortable="true">#</th>
+          <th data-field="name" class="col-xs-2" data-sortable="true">用户名</th>
+          <th data-field="nick_name" class="col-xs-2" id="nick_name" data-sortable="true" data-editable="true">姓名</th>
+          <th data-field="unit" data-sortable="true">单位</th>
+          <th data-field="action" class="col-xs-1">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for admin in admins %}
+        <tr id="{{admin.id}}">
+          <td></td>
+          <td>{{ admin.id }}</td>
+          <td>{{ admin.user_name }}</td>
+          <td>{{ admin.nick_name }}</td>
+          <td>{{ admin.unit.unit_name }}</td>
+          <td>
+              <a class="btn-xs ml10"><i class="glyphicon glyphicon-lock" data-toggle="modal" data-target="#updateModal{{admin.id}}"></i></a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- modal -->
+
+    {% for admin in admins %}
+
+    <!-- loop -->
+
+      <!-- updateModal -->
+
+      <div class="modal fade" id="updateModal{{admin.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="myModalLabel">修改管理员名称</h4>
+            </div>
+            <div class="modal-body">
+              <p class="hidden">{{admin.id}}</p>
+              <div class="form-group">
+                <input id="updateInput" placeholder="{{admin.nick_name}}" type="text" class="form-control">
+              </div>
+              <button id="updateButton" type="button" class="btn btn-success btn-block" disabled="disabled" data-dismiss="modal">修改</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- endUpdateModal -->
+
+    {% endfor %}
+
+    <!-- endLoop -->
+
+  <!-- endModal -->
+
+{% endblock %}
+
+{% block script %}
+
+  {{ super() }}
+
+  <script>
+    var $table = $('#table'),
+        $remove = $('#remove');
+    $(function () {
+      $table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
+        $remove.prop('disabled', !$table.bootstrapTable('getSelections').length);
+      });
+
+      $remove.click(function () {
+        var ids = $.map($table.bootstrapTable('getSelections'), function (row) {
+          return row.id
+        });
+        $.getJSON("/admin/system_admin/_delete",{ ids: ids.join(',')}, function(data) {
+          if (data.status) {
+            $table.bootstrapTable('remove', {
+              field: 'id',
+              values: ids
+            });
+            $remove.prop('disabled', true);
+          }
+        });
+      });
+    });
+  </script>
+
+  <script>
+    $(document).ready(function() {
+
+      $('.editable').on('shown', function(e, editable) {
+        $(this).editable('option', 'validate', function(value) { 
+          if($.trim(value) == '') {
+            return 'This field is required';
+          }
+        });
+      });
+
+      $('.editable').on('save',function(e, params){
+        var id = $(this).parents('tr').attr('id');
+
+        $(this).editable('submit', { 
+          ajaxOptions: {
+            url: '/admin/system_admin/_update',
+            method: 'GET',
+            data: { id: id, newName: params.newValue }
+          },
+          success: function(data) {
+            if(data) {
+            }
+          }
+        });
+      });
+
+    });
+  </script>
+
+{% endblock %}
