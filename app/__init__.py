@@ -1,8 +1,7 @@
-#_*_ coding= UTF-8 _*_
+#_*_ coding: UTF-8 _*_
 from flask import Flask
 from flask.ext.login import LoginManager
 from flask.ext.sqlalchemy import SQLAlchemy
-from flask.ext.admin import Admin
 from config import config
 import os
 
@@ -18,8 +17,11 @@ with app.app_context():
     db.app = app
     db.init_app(app)
 
-    from admin import admin as admin_blueprint
-    app.register_blueprint(admin_blueprint, url_prefix='/admin')
+    from admin_old import admin as admin_blueprint
+    app.register_blueprint(admin_blueprint, url_prefix='/admin_old')
+
+    from .admin import admin
+    admin.init_app(app)
 
     login_manager.setup_app(app)
     login_manager.session_protection = 'strong'
