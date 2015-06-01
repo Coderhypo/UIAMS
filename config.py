@@ -1,13 +1,12 @@
-SQLALCHEMY_DATABASE_URI = 'mysql://root:password@localhost/comdb'
-CSRF_ENABLED = True
-SECRET_KEY = 'you-will-never-guess'
 import os
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
 class Config:
     SECRET_KEY = 'you-will-never-guess'
+    CSRF_ENABLED = True
     FLASK_POSTS_PER_PAGE = 10
     UPLOAD_FOLDER = BASE_DIR
+    BABEL_DEFAULT_LOCALE = 'zh_CN'
 
     @staticmethod
     def init_app(app):
