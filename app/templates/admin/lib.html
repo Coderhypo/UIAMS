@@ -3,7 +3,7 @@
 {# ---------------------- Pager -------------------------- #}
 {% macro pager(page, pages, generator) -%}
 {% if pages > 1 %}
-<ul class="pagination">
+<ul class="pagination pull-right">
     {% set min = page - 3 %}
     {% set max = page + 3 + 1 %}
 
