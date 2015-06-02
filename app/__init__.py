@@ -2,6 +2,7 @@
 from flask import Flask
 from flask.ext.login import LoginManager
 from flask.ext.sqlalchemy import SQLAlchemy
+from flask.ext.babelex import Babel
 from config import config
 import os
 
@@ -22,6 +23,12 @@ with app.app_context():
 
     from .admin import admin
     admin.init_app(app)
+
+    babel = Babel(app)
+
+    @babel.localeselector
+    def get_locale():
+        return 'zh_hans_CN'
 
     login_manager.setup_app(app)
     login_manager.session_protection = 'strong'
