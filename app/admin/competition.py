@@ -2,7 +2,7 @@
 from ..models import Competition
 from ..models import CompetitionProject
 from ..models import Unit
-from .mixin import Mixin
+from .mixin import ModelViewMixin
 from .. import db
 from . import admin
 
@@ -17,7 +17,7 @@ labels = dict(
     student = u'学生'
     )
 
-class CompetitionAdmin(Mixin):
+class CompetitionAdmin(ModelViewMixin):
 
     column_labels = labels
 
@@ -35,7 +35,7 @@ class CompetitionAdmin(Mixin):
     def __init__(self, session, **kwargs):
         super(CompetitionAdmin, self).__init__(Competition, session, **kwargs)
 
-class ProjectAdmin(Mixin):
+class ProjectAdmin(ModelViewMixin):
 
     column_labels = labels
 
@@ -55,5 +55,6 @@ class ProjectAdmin(Mixin):
     def __init__(self, session, **kwargs):
         super(ProjectAdmin, self).__init__(CompetitionProject, session, **kwargs)
 
-admin.add_view(CompetitionAdmin(db.session, category=u'竞赛管理'))
-admin.add_view(ProjectAdmin(db.session, category=u'竞赛管理'))
+admin.add_view(CompetitionAdmin(db.session, category=u'竞赛管理',
+    name=u'竞赛列表'))
+admin.add_view(ProjectAdmin(db.session, category=u'竞赛管理', name=u'竞赛项目'))
