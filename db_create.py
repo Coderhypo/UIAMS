@@ -1,6 +1,6 @@
 #-*- coding: UTF-8 -*-
 import os
-from app import create_app, db
+from app import db
 from app.models import CompetitionProject, User, Role, Major, Grade, Unit
 
 def createdb():
