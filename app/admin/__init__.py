@@ -14,5 +14,6 @@ admin = Admin(name = u'大学生创新活动管理系统',
     )
 #
 from .user import *
-from .info import *
+from .department import *
+from .grade import *
 from .competition import *
