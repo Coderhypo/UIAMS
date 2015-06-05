@@ -1,7 +1,6 @@
 #-*- coding: utf-8 -*-
 from flask import redirect, url_for, request, flash, views
-from ..models import User
-from ..models import Unit
+from ..models import User, Unit, Role
 from .mixin import ModelViewMixin, BaseViewMixin
 from flask.ext.admin import expose_plugview
 from .. import db
@@ -91,6 +90,7 @@ class ImportTeacherView(BaseViewMixin):
                         flash(u'更新教师失败，未知错误', 'danger')
             else:
                 flash(u'更新教师失败，文件格式错误', 'danger')
+            return redirect(url_for('admin.index'))
 
 admin.add_view(UserAdmin(db.session, category=u'用户管理', name=u'用户列表'))
 admin.add_view(ImportTeacherView(url='import_teacher'))
