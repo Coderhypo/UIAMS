@@ -17,11 +17,18 @@ class Unit(db.Model):
     majors = db.relationship('Major', backref='acachemy', lazy='dynamic')
     teachers = db.relationship('User', backref='unit',lazy='dynamic')
 
-    def to_json(self):
+    def department_to_json(self):
         return {
             'id': self.unit_id,
+            'acachemy': self.unit_name,
+            'majors': [major.major_name for major in self.majors],
+        }
+
+    def unit_teacher_to_json(self):
+        return {
+            'id': self.id,
             'unit_name': self.unit_name,
-            'majors': [major.major_name for major in self.majors]
+            'teachers': [teacher.nick_name + '/' + teacher.user_name for teacher in self.teachers]
         }
 
     def __init__(self, unit_id, unit_name):
