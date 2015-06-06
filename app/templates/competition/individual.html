@@ -121,9 +121,6 @@
             <div class="col-sm-6">
               <select class="form-control unit" name="unit1" id="unit1" required>
                 <option value="" disabled selected>==选择单位==</option>
-                {% for unit in units %}
-                  <option value="{{ unit.id }}">{{ unit.unit_name }}</option>
-                {% endfor %}
               </select>
             </div>
             <div class="col-sm-6">
@@ -194,6 +191,7 @@ $(".form_datetime").datetimepicker({
   });
 </script>
 <script>
+
   function department_init() {
     $.getJSON("/department/_get",function(data){
       var opt = "";
