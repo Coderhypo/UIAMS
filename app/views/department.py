@@ -10,11 +10,4 @@ from .. import db, app
 @login_required
 def getDepartment():
     units = Unit.query.all()
-    return jsonify({'department': [ unit.to_json() for unit in units] })
-
-@app.route('/major/_get')
-@login_required
-def getMajor():
-    id = request.args.get('Id')
-    majors = Major.query.filter_by(id_acachemy=id).order_by('id').all()
-    return jsonify({'majors': [ major.to_json() for major in majors] })
+    return jsonify({'department': [ unit.department_to_json() for unit in units] })

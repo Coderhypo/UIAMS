@@ -200,7 +200,7 @@ $(".form_datetime").datetimepicker({
       opt += "<option value=\"\" disabled selected>==选择学院==</option>";
       for (var i=0; i<data.department.length; i++) {
         if(data.department[i].id!=0)
-          opt += "<option value=\"" + data.department[i].id + "\">" + data.department[i].unit_name + "</option>";
+          opt += "<option value=\"" + data.department[i].id + "\">" + data.department[i].acachemy + "</option>";
       }
       $("#acachemy").html(opt);
       $("#acachemy").change(function(){
@@ -216,11 +216,51 @@ $(".form_datetime").datetimepicker({
         $("#major").html(opt)
       });
     });
+  }
+
+  function teachers_init() {
+    $.getJSON("/teacher/_get",function(data){
+      var opt = "";
+      opt += "<option value=\"\" disabled selected>==选择单位==</option>";
+      for (var i=0; i<data.unit_teachers.length; i++) {
+        opt += "<option value=\"" + data.unit_teachers[i].id + "\">" + data.unit_teachers[i].unit_name + "</option>";
+      }
+      $("#unit1").html(opt);
+      $("#unit2").html(opt);
+      $("#unit1").change(function(){
+        id = $(this).val();
+        var opt = "";
+        opt += "<option value=\"\" disabled selected>==选择教师==</option>";
+        for (var i=0; i<data.unit_teachers.length; i++) {
+          if (data.unit_teachers[i].id==id)
+            for (var j=0; j<data.unit_teachers[i].teachers.length; j++)
+              opt += "<option value=\"" + data.unit_teachers[i].teachers[j] + "\">" + data.unit_teachers[i].teachers[j] + "</option>"
+
+        }
+        $("#teacher1").html(opt)
+      });
+      $("#unit2").change(function(){
+        id = $(this).val();
+        var opt = "";
+        opt += "<option value=\"\" disabled selected>==选择教师==</option>";
+        for (var i=0; i<data.unit_teachers.length; i++) {
+          if (data.unit_teachers[i].id==id)
+            for (var j=0; j<data.unit_teachers[i].teachers.length; j++)
+              opt += "<option value=\"" + data.unit_teachers[i].teachers[j] + "\">" + data.unit_teachers[i].teachers[j] + "</option>"
+
+        }
+        $("#teacher2").html(opt)
+      });
+    });
    }
+
 
   $(document).ready(function(){
     department_init();
+    teachers_init();
     $(".project").select2();
+    $(".teacher").select2();
+    $(".unit").select2();
   });
 
   /*
