@@ -1,7 +1,7 @@
 # coding=utf-8
 from flask import render_template, session, redirect, url_for, request,\
 jsonify, current_app, flash
-from ...models import Grade, Role, User, Unit, CompetitionProject, Major,\
+from ...models import Grade, Role, User, Unit, Project, Major,\
 Competition
 from flask.ext.login import login_required
 
