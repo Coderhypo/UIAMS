@@ -12,8 +12,6 @@ from werkzeug import secure_filename
 def individual():
     competitionProjects = CompetitionProject.query.order_by('id').all()
     grades = Grade.query.order_by('id').all()
-    acachemys = Unit.query.filter_by(unit_id=0).order_by('id').all()
-    units = Unit.query.order_by('id').all()
     if request.method == "POST":
         student = Student(request.form['student_id'], request.form['student_name'], request.form['grade'], request.form['acachemy'], request.form['major'])
         db.session.add(student)
@@ -36,8 +34,7 @@ def individual():
             competitionProjects=competitionProjects, grades = grades)
 
     return render_template('/competition/individual.html',
-        competitionProjects=competitionProjects, units = units, acachemys =
-        acachemys, grades = grades)
+            competitionProjects=competitionProjects, grades = grades)
 
 @app.route('/competition/team')
 @login_required

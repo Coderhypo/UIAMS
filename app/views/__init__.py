@@ -1,3 +1,5 @@
 from . import competition
+from . import department
 from . import index
-from . import user
+from . import auth
+from . import teacher
