@@ -200,7 +200,7 @@ $(".form_datetime").datetimepicker({
 $(document).ready(function(){
   $("#acachemy").change(function(){
     acachemyId = $(this).val();
-    $.getJSON("/admin/department/_get",{
+    $.getJSON("/major/_get",{
       Id: acachemyId
       },function(data){
         var opt = "";
@@ -215,7 +215,7 @@ $(document).ready(function(){
   $(".unit").change(function(){
     unitId = $(this).val();
     $this = $(this);
-    $.getJSON("/admin/teacher/_get",{
+    $.getJSON("/teacher/_get",{
         Id: unitId
       },function(data){
         var opt = "";
