@@ -4,7 +4,7 @@
 
 {% block page_content %}
 <div class="page-header">
-    <h1>团队竞赛获奖</h1>
+    <h1>竞赛获奖</h1>
 </div>
 <div class="container">
   <form method="post" class="form-horizontal">
@@ -103,107 +103,6 @@
           </div>
       </div>
     </div>
-    <div class="col-md-12">
-      <legend>
-      参赛学生<small> 参照奖状顺序填写</small>
-      </legend>
-      <div class="col-md-8 col-md-offset-2">
-        <h4>
-        学生1
-        </h4>
-        <hr />
-        <div class="form-group">
-          <label class="col-sm-2 control-label">学号</label>
-          <div class="col-sm-10">
-            <input class="form-control" required></input>
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="col-sm-3 control-label">姓名</label>
-          <div class="col-sm-9">
-            <input class="form-control" required></input>
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="col-sm-2 control-label">年级</label>
-          <div class="col-sm-10">
-            <select class="form-control">
-              {% for grade in grades %}
-              <option>{{grade.grade_name}}</option>
-              {% endfor%}
-            </select>
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="col-sm-3 control-label">学院</label>
-          <div class="col-sm-9">
-            <select class="form-control">
-              {% for acachemy in acachemys %}
-              <option>{{acachemy.unit_name}}</option>
-              {% endfor%}
-            </select>
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="col-sm-2 control-label">专业</label>
-          <div class="col-sm-10">
-            <select class="form-control">
-              {% for major in majors %}
-              <option>{{major.major_name}}</option>
-              {% endfor%}
-            </select>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-8 col-md-offset-2">
-        <h4>
-        学生1
-        </h4>
-        <hr />
-        <div class="form-group">
-          <label class="col-sm-2 control-label">学号</label>
-          <div class="col-sm-10">
-            <input class="form-control" required></input>
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="col-sm-3 control-label">姓名</label>
-          <div class="col-sm-9">
-            <input class="form-control" required></input>
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="col-sm-2 control-label">年级</label>
-          <div class="col-sm-10">
-            <select class="form-control">
-              {% for grade in grades %}
-              <option>{{grade.grade_name}}</option>
-              {% endfor%}
-            </select>
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="col-sm-3 control-label">学院</label>
-          <div class="col-sm-9">
-            <select class="form-control">
-              {% for acachemy in acachemys %}
-              <option>{{acachemy.unit_name}}</option>
-              {% endfor%}
-            </select>
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="col-sm-2 control-label">专业</label>
-          <div class="col-sm-10">
-            <select class="form-control">
-              {% for major in majors %}
-              <option>{{major.major_name}}</option>
-              {% endfor%}
-            </select>
-          </div>
-        </div>
-      </div>
-  </div>
     <div class="col-md-6">
       <h3>
       上传附件
