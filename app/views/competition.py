@@ -36,7 +36,8 @@ def individual():
     return render_template('/competition/individual.html',
             competitionProjects=competitionProjects, grades = grades)
 
-@app.route('/competition/team')
+@app.route('/competition')
 @login_required
 def team():
-    return render_template('/competition/team.html')
+    competitionProjects = CompetitionProject.query.order_by('id').all()
+    return render_template('/competition/competition.html', competitionProjects =competitionProjects)
