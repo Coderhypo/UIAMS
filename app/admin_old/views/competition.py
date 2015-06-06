@@ -1,7 +1,7 @@
 #-*- coding: UTF-8 -*-
 from flask import render_template, session, redirect, url_for, request,\
 jsonify, current_app, flash
-from ...models import Grade, Role, User, Unit, CompetitionProject, Major,\
+from ...models import Grade, Role, User, Unit, Project, Major,\
 Competition
 from flask.ext.login import login_required
 
@@ -51,7 +51,7 @@ def competitionDelete():
 @admin.route('/competition/project')
 @login_required
 def competition_project():
-    projects = CompetitionProject.query.order_by('id').all()
+    projects = Project.query.order_by('id').all()
     return render_template('/admin/competition_project.html',competitionProjects=projects)
 
 @admin.route('/competition/project/_insert', methods=['GET','POST'])

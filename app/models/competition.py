@@ -2,15 +2,15 @@
 
 from app import db
 
-class CompetitionProject(db.Model):
+class Project(db.Model):
 
     '''竞赛项目名称表'''
 
-    __tablename__ = 'competitionproject'
+    __tablename__ = 'project'
     id = db.Column(db.Integer, primary_key=True)
     project_name = db.Column(db.String(128), nullable=False)
 
-    competitions = db.relationship('Competition', backref='competitionproject',lazy='dynamic')
+    competitions = db.relationship('Competition', backref='project',lazy='dynamic')
 
     def __init__(self, project_name):
         self.project_name=project_name
@@ -43,7 +43,7 @@ class Competition(db.Model):
 
     __tablename__ = 'competition'
     id = db.Column(db.Integer, primary_key=True)
-    id_competitionproject = db.Column(db.Integer, db.ForeignKey('competitionproject.id'))
+    id_project = db.Column(db.Integer, db.ForeignKey('project.id'))
     achievement_name = db.Column(db.String(128))
     winning_level = db.Column(db.String(128))
     rate = db.Column(db.String(128))

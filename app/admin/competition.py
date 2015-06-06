@@ -1,6 +1,6 @@
 #-*- coding: utf-8 -*-
 from flask import redirect, url_for, request, flash, views
-from ..models import Competition, CompetitionProject, Unit
+from ..models import Competition, Project, Unit
 from .mixin import ModelViewMixin, BaseViewMixin
 from flask.ext.admin import expose_plugview
 from .. import db
@@ -18,7 +18,7 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 labels = dict(
-    competitionproject = u'竞赛项目',
+    project = u'竞赛项目',
     project_name = u'项目名称',
     achievement_name = u'成果名称',
     winning_level = u'获奖级别',
@@ -64,7 +64,7 @@ class ProjectAdmin(ModelViewMixin):
     #column_filters = ['user_name', 'nick_name', Unit.unit_name, 'role']
 
     def __init__(self, session, **kwargs):
-        super(ProjectAdmin, self).__init__(CompetitionProject, session, **kwargs)
+        super(ProjectAdmin, self).__init__(Project, session, **kwargs)
 
 class ImportProjectView(BaseViewMixin):
 
@@ -92,10 +92,10 @@ class ImportProjectView(BaseViewMixin):
                         break
 
                     competition_project = \
-                        CompetitionProject.query.filter_by(project_name=project_name).first()
+                        Project.query.filter_by(project_name=project_name).first()
                     if not competition_project:
-                        competitionProject = CompetitionProject(project_name)
-                        db.session.add(competitionProject)
+                        competition_project = Project(project_name)
+                        db.session.add(competition_project)
                 else:
                     try:
                         db.session.commit()
