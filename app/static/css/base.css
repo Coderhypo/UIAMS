@@ -28,3 +28,7 @@ legend {
     margin-top:20px;
     margin-bottom:40px;
 }
+
+.select2-container .select2-selection--single {
+    height:34px;
+}
