@@ -18,8 +18,8 @@
             <label class="col-sm-3 control-label">竞赛项目</label>
             <div class="col-sm-9">
               <select class="form-control project" name="project">
-                {% for projectName in projects %}
-                <option value="{{projectName.id}}">{{projectName.project_name}}</option>
+                {% for project in projects %}
+                <option value="{{project.id}}">{{project.project_name}}</option>
                 {% endfor%}
               </select>
             </div>
