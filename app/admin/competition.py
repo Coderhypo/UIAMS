@@ -37,7 +37,7 @@ class CompetitionAdmin(ModelViewMixin):
     can_edit = True
     can_delete = True
 
-    column_list = ('id', 'competitionproject','achievement_name', 'winning_level', 'rate',
+    column_list = ('id', 'project','achievement_name', 'winning_level', 'rate',
             'awards_unit', 'winning_time', 'student')
 
     column_filters = ['student', 'achievement_name', 'winning_level', 'rate',
