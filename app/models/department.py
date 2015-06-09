@@ -19,16 +19,23 @@ class Unit(db.Model):
 
     def department_to_json(self):
         return {
-            'id': self.unit_id,
+            'id': self.id,
             'acachemy': self.unit_name,
-            'majors': [major.major_name for major in self.majors],
+            'majors': [{
+                'major_id': major.id,
+                'major_name': major.major_name
+            } for major in self.majors]
         }
 
     def unit_teacher_to_json(self):
         return {
             'id': self.id,
             'unit_name': self.unit_name,
-            'teachers': [teacher.nick_name + '/' + teacher.user_name for teacher in self.teachers]
+            'teachers': [{
+                    'teacher_id': teacher.id ,
+                    'teacher_name': teacher.nick_name + '/' + teacher.user_name
+                } for teacher in self.teachers
+            ]
         }
 
     def __init__(self, unit_id, unit_name):
