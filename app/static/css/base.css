@@ -12,6 +12,12 @@ body {
  * Footer
  */
 
+.content{
+    background-color: #fff;
+    padding-bottom: 20px;
+    border-radius:5px ;
+}
+
 .footer {
   padding: 40px 0;
   color: #999;
