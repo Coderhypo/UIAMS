@@ -3,7 +3,6 @@
 {% block title %}大学生创新活动{% endblock %}
 
 {% block page_content %}
-<div class="col-md-8">
   <div class="panel panel-default">
     <div class="panel-heading">
         <i class="glyphicon glyphicon-duplicate"></i> 新闻
@@ -11,8 +10,6 @@
     <div class="panel-body">
     </div>
   </div>
-</div>
-<div class="col-md-4">
   <div class="panel panel-default">
     <div class="panel-body">
       {% if current_user.is_authenticated() %}
@@ -35,5 +32,4 @@
       {% endif %}
     </div>
   </div>
-</div>
 {% endblock %}
