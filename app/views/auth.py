@@ -11,7 +11,6 @@ def login():
         user = User.query.filter_by(user_name = request.form['username']).first()
         if user is not None and user.verify_password(request.form['password']):
             login_user(user, request.form.get('remember_me'))
-            flash(u'您已经成功登录', 'success')
             return redirect('/')
         else:
             flash(u'用户名或密码错误', 'danger')
