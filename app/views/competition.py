@@ -48,11 +48,13 @@ def competition():
         awards_unit = request.form['awards_unit']
 
         competition = Competition(achievement_name, winning_level, rate, awards_unit,winning_time)
-        competition.id_competitionproject = request.form['competitionproject']
+        print request.form['project']
+        competition.id_project = request.form['project']
         competition.id_teacher_1 = request.form['teacher1']
         competition.id_teacher_2 = request.form['teacher2']
 
         db.session.add(competition)
         db.session.commit()
+        return render_template('/competition/competition.html', projects =projects)
 
     return render_template('/competition/competition.html', projects =projects)
