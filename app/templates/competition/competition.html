@@ -33,7 +33,7 @@
           <div class="form-group">
             <label class="col-sm-3 control-label">获奖级别</label>
             <div class="col-sm-9">
-              <select class="form-control">
+              <select class="form-control" name="winning_level">
                 <option>国际级</option>
                 <option>赛区级</option>
                 <option>国家级</option>
@@ -44,7 +44,7 @@
           <div class="form-group">
             <label class="col-sm-3 control-label">等级</label>
             <div class="col-sm-9">
-              <select class="form-control">
+              <select class="form-control" name="rate">
                 <option>特等奖</option>
                 <option>一等奖</option>
                 <option>二等奖</option>
@@ -65,7 +65,7 @@
           <div class="form-group">
             <label class="col-sm-3 control-label">颁奖单位</label>
             <div class="col-sm-9">
-              <input class="form-control" required></input>
+              <input class="form-control" required name="awards_unit"></input>
             </div>
           </div>
       </div>
@@ -193,7 +193,7 @@ $(".form_datetime").datetimepicker({
         for (var i=0; i<data.unit_teachers.length; i++) {
           if (data.unit_teachers[i].id==id)
             for (var j=0; j<data.unit_teachers[i].teachers.length; j++)
-              opt += "<option value=\"" + data.unit_teachers[i].teachers[j] + "\">" + data.unit_teachers[i].teachers[j] + "</option>";
+              opt += "<option value=\"" + data.unit_teachers[i].teachers[j].teacher_id + "\">" + data.unit_teachers[i].teachers[j].teacher_name + "</option>";
 
         }
         $("#teacher1").html(opt);
@@ -206,7 +206,7 @@ $(".form_datetime").datetimepicker({
         for (var i=0; i<data.unit_teachers.length; i++) {
           if (data.unit_teachers[i].id==id)
             for (var j=0; j<data.unit_teachers[i].teachers.length; j++)
-              opt += "<option value=\"" + data.unit_teachers[i].teachers[j] + "\">" + data.unit_teachers[i].teachers[j] + "</option>";
+              opt += "<option value=\"" + data.unit_teachers[i].teachers[j].teacher_id + "\">" + data.unit_teachers[i].teachers[j].teacher_name + "</option>";
         }
         $("#teacher2").html(opt);
       });
