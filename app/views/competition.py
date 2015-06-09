@@ -48,7 +48,6 @@ def competition():
         awards_unit = request.form['awards_unit']
 
         competition = Competition(achievement_name, winning_level, rate, awards_unit,winning_time)
-        print request.form['project']
         competition.id_project = request.form['project']
         competition.id_teacher_1 = request.form['teacher1']
         competition.id_teacher_2 = request.form['teacher2']
