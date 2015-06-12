@@ -9,7 +9,7 @@ class Config:
     SECRET_KEY = 'you-will-never-guess'
     CSRF_ENABLED = True
     FLASK_POSTS_PER_PAGE = 10
-    UPLOAD_FOLDER = BASE_DIR
+    UPLOAD_FOLDER = BASE_DIR + '/app/uploads'
     BABEL_DEFAULT_LOCALE = 'zh_CN'
 
     @staticmethod
