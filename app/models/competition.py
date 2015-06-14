@@ -24,12 +24,20 @@ class Project(db.Model):
             'project_name': self.project_name
         }
 
-class Participants(db.Model):
+class Participant(db.Model):
 
-    __tablename__ = 'participants'
+    __tablename__ = 'participant'
     id = db.Column(db.Integer, primary_key=True)
     id_competition = db.Column(db.Integer, db.ForeignKey('competition.id'))
     id_student = db.Column(db.Integer, db.ForeignKey('student.id'))
+    locant = db.Column(db.Integer)
+
+class Adviser(db.Model):
+
+    __tablename__ = 'adviser'
+    id = db.Column(db.Integer, primary_key=True)
+    id_competition = db.Column(db.Integer, db.ForeignKey('competition.id'))
+    id_teacher = db.Column(db.Integer, db.ForeignKey('user.id'))
     locant = db.Column(db.Integer)
 
 class Competition(db.Model):
@@ -43,9 +51,15 @@ class Competition(db.Model):
     awards_unit = db.Column(db.String(128))
     winning_time = db.Column(db.Date)
 
-    participants = db.relationship('Participants',
-            foreign_keys=[Participants.id_competition],
-            backref=db.backref('competition', lazy='joined'),
+    participants = db.relationship('Participant',
+            foreign_keys=[Participant.id_competition],
+            backref=db.backref('competitions', lazy='joined'),
+            lazy='dynamic',
+            cascade='all, delete-orphan')
+
+    advisers = db.relationship('Adviser',
+            foreign_keys=[Adviser.id_competition],
+            backref=db.backref('competitions', lazy='joined'),
             lazy='dynamic',
             cascade='all, delete-orphan')
 
@@ -55,3 +69,4 @@ class Competition(db.Model):
         self.rate = rate
         self.awards_unit = awards_unit
         self.winning_time = winning_time
+

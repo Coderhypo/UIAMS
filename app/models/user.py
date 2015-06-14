@@ -4,6 +4,7 @@ from app import db, login_manager
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask.ext.login import UserMixin, AnonymousUserMixin
 from .permission import Permission
+from .competition import Adviser
 
 @login_manager.user_loader
 def load_user(id):
@@ -30,6 +31,12 @@ class User(UserMixin, db.Model):
 
     id_unit = db.Column(db.Integer, db.ForeignKey('unit.id'))
     id_role = db.Column(db.Integer, db.ForeignKey('role.id'))
+
+    competitions = db.relationship('Adviser',
+            foreign_keys=[Adviser.id_teacher],
+            backref=db.backref('advisers', lazy='joined'),
+            lazy='dynamic',
+            cascade='all, delete-orphan')
 
     def to_json(self):
         return {
