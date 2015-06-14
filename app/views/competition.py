@@ -25,10 +25,19 @@ def competition():
 
         competition = Competition(achievement_name, winning_level, rate, awards_unit,winning_time)
         competition.id_project = request.form['project']
-        competition.id_teacher_1 = request.form['teacher1']
-        competition.id_teacher_2 = request.form['teacher2']
 
         db.session.add(competition)
+        db.session.commit()
+
+        adviser_1 = Adviser(1)
+        adviser_1.id_competition = competition.id
+        adviser_1.id_teacher = request.form['teacher1']
+
+        adviser_2 = Adviser(2)
+        adviser_2.id_competition = competition.id
+        adviser_2.id_teacher = request.form['teacher2']
+
+        db.session.add_all([adviser_1, adviser_2])
         db.session.commit()
 
         file = request.files['file']
