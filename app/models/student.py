@@ -1,5 +1,5 @@
 #-*- coding: UTF-8 -*-
-
+from .competition import *
 from app import db
 
 class Student(db.Model):
@@ -16,7 +16,11 @@ class Student(db.Model):
     id_acachemy = db.Column(db.Integer, db.ForeignKey('unit.id'))
     id_major = db.Column(db.Integer, db.ForeignKey('major.id'))
 
-    competitions = db.relationship('Competition', backref='student', lazy='dynamic')
+    competitions = db.relationship('Participants',
+            foreign_keys=[Participants.id_student],
+            backref=db.backref('participants', lazy='joined'),
+            lazy='dynamic',
+            cascade='all, delete-orphan')
 
     def __init__(self, student_id, student_name, id_grade, id_acachemy, id_major):
         self.student_id = student_id

@@ -28,16 +28,9 @@ class Participants(db.Model):
 
     __tablename__ = 'participants'
     id = db.Column(db.Integer, primary_key=True)
-    id_student_1 = db.Column(db.Integer, db.ForeignKey('student.id'), nullable=False)
-    id_student_2 = db.Column(db.Integer, db.ForeignKey('student.id'))
-    id_student_3 = db.Column(db.Integer, db.ForeignKey('student.id'))
-    id_student_4 = db.Column(db.Integer, db.ForeignKey('student.id'))
-    id_student_5 = db.Column(db.Integer, db.ForeignKey('student.id'))
-    id_student_6 = db.Column(db.Integer, db.ForeignKey('student.id'))
-    id_student_7 = db.Column(db.Integer, db.ForeignKey('student.id'))
-    id_student_8 = db.Column(db.Integer, db.ForeignKey('student.id'))
-    id_student_9 = db.Column(db.Integer, db.ForeignKey('student.id'))
-    id_student_10 = db.Column(db.Integer, db.ForeignKey('student.id'))
+    id_competition = db.Column(db.Integer, db.ForeignKey('competition.id'))
+    id_student = db.Column(db.Integer, db.ForeignKey('student.id'))
+    locant = db.Column(db.Integer)
 
 class Competition(db.Model):
 
@@ -49,10 +42,12 @@ class Competition(db.Model):
     rate = db.Column(db.String(128))
     awards_unit = db.Column(db.String(128))
     winning_time = db.Column(db.Date)
-    id_student = db.Column(db.Integer, db.ForeignKey('student.id'))
-    id_participants = db.Column(db.Integer, db.ForeignKey('participants.id'))
-    id_teacher_1 = db.Column(db.Integer, db.ForeignKey('user.id'))
-    id_teacher_2 = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    participants = db.relationship('Participants',
+            foreign_keys=[Participants.id_competition],
+            backref=db.backref('competition', lazy='joined'),
+            lazy='dynamic',
+            cascade='all, delete-orphan')
 
     def __init__(self, achievement_name, winning_level, rate, awards_unit, winning_time):
         self.achievement_name = achievement_name
