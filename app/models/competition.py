@@ -32,6 +32,12 @@ class Participant(db.Model):
     id_student = db.Column(db.Integer, db.ForeignKey('student.id'))
     locant = db.Column(db.Integer)
 
+    def __init__(self, locant):
+        self.locant = locant
+
+    def __repr__ (self):
+        return self.participants.student_name
+
 class Adviser(db.Model):
 
     __tablename__ = 'adviser'
@@ -39,6 +45,12 @@ class Adviser(db.Model):
     id_competition = db.Column(db.Integer, db.ForeignKey('competition.id'))
     id_teacher = db.Column(db.Integer, db.ForeignKey('user.id'))
     locant = db.Column(db.Integer)
+
+    def __init__(self, locant):
+        self.locant = locant
+
+    def __repr__ (self):
+        return self.advisers.nick_name
 
 class Competition(db.Model):
 
