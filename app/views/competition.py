@@ -1,6 +1,6 @@
 # coding=utf-8
 from flask import render_template, redirect, url_for, request, current_app
-from ..models import Project, Grade, Unit, Major, Student, User, Participants, Competition
+from ..models import Project, Grade, Unit, Major, Student, User, Participant, Competition
 from flask.ext.login import login_required
 
 from .. import app, db
