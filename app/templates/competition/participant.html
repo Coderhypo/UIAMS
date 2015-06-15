@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}大学生竞赛获奖{% endblock %}
+
+{% block page_content %}
+<div class="row content">
+  <div style="border-bottom:1px solid #eee;">
+    <h2 style="margin-left:15px;margin-right:15px"> 竞赛活动 <small>参赛学生 </small><i class="glyphicon glyphicon-plus pull-right"></i></h2>   
+  </div>
+  <form method="post" class="form-horizontal" enctype="multipart/form-data">
+    <div class="col-md-12">
+      <div class="col-md-6">
+          <h3>
+          学生No. 1
+          </h3>
+          <hr />
+        <div class="form-group">
+          <label class="col-sm-2 control-label">学号</label>
+          <div class="col-sm-9">
+            <input class="form-control" name=""></input>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">姓名</label>
+          <div class="col-sm-9">
+            <input class="form-control" name=""></input>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">年级</label>
+          <div class="col-sm-9">
+            <input class="form-control" name=""></input>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">学院</label>
+          <div class="col-sm-9">
+            <input class="form-control" name=""></input>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">专业</label>
+          <div class="col-sm-9">
+            <input class="form-control" name=""></input>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+          <h3>
+          学生No. 2
+          </h3>
+          <hr />
+        <div class="form-group">
+          <label class="col-sm-2 control-label">学号</label>
+          <div class="col-sm-9">
+            <input class="form-control" name=""></input>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">姓名</label>
+          <div class="col-sm-9">
+            <input class="form-control" name=""></input>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">年级</label>
+          <div class="col-sm-9">
+            <input class="form-control" name=""></input>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">学院</label>
+          <div class="col-sm-9">
+            <input class="form-control" name=""></input>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">专业</label>
+          <div class="col-sm-9">
+            <input class="form-control" name=""></input>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+{% block link %}
+
+<link href="{{ url_for('static', filename='css/bootstrap-datetimepicker.min.css')}}" rel="stylesheet">
+
+{{ super() }}
+
+{% endblock %}
+
+{% block script %}
+
+{{ super() }}
+
+{% endblock %}
