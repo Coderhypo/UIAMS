@@ -1,6 +1,6 @@
 # coding=utf-8
 from flask import render_template, redirect, url_for, request, current_app
-from ..models import Project, Unit, Competition, Adviser
+from ..models import Project, Unit, Competition, Adviser, Participant, Grade
 from flask.ext.login import login_required
 
 from .. import app, db
@@ -58,4 +58,8 @@ def show_competition(id):
 @app.route('/competition/<int:id>/participant', methods=['GET', 'POST'])
 @login_required
 def participant(id):
-    return render_template('/competition/participant.html')
+    participants = Competition.query.filter_by(id=id).first()
+    if participants:
+        return redirect(url_for('show_competition', id=id))
+    grades = Grade.query.all()
+    return render_template('/competition/participant.html', grades = grades)
