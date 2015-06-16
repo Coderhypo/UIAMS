@@ -10,4 +10,4 @@ from .. import db, app
 @login_required
 def getDepartment():
     units = Unit.query.all()
-    return jsonify({'department': [ unit.department_to_json() for unit in units] })
+    return jsonify({'departments': [ unit.department_to_json() for unit in units] })
