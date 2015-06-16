@@ -8,8 +8,8 @@
       <h3>竞赛活动 <small>参赛学生</small></h3>
     </div>
     <form method="post" class="form-horizontal">
-        <div class="col-md-12">
-          <div class="col-md-6">
+        <div class="col-md-12 students">
+          <div class="col-md-6 student" id="1">
 
             <h3>
             学生No. 1
@@ -18,19 +18,19 @@
             <div class="form-group">
               <label class="col-sm-2 control-label">学号</label>
               <div class="col-sm-10">
-                <input type="text" class="form-control" name="studen_no.1_id" required></input>
+                <input type="text" class="form-control" name="No_1_id" required></input>
               </div>
             </div>
             <div class="form-group">
               <label class="col-sm-2 control-label">姓名</label>
               <div class="col-sm-10">
-                <input type="text" class="form-control" name="" required></input>
+                <input type="text" class="form-control" name="No_1_name" required></input>
               </div>
             </div>
             <div class="form-group">
               <label class="col-sm-2 control-label">年级</label>
               <div class="col-sm-10">
-                <select class="form-control" name="">
+                <select class="form-control" name="No_1_grade">
                   <option value="" disabled selected>==选择年级==</option>
                   {% for grade in grades %}
                   <option value="{{grade.id}}">{{grade.grade_name}}</option>
@@ -41,7 +41,7 @@
             <div class="form-group">
               <label class="col-sm-2 control-label">学院</label>
               <div class="col-sm-10">
-                <select class="form-control acachemy" name="">
+                <select class="form-control acachemy" id="No_1_acachemy" name="No_1_acachemy">
                   <option value="" disabled selected>==选择学院==</option>
                 </select>
               </div>
@@ -49,54 +49,7 @@
             <div class="form-group">
               <label class="col-sm-2 control-label">专业</label>
               <div class="col-sm-10">
-                <select class="form-control major" name="">
-                  <option value="" disabled selected>==选择专业==</option>
-                </select>
-              </div>
-            </div>
-
-          </div>
-          <div class="col-md-6">
-
-            <h3>
-            学生No. 2
-            </h3>
-            <hr />
-            <div class="form-group">
-              <label class="col-sm-2 control-label">学号</label>
-              <div class="col-sm-10">
-                <input type="text" class="form-control" name="" required></input>
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="col-sm-2 control-label">姓名</label>
-              <div class="col-sm-10">
-                <input type="text" class="form-control" name="" required></input>
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="col-sm-2 control-label">年级</label>
-              <div class="col-sm-10">
-                <select class="form-control" name="">
-                  <option value="" disabled selected>==选择年级==</option>
-                  {% for grade in grades %}
-                  <option value="{{grade.id}}">{{grade.grade_name}}</option>
-                  {% endfor%}
-                </select>
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="col-sm-2 control-label">学院</label>
-              <div class="col-sm-10">
-                <select class="form-control acachemy" name="">
-                  <option value="" disabled selected>==选择学院==</option>
-                </select>
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="col-sm-2 control-label">专业</label>
-              <div class="col-sm-10">
-                <select class="form-control major" name="">
+                <select class="form-control major" id="No_1_major" name="No_1_major">
                   <option value="" disabled selected>==选择专业==</option>
                 </select>
               </div>
@@ -106,7 +59,10 @@
         </div>
         
         <div class="col-md-12">
-            <input type="submit" class="btn btn-primary pull-right" value="提交"></input>
+          <div class="col-md-offset-10">
+            <button class="btn btn-success add_student" type="button" value="Input">添加学生</button>
+            <button class="btn btn-primary" type="submit" value="提交">提交</button>
+          </div>
         </div>
     </form>
 </div>
@@ -125,7 +81,7 @@
 {{ super() }}
 
 <script>
-  function departments_init() {
+  function department_init(student_id) {
     $.getJSON("/department/_get",function(data){
       var opt = "";
       opt += "<option value=\"\" disabled selected>==选择学院==</option>";
@@ -133,9 +89,9 @@
         if (data.departments[i].acachemy_id!=0)
         opt += "<option value=\"" + data.departments[i].id + "\">" + data.departments[i].acachemy + "</option>";
       }
-      $(".acachemy").html(opt);
+      $("#No_" + student_id + "_acachemy").html(opt);
 
-      $(".acachemy").change(function(){
+      $("#No_" + student_id + "_acachemy").change(function(){
         id = $(this).val();
         var opt = "";
         opt += "<option value=\"\" disabled selected>==选择专业==</option>";
@@ -150,12 +106,71 @@
 
     });
    }
-
+  
+  function add_student() {
+    $(".add_student").click(function(){
+      var student_num = $(".student").length;
+      if(student_num >= 10)
+        alert("最多添加10个学生");
+      else {
+      $(".students").append("<div class='col-md-6 student' id='" + (student_num + 1) + "'>"
+          +"<h3>"
+          +"学生No. " + (student_num + 1)
+          +"</h3>"
+          +"<hr />"
+          +"<div class='form-group'>"
+          +"<label class='col-sm-2 control-label'>学号</label>"
+          +"<div class='col-sm-10'>"
+          +"<input type='text' class='form-control' name='No_" + (student_num + 1) + "_id' required></input>"
+          +"</div>"
+          +"</div>"
+          +"<div class='form-group'>"
+          +"<label class='col-sm-2 control-label'>姓名</label>"
+          +"<div class='col-sm-10'>"
+          +"<input type='text' class='form-control' name='No_" + (student_num + 1) + "_name' required></input>"
+          +"</div>"
+          +"</div>"
+          +"<div class='form-group'>"
+          +"<label class='col-sm-2 control-label'>年级</label>"
+          +"<div class='col-sm-10'>"
+          +"<select class='form-control' name='No_" + (student_num + 1) + "_grade'>"
+          +"<option value='' disabled selected>==选择年级==</option>"
+          +"{% for grade in grades %}"
+          +"<option value='{{grade.id}}'>{{grade.grade_name}}</option>"
+          +"{% endfor%}"
+          +"</select>"
+          +"</div>"
+          +"</div>"
+          +"<div class='form-group'>"
+          +"<label class='col-sm-2 control-label'>学院</label>"
+          +"<div class='col-sm-10'>"
+          +"<select class='form-control acachemy' id='No_" + (student_num + 1) + "_acachemy'" + " name='No_" + (student_num + 1) + "_acachemy'>"
+          +"<option value='' disabled selected>==选择学院==</option>"
+          +"</select>"
+          +"</div>"
+          +"</div>"
+          +"<div class='form-group'>"
+          +"<label class='col-sm-2 control-label'>专业</label>"
+          +"<div class='col-sm-10'>"
+          +"<select class='form-control major' id='No_" + (student_num + 1) + "_major'" + " name='No_" + (student_num + 1) + "_major'>"
+          +"<option value='' disabled selected>==选择专业==</option>"
+          +"</select>"
+          +"</div>"
+          +"</div>"
+          +"</div>"
+        );
+        department_init(student_num + 1);
+        $(".acachemy").select2();
+        $(".major").select2();
+      }
+    });
+  }
 
   $(document).ready(function(){
-    departments_init();
+    department_init(1);
     $(".acachemy").select2();
     $(".major").select2();
+    add_student();
   });
 </script>
 {% endblock %}
