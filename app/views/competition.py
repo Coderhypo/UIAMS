@@ -46,7 +46,7 @@ def competition():
             file_url = os.path.join(UPLOAD_FOLDER, file.filename)
             file.save(file_url)
 
-        return redirect(url_for('show_competition', id=competition.id))
+        return redirect(url_for('participant', id=competition.id))
 
     return render_template('/competition/competition.html', projects=projects)
 
@@ -54,3 +54,8 @@ def competition():
 @login_required
 def show_competition(id):
     return 'hello world'
+
+@app.route('/competition/<int:id>/participant', methods=['GET', 'POST'])
+@login_required
+def participant(id):
+    return render_template('/competition/participant.html')
