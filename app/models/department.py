@@ -21,6 +21,7 @@ class Unit(db.Model):
         return {
             'id': self.id,
             'acachemy': self.unit_name,
+            'acachemy_id': self.unit_id,
             'majors': [{
                 'major_id': major.id,
                 'major_name': major.major_name
