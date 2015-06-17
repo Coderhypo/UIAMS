@@ -18,7 +18,7 @@ class Student(db.Model):
 
     competitions = db.relationship('Participant',
             foreign_keys=[Participant.id_student],
-            backref=db.backref('participants', lazy='joined'),
+            backref=db.backref('student', lazy='joined'),
             lazy='dynamic',
             cascade='all, delete-orphan')
 
