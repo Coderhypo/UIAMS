@@ -6,7 +6,14 @@ from .. import db
 from . import admin
 from flask import views
 
+labels = dict(
+    id = u'#',
+    grade_name = u'年级'
+    )
+
 class GradeAdmin(ModelViewMixin):
+
+    column_labels = labels
 
     can_restore = False
     can_create = True
