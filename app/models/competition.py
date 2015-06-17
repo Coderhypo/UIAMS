@@ -35,8 +35,8 @@ class Participant(db.Model):
     def __init__(self, locant):
         self.locant = locant
 
-    def __repr__ (self):
-        return self.participants.student_name
+    def __repr__(self):
+        return self.student.student_name
 
 class Adviser(db.Model):
 
@@ -49,8 +49,8 @@ class Adviser(db.Model):
     def __init__(self, locant):
         self.locant = locant
 
-    def __repr__ (self):
-        return self.advisers.nick_name
+    def __repr__(self):
+        return self.teacher.nick_name
 
 class Competition(db.Model):
 
@@ -66,13 +66,13 @@ class Competition(db.Model):
 
     participants = db.relationship('Participant',
             foreign_keys=[Participant.id_competition],
-            backref=db.backref('competitions', lazy='joined'),
+            backref=db.backref('competition', lazy='joined'),
             lazy='dynamic',
             cascade='all, delete-orphan')
 
     advisers = db.relationship('Adviser',
             foreign_keys=[Adviser.id_competition],
-            backref=db.backref('competitions', lazy='joined'),
+            backref=db.backref('competition', lazy='joined'),
             lazy='dynamic',
             cascade='all, delete-orphan')
 
