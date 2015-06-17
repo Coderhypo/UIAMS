@@ -24,14 +24,6 @@ def deploy():
     # upgrade()
 
     Role.insert_roles()
-    admin_role = Role.query.filter_by(role_name='管理员').first()
-
-    admin = User('admin', 'admin')
-    admin.password = '123'
-    admin.role = admin_role
-
-    db.session.add(admin)
-    db.session.commit()
 
 if __name__ == '__main__':
     manager.run()
