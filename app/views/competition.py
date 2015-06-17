@@ -25,28 +25,29 @@ def allowed_file(filename):
 def competition():
     projects = Project.query.order_by('id').all()
     if request.method == "POST":
-        achievement_name = request.form['achievement_name']
-        winning_level = request.form['winning_level']
-        rate = request.form['rate']
-        winning_time = request.form['winning_time']
-        awards_unit = request.form['awards_unit']
+        try:
+            teacher_num = int(request.form['teacher_num'])
+            achievement_name = request.form['achievement_name']
+            winning_level = request.form['winning_level']
+            rate = request.form['rate']
+            winning_time = request.form['winning_time']
+            awards_unit = request.form['awards_unit']
 
-        competition = Competition(achievement_name, winning_level, rate, awards_unit,winning_time)
-        competition.id_project = request.form['project']
+            competition = Competition(achievement_name, winning_level, rate, awards_unit,winning_time)
+            competition.id_project = request.form['project']
 
-        db.session.add(competition)
-        db.session.commit()
+            db.session.add(competition)
 
-        adviser_1 = Adviser(1)
-        adviser_1.id_competition = competition.id
-        adviser_1.id_teacher = request.form['teacher1']
+            for i in range(1, teacher_num + 1):
+                adviser = Adviser(1)
+                adviser.competition = competition
+                adviser.id_teacher = request.form['No_%s_teacher' % i]
 
-        adviser_2 = Adviser(2)
-        adviser_2.id_competition = competition.id
-        adviser_2.id_teacher = request.form['teacher2']
+                db.session.add(adviser)
 
-        db.session.add_all([adviser_1, adviser_2])
-        db.session.commit()
+            db.session.commit()
+        except:
+            db.session.rollback()
 
         file = request.files['file']
         if file and allowed_file(file.filename):
@@ -73,23 +74,26 @@ def participant(id):
         return redirect(url_for('show_competition', id=id))
     grades = Grade.query.all()
     if request.method == 'POST':
-        student_num = int(request.form['student_num'])
-        for i in range(1, student_num + 1):
-            student_id = request.form['No_%s_id' % i]
-            student = Student.query.filter_by(student_id=student_id).first()
-            if not student:
-                student_name = request.form['No_%s_name' % i]
-                student = Student(student_id, student_name)
-                student.id_grade = request.form['No_%s_grade' % i]
-                student.id_acachemy = request.form['No_%s_acachemy' % i]
-                student.id_major = request.form['No_%s_major' % i]
-                db.session.add(student)
-                db.session.commit()
+        try:
+            student_num = int(request.form['student_num'])
+            for i in range(1, student_num + 1):
+                student_id = request.form['No_%s_id' % i]
+                student = Student.query.filter_by(student_id=student_id).first()
+                if not student:
+                    student_name = request.form['No_%s_name' % i]
+                    student = Student(student_id, student_name)
+                    student.id_grade = request.form['No_%s_grade' % i]
+                    student.id_acachemy = request.form['No_%s_acachemy' % i]
+                    student.id_major = request.form['No_%s_major' % i]
+                    db.session.add(student)
 
-            participant = Participant(i)
-            participant.id_student = student.id
-            participant.id_competition = id
-            db.session.add(participant)
+                participant = Participant(i)
+                participant.student = student
+                participant.id_competition = id
+                db.session.add(participant)
+
             db.session.commit()
+        except:
+            db.session.rollback()
         return redirect(url_for('show_competition', id=id))
     return render_template('/competition/participant.html', grades = grades)
