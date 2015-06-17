@@ -18,6 +18,7 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 labels = dict(
+    id = u'#',
     project = u'竞赛项目',
     project_name = u'项目名称',
     achievement_name = u'成果名称',
@@ -60,7 +61,7 @@ class ProjectAdmin(ModelViewMixin):
 
     #column_searchable_list = ['nick_name']
 
-    #column_list = ('id', 'user_name', 'nick_name', 'unit', 'role')
+    column_list = ('id', 'project_name')
 
     #column_filters = ['user_name', 'nick_name', Unit.unit_name, 'role']
 
