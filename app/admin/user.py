@@ -17,11 +17,21 @@ UPLOAD_FOLDER = '/tmp'
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
+labels = dict(
+    id = u'#',
+    user_name = u'用户名',
+    nick_name = u'姓名',
+    unit = u'单位',
+    unit_name = u'单位名称',
+    role = u'角色',
+    role_name = u'角色名称'
+    )
+
 class UserAdmin(ModelViewMixin):
 
-    can_restore = False
+    column_labels = labels
+
     can_create = True
-    can_edit = True
     can_delete = True
 
     list_template = 'admin/user.html'
@@ -30,7 +40,7 @@ class UserAdmin(ModelViewMixin):
 
     column_list = ('id', 'user_name', 'nick_name', 'unit', 'role')
 
-    column_filters = ['user_name', 'nick_name', Unit.unit_name, 'role']
+    column_filters = ['user_name', 'nick_name', Unit.unit_name, Role.role_name]
 
     def __init__(self, session, **kwargs):
         super(UserAdmin, self).__init__(User, session, **kwargs)
