@@ -34,7 +34,7 @@ class User(UserMixin, db.Model):
 
     competitions = db.relationship('Adviser',
             foreign_keys=[Adviser.id_teacher],
-            backref=db.backref('advisers', lazy='joined'),
+            backref=db.backref('teacher', lazy='joined'),
             lazy='dynamic',
             cascade='all, delete-orphan')
 
