@@ -13,7 +13,7 @@ class Project(db.Model):
     competitions = db.relationship('Competition', backref='project',lazy='dynamic')
 
     def __init__(self, project_name):
-        self.project_name=project_name
+        self.project_name = project_name
 
     def __repr__(self):
         return self.project_name
@@ -62,6 +62,7 @@ class Competition(db.Model):
     rate = db.Column(db.String(128))
     awards_unit = db.Column(db.String(128))
     winning_time = db.Column(db.Date)
+    is_review = db.Column(db.Boolean, default=False)
 
     participants = db.relationship('Participant',
             foreign_keys=[Participant.id_competition],
