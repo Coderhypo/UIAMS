@@ -22,12 +22,9 @@ class Student(db.Model):
             lazy='dynamic',
             cascade='all, delete-orphan')
 
-    def __init__(self, student_id, student_name, id_grade, id_acachemy, id_major):
+    def __init__(self, student_id, student_name):
         self.student_id = student_id
         self.student_name = student_name
-        self.id_grade = id_grade
-        self.id_acachemy = id_acachemy
-        self.id_major = id_major
 
     def __repr__(self):
-        return self.student_id
+        return self.student_id + '/' + self.student_name
