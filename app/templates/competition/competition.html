@@ -69,12 +69,15 @@
             </div>
           </div>
       </div>
-      <div class="col-md-6">
+      <div class="col-md-6 teachers">
+          <input name="teacher_num" class="hidden teacher_num" value="1"></input>
           <h3>
         指导教师
+        <button type="button" class="close del_teacher"><span class="glyphicon glyphicon-minus"></span></button>
+        <button type="button" class="close add_teacher"><span class="glyphicon glyphicon-plus"></span></button>
           </h3>
           <hr />
-        <div class="col-md-12">
+        <div class="col-md-12 teacher" id="No_1">
           <h4>
           教师No. 1
           </h4>
@@ -82,7 +85,7 @@
           <div class="form-group">
             <label class="col-sm-3 control-label">单位</label>
             <div class="col-sm-9">
-              <select class="form-control unit" name="unit1" id="unit1" required>
+              <select class="form-control unit" name="No_1_unit" id="No_1_unit" required>
                 <option value="" disabled selected>==选择单位==</option>
               </select>
             </div>            
@@ -90,29 +93,7 @@
             <div class="form-group">
               <label class="col-sm-3 control-label">教师姓名</label>
               <div class="col-sm-9">
-                <select class="form-control teacher" name="teacher1" id="teacher1" required>
-                  <option value="" disabled selected>==选择教师==</option>
-                </select>
-              </div>
-            </div>
-        </div>
-        <div class="col-md-12">
-            <h4>
-            教师No. 2
-            </h4>
-            <hr />
-            <div class="form-group">
-              <label class="col-sm-3 control-label">单位</label>
-              <div class="col-sm-9">
-                <select class="form-control unit" name="unit2" id="unit2">
-                  <option value="" disabled selected>==选择单位==</option>
-                </select>
-              </div>            
-            </div>
-            <div class="form-group">
-              <label class="col-sm-3 control-label">教师姓名</label>
-              <div class="col-sm-9">
-                <select class="form-control teacher" name="teacher2" id="teacher2">
+                <select class="form-control tea" name="No_1_teacher" id="No_1_teacher" required>
                   <option value="" disabled selected>==选择教师==</option>
                 </select>
               </div>
@@ -176,17 +157,16 @@ $(".form_datetime").datetimepicker({
 </script>
 
 <script>
-  function teachers_init() {
+  function teacher_init(teacher_id) {
     $.getJSON("/teacher/_get",function(data){
       var opt = "";
       opt += "<option value=\"\" disabled selected>==选择单位==</option>";
       for (var i=0; i<data.unit_teachers.length; i++) {
         opt += "<option value=\"" + data.unit_teachers[i].id + "\">" + data.unit_teachers[i].unit_name + "</option>";
       }
-      $("#unit1").html(opt);
-      $("#unit2").html(opt);
+      $("#No_" + teacher_id + "_unit").html(opt);
 
-      $("#unit1").change(function(){
+      $("#No_" + teacher_id + "_unit").change(function(){
         id = $(this).val();
         var opt = "";
         opt += "<option value=\"\" disabled selected>==选择教师==</option>";
@@ -196,29 +176,75 @@ $(".form_datetime").datetimepicker({
               opt += "<option value=\"" + data.unit_teachers[i].teachers[j].teacher_id + "\">" + data.unit_teachers[i].teachers[j].teacher_name + "</option>";
 
         }
-        $("#teacher1").html(opt);
+        $(this).parent().parent().next().find(".tea").html(opt);
       });
 
-      $("#unit2").change(function(){
-        id = $(this).val();
-        var opt = "";
-        opt += "<option value=\"\" disabled selected>==选择教师==</option>";
-        for (var i=0; i<data.unit_teachers.length; i++) {
-          if (data.unit_teachers[i].id==id)
-            for (var j=0; j<data.unit_teachers[i].teachers.length; j++)
-              opt += "<option value=\"" + data.unit_teachers[i].teachers[j].teacher_id + "\">" + data.unit_teachers[i].teachers[j].teacher_name + "</option>";
-        }
-        $("#teacher2").html(opt);
-      });
     });
-   }
+  }
 
+  function add_teacher() {
+    $(".add_teacher").click(function(){
+      var teacher_num = $(".teacher").length;
+      if (teacher_num >= 2)
+        alert("最多添加2个教师");
+      else {
+        $(".teachers").append(
+          "<div class='col-md-12 teacher' id='No_" + (teacher_num + 1) + "'>"+
+          "<h4>"+
+          "教师No. " + (teacher_num + 1) +
+          "</h4>"+
+          "<hr />"+
+          "<div class='form-group'>"+
+          "<label class='col-sm-3 control-label'>单位</label>"+
+          "<div class='col-sm-9'>"+
+          "<select class='form-control unit' id='No_" + (teacher_num + 1) + "_unit' name='No_" + (teacher_num + 1) + "_unit'>"+
+          "<option value='' disabled selected>==选择单位==</option>"+
+          "</select>"+
+          "</div>"+
+          "</div>"+
+          "<div class='form-group'>"+
+          "<label class='col-sm-3 control-label'>教师姓名</label>"+
+          "<div class='col-sm-9'>"+
+          "<select class='form-control tea' id='No_" + (teacher_num + 1) + "_teacher' name='No_" + (teacher_num + 1) + "_teacher'>"+
+          "<option value='' disabled selected>==选择教师==</option>"+
+          "</select>"+
+          "</div>"+
+          "</div>"+
+          "</div>"
+          );
+        teacher_init(teacher_num + 1);
+        $(".tea").select2();
+        $(".unit").select2();
+      }
+    });
+  }
+
+  function del_teacher() {
+    $(".del_teacher").click(function() {
+      var teacher_num = $(".teacher").length;
+      if(teacher_num > 1) {
+        $("#No_" + teacher_num).remove();
+      }
+      else
+        alert("指导教师必须大于1个");
+    }); 
+  }
+
+  function submit_teacher() {
+    $(".submit").click(function() {
+      var teacher_num = $(".teacher").length;
+      $(".teacher_num").val(teacher_num);
+    });
+  }
 
   $(document).ready(function(){
-    teachers_init();
+    teacher_init(1);
     $(".project").select2();
-    $(".teacher").select2();
+    $(".tea").select2();
     $(".unit").select2();
+    add_teacher();
+    del_teacher();
+    submit_teacher();
   });
 </script>
 
