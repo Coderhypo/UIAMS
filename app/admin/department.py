@@ -18,7 +18,14 @@ UPLOAD_FOLDER = '/tmp'
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
+labels = dict(
+    unit_id = u'#',
+    unit_name = u'单位/学院'
+    )
+
 class DepartmentAdmin(ModelViewMixin):
+
+    column_labels = labels
 
     can_restore = False
     can_create = True
