@@ -9,6 +9,7 @@
     </div>
     <form method="post" class="form-horizontal">
         <div class="col-md-12 students">
+          <input name="student_num" class="hidden student_num" value="1"></input>
           <div class="col-md-6 student" id="1">
 
             <h3>
@@ -62,7 +63,7 @@
           <div class="col-md-offset-9">
             <button class="btn btn-success add_student" type="button">添加学生</button>
             <button class="btn btn-danger del_student" type="button">删除学生</button>
-            <button class="btn btn-primary" type="submit" value="提交">提交</button>
+            <button class="btn btn-primary submit" type="submit" value="提交">提交</button>
           </div>
         </div>
     </form>
@@ -170,11 +171,19 @@
   function del_student() {
     $(".del_student").click(function() {
       var student_num = $(".student").length;
-      if(student_num > 1)
+      if(student_num > 1) {
         $("#" + student_num).remove();
+      }
       else
         alert("参赛学生必须大于一个人");
     }); 
+  }
+
+  function submit_student() {
+    $(".submit").click(function() {
+      var student_num = $(".student").length;
+      $(".student_num").val(student_num);
+    });
   }
 
   $(document).ready(function(){
@@ -183,6 +192,7 @@
     $(".major").select2();
     add_student();
     del_student();
+    submit_student()
   });
 </script>
 {% endblock %}
