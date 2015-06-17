@@ -1,6 +1,14 @@
 # coding=utf-8
 from flask import render_template, redirect, url_for, request, current_app
-from ..models import Project, Unit, Competition, Adviser, Participant, Grade
+from ..models import (
+        Project,
+        Unit,
+        Competition,
+        Adviser,
+        Participant,
+        Grade,
+        Student
+    )
 from flask.ext.login import login_required
 
 from .. import app, db
@@ -58,8 +66,30 @@ def show_competition(id):
 @app.route('/competition/<int:id>/participant', methods=['GET', 'POST'])
 @login_required
 def participant(id):
-    participants = Competition.query.filter_by(id=id).first()
-    if participants:
+    competition = Competition.query.filter_by(id=id).first()
+    if not competition:
+        return redirect(url_for('competition'))
+    elif competition.participants.all():
         return redirect(url_for('show_competition', id=id))
     grades = Grade.query.all()
+    if request.method == 'POST':
+        student_num = int(request.form['student_num'])
+        for i in range(1, student_num + 1):
+            student_id = request.form['No_%s_id' % i]
+            student = Student.query.filter_by(student_id=student_id).first()
+            if not student:
+                student_name = request.form['No_%s_name' % i]
+                student = Student(student_id, student_name)
+                student.id_grade = request.form['No_%s_grade' % i]
+                student.id_acachemy = request.form['No_%s_acachemy' % i]
+                student.id_major = request.form['No_%s_major' % i]
+                db.session.add(student)
+                db.session.commit()
+
+            participant = Participant(i)
+            participant.id_student = student.id
+            participant.id_competition = id
+            db.session.add(participant)
+            db.session.commit()
+        return redirect(url_for('show_competition', id=id))
     return render_template('/competition/participant.html', grades = grades)
