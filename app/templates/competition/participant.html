@@ -31,7 +31,7 @@
             <div class="form-group">
               <label class="col-sm-2 control-label">年级</label>
               <div class="col-sm-10">
-                <select class="form-control" name="No_1_grade">
+                <select class="form-control" name="No_1_grade" required>
                   <option value="" disabled selected>==选择年级==</option>
                   {% for grade in grades %}
                   <option value="{{grade.id}}">{{grade.grade_name}}</option>
@@ -42,7 +42,7 @@
             <div class="form-group">
               <label class="col-sm-2 control-label">学院</label>
               <div class="col-sm-10">
-                <select class="form-control acachemy" id="No_1_acachemy" name="No_1_acachemy">
+                <select class="form-control acachemy" id="No_1_acachemy" name="No_1_acachemy" required>
                   <option value="" disabled selected>==选择学院==</option>
                 </select>
               </div>
@@ -50,7 +50,7 @@
             <div class="form-group">
               <label class="col-sm-2 control-label">专业</label>
               <div class="col-sm-10">
-                <select class="form-control major" id="No_1_major" name="No_1_major">
+                <select class="form-control major" id="No_1_major" name="No_1_major" required>
                   <option value="" disabled selected>==选择专业==</option>
                 </select>
               </div>
