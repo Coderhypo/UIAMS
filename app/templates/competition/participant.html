@@ -88,8 +88,8 @@
       var opt = "";
       opt += "<option value=\"\" disabled selected>==选择学院==</option>";
       for (var i=0; i<data.departments.length; i++) {
-        if (data.departments[i].acachemy_id!=0)
-        opt += "<option value=\"" + data.departments[i].id + "\">" + data.departments[i].acachemy + "</option>";
+        if (data.departments[i].acachemy.acachemy_id!=0)
+        opt += "<option value=\"" + data.departments[i].id + "\">" + data.departments[i].acachemy.acachemy_name + "</option>";
       }
       $("#No_" + student_id + "_acachemy").html(opt);
 
