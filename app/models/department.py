@@ -20,8 +20,10 @@ class Unit(db.Model):
     def department_to_json(self):
         return {
             'id': self.id,
-            'acachemy': self.unit_name,
-            'acachemy_id': self.unit_id,
+            'acachemy': {
+                'acachemy_id': self.unit_id,
+                'acachemy_name': self.unit_name,
+                },
             'majors': [{
                 'major_id': major.id,
                 'major_name': major.major_name
