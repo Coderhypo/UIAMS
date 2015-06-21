@@ -22,8 +22,6 @@ class GradeAdmin(ModelViewMixin):
 
     column_searchable_list = ['grade_name']
 
-    column_list = ('id', 'grade_name')
-
     def __init__(self, session, **kwargs):
         super(GradeAdmin, self).__init__(Grade, session, **kwargs)
 
