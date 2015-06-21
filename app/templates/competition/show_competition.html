@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}大学生竞赛获奖{% endblock %}
+
+{% block page_content %}
+<div class="row content">
+  <div class="modal-header">
+    <h3>竞赛活动</h3>
+  </div>
+</div>
+{% endblock %}
+
+{% block link %}
+
+<link href="{{ url_for('static', filename='css/bootstrap-datetimepicker.min.css')}}" rel="stylesheet">
+
+{{ super() }}
+
+{% endblock %}
+
+{% block script %}
+
+{{ super() }}
+
+<script src="{{ url_for('static', filename='js/bootstrap-datetimepicker.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/locales/bootstrap-datetimepicker.zh-CN.js') }}"></script>
+
+{% endblock %}
