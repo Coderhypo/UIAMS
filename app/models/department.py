@@ -11,6 +11,10 @@ class Unit(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     unit_id = db.Column(db.Integer)
     unit_name = db.Column(db.String(128))
+    date_created = db.Column(
+        db.DateTime, index=True,
+        server_default=db.func.current_timestamp()
+    )
 
     # 反向关系
     students = db.relationship('Student', backref='acachemy', lazy='dynamic')
@@ -61,6 +65,10 @@ class Major(db.Model):
     major_id = db.Column(db.String(128), unique = True)
     major_name = db.Column(db.String(128))
     id_acachemy = db.Column(db.Integer, db.ForeignKey('unit.id'))
+    date_created = db.Column(
+        db.DateTime, index=True,
+        server_default=db.func.current_timestamp()
+    )
 
     def to_json(self):
         return {
