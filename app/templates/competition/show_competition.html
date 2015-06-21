@@ -7,6 +7,35 @@
   <div class="modal-header">
     <h3>竞赛活动</h3>
   </div>
+  <div class="col-md-12">
+    <h3>
+      竞赛信息
+    </h3>
+    <hr />
+    竞赛项目: {{competition.project}}
+    <br>
+    成果名称: {{competition.achievement_name}}
+    <br>
+    获奖级别: {{competition.winning_level}}
+    <br>
+    等级: {{competition.rate}}
+    <br>
+    获奖时间: {{competition.winning_time}}
+    <br>
+    获奖单位: {{competition.awards_unit}}
+    <br>
+    创建时间: {{competition.date_created}}
+    <h3>
+      参赛学生
+    </h3>
+    <hr />
+    {{competition.participants.all()}}
+    <h3>
+      指导教师 
+    </h3>
+    <hr />
+    {{competition.advisers.all()}}
+  </div>
 </div>
 {% endblock %}
 
