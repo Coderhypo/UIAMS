@@ -9,6 +9,10 @@ class Project(db.Model):
     __tablename__ = 'project'
     id = db.Column(db.Integer, primary_key=True)
     project_name = db.Column(db.String(128), nullable=False)
+    date_created = db.Column(
+        db.DateTime, nullable=False, index=True,
+        server_default=db.func.current_timestamp()
+    )
 
     def __repr__(self):
         return self.project_name
@@ -26,6 +30,10 @@ class Participant(db.Model):
     id_competition = db.Column(db.Integer, db.ForeignKey('competition.id'))
     id_student = db.Column(db.Integer, db.ForeignKey('student.id'))
     locant = db.Column(db.Integer)
+    date_created = db.Column(
+        db.DateTime, nullable=False, index=True,
+        server_default=db.func.current_timestamp()
+    )
 
     def __init__(self, locant):
         self.locant = locant
@@ -58,6 +66,10 @@ class Competition(db.Model):
     awards_unit = db.Column(db.String(128))
     winning_time = db.Column(db.Date)
     is_review = db.Column(db.Boolean, default=False)
+    date_created = db.Column(
+        db.DateTime, nullable=False, index=True,
+        server_default=db.func.current_timestamp()
+    )
 
     project = db.relationship('Project', lazy=True)
 
