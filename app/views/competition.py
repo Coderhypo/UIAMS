@@ -62,7 +62,7 @@ def competition():
 @app.route('/competition/<int:id>')
 @login_required
 def show_competition(id):
-    return 'hello world'
+    return render_template('/competition/show_competition.html')
 
 @app.route('/competition/<int:id>/participant', methods=['GET', 'POST'])
 @login_required
