@@ -33,7 +33,10 @@ class Unit(db.Model):
     def unit_teacher_to_json(self):
         return {
             'id': self.id,
-            'unit_name': self.unit_name,
+            'unit': {
+                'unit_id': self.unit_id,
+                'unit_name': self.unit_name
+            },
             'teachers': [{
                     'teacher_id': teacher.id ,
                     'teacher_name': teacher.nick_name + '/' + teacher.user_name
