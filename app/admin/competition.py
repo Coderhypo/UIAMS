@@ -27,7 +27,9 @@ labels = dict(
     awards_unit = u'颁奖单位',
     winning_time = u'获奖时间',
     student = u'学生',
-    is_review = u'是否审核'
+    is_review = u'是否审核',
+    participants = u'参赛学生',
+    advisers = u'指导教师'
     )
 
 class CompetitionAdmin(ModelViewMixin):
@@ -45,6 +47,8 @@ class CompetitionAdmin(ModelViewMixin):
     column_filters = ['project', 'achievement_name', 'winning_level', 'rate',
             'awards_unit', 'winning_time', 'is_review']
 
+    column_editable_list = ['is_review']
+
     def __init__(self, session, **kwargs):
         super(CompetitionAdmin, self).__init__(Competition, session, **kwargs)
 
@@ -60,8 +64,6 @@ class ProjectAdmin(ModelViewMixin):
     list_template = 'admin/competition_project.html'
 
     #column_searchable_list = ['nick_name']
-
-    column_list = ('id', 'project_name')
 
     #column_filters = ['user_name', 'nick_name', Unit.unit_name, 'role']
 
