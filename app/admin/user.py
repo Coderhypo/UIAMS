@@ -38,9 +38,14 @@ class UserAdmin(ModelViewMixin):
 
     column_searchable_list = ['nick_name']
 
-    column_list = ('id', 'user_name', 'nick_name', 'unit', 'role')
+    form_excluded_columns = ['competitions', 'user_password_hash']
+
+    column_list = ('id', 'user_name', 'nick_name', 'unit', 'role',
+            'date_created')
 
     column_filters = ['user_name', 'nick_name', Unit.unit_name, Role.role_name]
+
+    column_editable_list = ['nick_name']
 
     def __init__(self, session, **kwargs):
         super(UserAdmin, self).__init__(User, session, **kwargs)
