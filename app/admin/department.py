@@ -28,7 +28,7 @@ class DepartmentAdmin(ModelViewMixin):
     column_labels = labels
 
     can_restore = False
-    can_create = True
+    can_create = False
     can_edit = False
     can_delete = True
 
