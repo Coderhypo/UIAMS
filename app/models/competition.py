@@ -10,9 +10,12 @@ class Project(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     project_name = db.Column(db.String(128), nullable=False)
     date_created = db.Column(
-        db.DateTime, nullable=False, index=True,
+        db.DateTime, index=True,
         server_default=db.func.current_timestamp()
     )
+
+    def __init__(self, project_name):
+        self.project_name = project_name
 
     def __repr__(self):
         return self.project_name
@@ -31,7 +34,7 @@ class Participant(db.Model):
     id_student = db.Column(db.Integer, db.ForeignKey('student.id'))
     locant = db.Column(db.Integer)
     date_created = db.Column(
-        db.DateTime, nullable=False, index=True,
+        db.DateTime, index=True,
         server_default=db.func.current_timestamp()
     )
 
@@ -67,7 +70,7 @@ class Competition(db.Model):
     winning_time = db.Column(db.Date)
     is_review = db.Column(db.Boolean, default=False)
     date_created = db.Column(
-        db.DateTime, nullable=False, index=True,
+        db.DateTime, index=True,
         server_default=db.func.current_timestamp()
     )
 
