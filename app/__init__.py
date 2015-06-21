@@ -18,17 +18,16 @@ with app.app_context():
     db.app = app
     db.init_app(app)
 
-    from admin_old import admin as admin_blueprint
-    app.register_blueprint(admin_blueprint, url_prefix='/admin_old')
-
     from .admin import admin
     admin.init_app(app)
 
+    """
     babel = Babel(app)
 
     @babel.localeselector
     def get_locale():
         return 'zh_hans_CN'
+    """
 
     login_manager.setup_app(app)
     login_manager.session_protection = 'strong'
