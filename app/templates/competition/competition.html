@@ -162,7 +162,7 @@ $(".form_datetime").datetimepicker({
       var opt = "";
       opt += "<option value=\"\" disabled selected>==选择单位==</option>";
       for (var i=0; i<data.unit_teachers.length; i++) {
-        opt += "<option value=\"" + data.unit_teachers[i].id + "\">" + data.unit_teachers[i].unit_name + "</option>";
+        opt += "<option value=\"" + data.unit_teachers[i].unit.unit_id + "\">" + data.unit_teachers[i].unit.unit_name + "</option>";
       }
       $("#No_" + teacher_id + "_unit").html(opt);
 
