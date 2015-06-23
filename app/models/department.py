@@ -12,7 +12,7 @@ class Unit(db.Model):
     unit_id = db.Column(db.Integer)
     unit_name = db.Column(db.String(128))
     date_created = db.Column(
-        db.DateTime, index=True,
+        db.TIMESTAMP, index=True,
         server_default=db.func.current_timestamp()
     )
 
@@ -66,7 +66,7 @@ class Major(db.Model):
     major_name = db.Column(db.String(128))
     id_acachemy = db.Column(db.Integer, db.ForeignKey('unit.id'))
     date_created = db.Column(
-        db.DateTime, index=True,
+        db.TIMESTAMP, index=True,
         server_default=db.func.current_timestamp()
     )
 
