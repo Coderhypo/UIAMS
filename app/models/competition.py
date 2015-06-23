@@ -10,7 +10,7 @@ class Project(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     project_name = db.Column(db.String(128), nullable=False)
     date_created = db.Column(
-        db.DateTime, index=True,
+        db.TIMESTAMP, index=True,
         server_default=db.func.current_timestamp()
     )
 
@@ -34,7 +34,7 @@ class Participant(db.Model):
     id_student = db.Column(db.Integer, db.ForeignKey('student.id'))
     locant = db.Column(db.Integer)
     date_created = db.Column(
-        db.DateTime, index=True,
+        db.TIMESTAMP, index=True,
         server_default=db.func.current_timestamp()
     )
 
@@ -70,7 +70,7 @@ class Competition(db.Model):
     winning_time = db.Column(db.Date)
     is_review = db.Column(db.Boolean, default=False)
     date_created = db.Column(
-        db.DateTime, index=True,
+        db.TIMESTAMP, index=True,
         server_default=db.func.current_timestamp()
     )
 
