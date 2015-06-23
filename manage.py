@@ -18,12 +18,25 @@ manager.add_command('db', MigrateCommand)
 @manager.command
 def deploy():
     from flask.ext.migrate import upgrade
-    from app.models import Role
+    from app.models import Role, User
 
     # migrate database to latest revision
     # upgrade()
 
-    Role.insert_roles()
+    db.drop_all()
+    db.create_all()
+        
+    try:
+        Role.insert_roles()
+        r = Role.query.filter_by(role_name = u'管理员').first()
+        u = User('admin', 'admin')
+        u.role = r
+        u.password = '123'
+        db.session.add(u)
+        db.session.commit()
+    except Exception, e:
+        print e
+        db.session.rollback()
 
 if __name__ == '__main__':
     manager.run()
